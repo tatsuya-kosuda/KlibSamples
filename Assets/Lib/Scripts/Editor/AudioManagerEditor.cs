@@ -21,7 +21,6 @@ namespace Kosu.UnityLibrary
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-
             _clipName = EditorGUILayout.TextField("clip name", _clipName);
 
             if (GUILayout.Button("Play SE"))

@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_EDITOR
-using System;
-using System.Reflection;
-using UnityEditor;
+    using System;
+    using System.Reflection;
+    using UnityEditor;
 #endif
 
 
@@ -54,7 +54,7 @@ namespace Kosu.UnityLibrary
         private float _deltaTime;
 
         [SerializeField]
-        private float _doublePressThresholdTime;
+        private float _doublePressThresholdTime = 0;
 
         private int _pressCount;
 
@@ -123,29 +123,33 @@ namespace Kosu.UnityLibrary
 
                 switch (t0.phase)
                 {
-                case TouchPhase.Began:
-                    _lastDragPos = RelativeMouseAt(pos);
-                    break;
-                case TouchPhase.Moved:
-                    _dragPos = RelativeMouseAt(pos);
-                    OnMoved();
-                    _deltaTime = 0f;
-                    _pressCount = 0;
-                    break;
-                case TouchPhase.Ended:
-                    _dragPos = Vector3.zero;
-                    _lastDragPos = Vector3.zero;
-                    _pressCount++;
+                    case TouchPhase.Began:
+                        _lastDragPos = RelativeMouseAt(pos);
+                        break;
 
-                    if (_pressCount == 2 &&
-                        _deltaTime < _doublePressThresholdTime)
-                    {
-                        _OnDoublePress();
-                    }
-                    break;
-                case TouchPhase.Stationary:
-                case TouchPhase.Canceled:
-                    break;
+                    case TouchPhase.Moved:
+                        _dragPos = RelativeMouseAt(pos);
+                        OnMoved();
+                        _deltaTime = 0f;
+                        _pressCount = 0;
+                        break;
+
+                    case TouchPhase.Ended:
+                        _dragPos = Vector3.zero;
+                        _lastDragPos = Vector3.zero;
+                        _pressCount++;
+
+                        if (_pressCount == 2 &&
+                            _deltaTime < _doublePressThresholdTime)
+                        {
+                            _OnDoublePress();
+                        }
+
+                        break;
+
+                    case TouchPhase.Stationary:
+                    case TouchPhase.Canceled:
+                        break;
                 }
             }
             else
@@ -258,7 +262,7 @@ namespace Kosu.UnityLibrary
             var gesture = new GestureInfo();
             gesture.DeltaScale = deltaScale;
             gesture.DisplayId = displayId;
-            
+
             if (OnMouseWheelScroll != null)
             {
                 OnMouseWheelScroll.Invoke(gesture);
@@ -284,8 +288,8 @@ namespace Kosu.UnityLibrary
             var mouseOverWindow = EditorWindow.mouseOverWindow;
             Assembly assembly = typeof(EditorWindow).Assembly;
             Type type = assembly.GetType("UnityEditor.GameView");
-
             int displayID = 0;
+
             if (type.IsInstanceOfType(mouseOverWindow))
             {
                 var displayField = type.GetField("m_TargetDisplay", BindingFlags.NonPublic | BindingFlags.Instance);

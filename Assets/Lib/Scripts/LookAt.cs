@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Kosu.UnityLibrary
 {
@@ -12,10 +12,10 @@ namespace Kosu.UnityLibrary
         private Transform _lookAtTarget;
 
         [SerializeField]
-        private Vector3 _offset;
+        private Vector3 _offset = Vector3.zero;
 
         [SerializeField]
-        private bool _isSmoothLookAt;
+        private bool _isSmoothLookAt = false;
 
         public void SetLookAtTarget(Transform lookAtTarget)
         {

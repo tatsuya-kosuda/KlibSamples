@@ -48,7 +48,6 @@ namespace Kosu.UnityLibrary
 
                 contents.Add(new GUIContent(""));
                 contents.Add(new GUIContent("==== Others ===="));
-
                 List<string> guids = new List<string>();
                 var settings = AssetDatabase.FindAssets("t:SceneMenuParameter", new string[] { "Assets" });
 

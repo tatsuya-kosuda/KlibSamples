@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Kosu.UnityLibrary
 {
@@ -8,7 +8,7 @@ namespace Kosu.UnityLibrary
     public class MyImageEffectBase : MonoBehaviour
     {
         [SerializeField]
-        private Shader _shader;
+        private Shader _shader = null;
 
         [SerializeField]
         private Material _mat;

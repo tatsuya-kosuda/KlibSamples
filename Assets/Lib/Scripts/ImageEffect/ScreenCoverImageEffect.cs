@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,11 +8,11 @@ namespace Kosu.UnityLibrary
     public class ScreenCoverImageEffect : MyImageEffectBase
     {
         [SerializeField]
-        private Color _color;
+        private Color _color = Color.white;
 
         [SerializeField]
         [Range(0, 800)]
-        private float _radius;
+        private float _radius = 0;
 
         public enum ScreenCoverType
         {
@@ -49,15 +49,19 @@ namespace Kosu.UnityLibrary
                 case ScreenCoverType.ADD_COVER:
                     ScreenCoverAdd(src, dest);
                     break;
+
                 case ScreenCoverType.MUL_COVER:
                     ScreenCoverMul(src, dest);
                     break;
+
                 case ScreenCoverType.SCREEN_COVER:
                     ScreenCoverScreen(src, dest);
                     break;
+
                 case ScreenCoverType.OVERLAY_COVER:
                     ScreenCoverOverlay(src, dest);
                     break;
+
                 case ScreenCoverType.CIRCLE:
                     CircleScreenCover(src, dest);
                     break;
