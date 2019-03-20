@@ -43,7 +43,7 @@ namespace Kosu.UnityLibrary
         private void OnEnable()
         {
             Application.logMessageReceived += LogCallbackHandler;
-            _setting = DataUtility.LoadDataFromJson<LogSetting>(LogSetting.PATH);
+            _setting = DataUtils.LoadDataFromJson<LogSetting>(LogSetting.PATH);
 
             if (_setting.beforeSaveFileName != null && !string.IsNullOrEmpty(_setting.beforeSaveFileName))
             {
@@ -67,7 +67,7 @@ namespace Kosu.UnityLibrary
 #if !UNITY_EDITOR
             _setting.beforeSaveFileName = _fileName;
 #endif
-            DataUtility.SaveDataToJson(_setting, LogSetting.PATH);
+            DataUtils.SaveDataToJson(_setting, LogSetting.PATH);
         }
 
         private void Update()

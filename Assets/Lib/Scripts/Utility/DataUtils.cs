@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 
 namespace Kosu.UnityLibrary
 {
-    public static class DataUtility
+    public static class DataUtils
     {
         public static void SaveDataToJson<T>(T obj, string savePath)
         {

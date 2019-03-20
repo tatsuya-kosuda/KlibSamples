@@ -24,7 +24,7 @@ namespace Kosu.UnityLibrary
             _rootCanvasGroup.alpha = 0;
             _rootCanvasGroup.interactable = false;
             _rootCanvasGroup.blocksRaycasts = false;
-            _visibleStream = UniRxUtility.ObserveInputKeyDown(KeyCode.F1, () =>
+            _visibleStream = UniRxUtils.ObserveInputKeyDown(KeyCode.F1, () =>
             {
                 if (_isShowed)
                 {
