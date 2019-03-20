@@ -64,32 +64,29 @@ public class OSCHandler : MonoBehaviour
     {
     }
 
+    public static OSCHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new GameObject("OSCHandler").AddComponent<OSCHandler>();
+            }
+
+            return _instance;
+        }
+    }
     #endregion
 
     #region Member Variables
-    public static OSCHandler Instance { get; private set; }
+    private static OSCHandler _instance = null;
     private Dictionary<string, ClientLog> _clients = new Dictionary<string, ClientLog>();
     private Dictionary<string, ServerLog> _servers = new Dictionary<string, ServerLog>();
     public List<OSCPacket> packets = new List<OSCPacket>();
-    private const int _loglength = 1;
+
+
+    private const int _loglength = 100;
     #endregion
-
-    public event PacketRecievedEventHandler PacketRecievedEvent;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            Debug.LogWarning("Singleton OSCHandler is already exists. new gameObject was destroyed.");
-        }
-
-        DontDestroyOnLoad(Instance);
-    }
 
     /// <summary>
     /// Initializes the OSC Handler.
@@ -129,7 +126,7 @@ public class OSCHandler : MonoBehaviour
     /// Ensure that the instance is destroyed when the game is stopped in the Unity editor
     /// Close all the OSC clients and servers
     /// </summary>
-    public void Close()
+    void OnApplicationQuit()
     {
         foreach (KeyValuePair<string, ClientLog> pair in _clients)
         {
@@ -141,25 +138,7 @@ public class OSCHandler : MonoBehaviour
             pair.Value.server.Close();
         }
 
-        _clients.Clear();
-        _servers.Clear();
-        //Instance = null;
-    }
-
-    public void Close(string clientId)
-    {
-        if (_clients == null || _clients.Count == 0)
-        {
-            return;
-        }
-
-        if (!_clients.ContainsKey(clientId))
-        {
-            return;
-        }
-
-        _clients[clientId].client.Close();
-        _clients.Remove(clientId);
+        _instance = null;
     }
 
     /// <summary>
@@ -176,13 +155,18 @@ public class OSCHandler : MonoBehaviour
     /// </param>
     public void CreateClient(string clientId, IPAddress destination, int port)
     {
+        if (_clients.ContainsKey(clientId))
+        {
+            return;
+        }
+
         ClientLog clientitem = new ClientLog();
         clientitem.client = new OSCClient(destination, port);
         clientitem.log = new List<string>();
         clientitem.messages = new List<OSCMessage>();
         _clients.Add(clientId, clientitem);
         // Send test message
-        string testaddress = "/test/alive";
+        string testaddress = "/test/alive/";
         OSCMessage message = new OSCMessage(testaddress, destination.ToString());
         message.Append(port);
         message.Append("OK");
@@ -204,7 +188,7 @@ public class OSCHandler : MonoBehaviour
     /// </param>
     public OSCServer CreateServer(string serverId, int port)
     {
-        OSCServer server = new OSCServer(port, serverId);
+        OSCServer server = new OSCServer(port);
         server.PacketReceivedEvent += OnPacketReceived;
         ServerLog serveritem = new ServerLog();
         serveritem.server = server;
@@ -216,23 +200,19 @@ public class OSCHandler : MonoBehaviour
 
     /// <summary>
     /// Callback when a message is received. It stores the messages in a list of the oscControl
-    void OnPacketReceived(string serverId, OSCPacket packet)
+    void OnPacketReceived(OSCServer server, OSCPacket packet)
     {
         // Remember origin
-        //packet.server = server;
+        packet.server = server;
 
-        //// Limit buffer
-        //if (packets.Count > _loglength)
-        //{
-        //    packets.RemoveRange(0, packets.Count - _loglength);
-        //}
-
-        //// Add to OSCPackets list
-        //packets.Add(packet);
-        if (PacketRecievedEvent != null)
+        // Limit buffer
+        if (packets.Count > _loglength)
         {
-            PacketRecievedEvent(serverId, packet);
+            packets.RemoveRange(0, packets.Count - _loglength);
         }
+
+        // Add to OSCPackets list
+        packets.Add(packet);
     }
 
     /// <summary>
@@ -248,11 +228,11 @@ public class OSCHandler : MonoBehaviour
     /// <param name="value">
     /// A <see cref="T"/>
     /// </param>
-    public void SendMessageToClient<T>(string clientId, string address, T value, System.Action onError = null)
+    public void SendMessageToClient<T>(string clientId, string address, T value)
     {
         List<object> temp = new List<object>();
         temp.Add(value);
-        SendMessageToClient(clientId, address, temp, onError);
+        SendMessageToClient(clientId, address, temp);
     }
 
     /// <summary>
@@ -268,7 +248,7 @@ public class OSCHandler : MonoBehaviour
     /// <param name="values">
     /// A <see cref="List<T>"/>
     /// </param>
-    public void SendMessageToClient<T>(string clientId, string address, List<T> values, System.Action onError = null)
+    public void SendMessageToClient<T>(string clientId, string address, List<T> values)
     {
         if (_clients.ContainsKey(clientId))
         {
@@ -301,11 +281,6 @@ public class OSCHandler : MonoBehaviour
         else
         {
             Debug.LogError(string.Format("Can't send OSC messages to {0}. Client doesn't exist.", clientId));
-
-            if (onError != null)
-            {
-                onError.Invoke();
-            }
         }
     }
 

@@ -27,8 +27,7 @@ using System.Collections.Generic;
 
 namespace UnityOSC
 {
-    //public delegate void PacketReceivedEventHandler(OSCServer sender, OSCPacket packet);
-    public delegate void PacketRecievedEventHandler(string serverId, OSCPacket packet);
+    public delegate void PacketReceivedEventHandler(OSCServer sender, OSCPacket packet);
 
     /// <summary>
     /// Receives incoming OSC messages
@@ -36,15 +35,14 @@ namespace UnityOSC
     public class OSCServer
     {
         #region Delegates
-        public event PacketRecievedEventHandler PacketReceivedEvent;
+        public event PacketReceivedEventHandler PacketReceivedEvent;
         #endregion
 
         #region Constructors
-        public OSCServer(int localPort, string serverId)
+        public OSCServer(int localPort)
         {
-            PacketReceivedEvent += delegate(string s, OSCPacket p) { };
+            PacketReceivedEvent += delegate(OSCServer s, OSCPacket p) { };
             _localPort = localPort;
-            _serverId = serverId;
             Connect();
         }
         #endregion
@@ -56,7 +54,6 @@ namespace UnityOSC
         private OSCPacket _lastReceivedPacket;
         private int _sleepMilliseconds = 10;
         private int _bufferSize = 1024;
-        private string _serverId;
         #endregion
 
         #region Properties
@@ -148,7 +145,6 @@ namespace UnityOSC
                 _udpClient = new UdpClient(_localPort);
                 _udpClient.Client.ReceiveBufferSize = _bufferSize;
                 _receiverThread = new Thread(new ThreadStart(this.ReceivePool));
-                _receiverThread.IsBackground = true;
                 _receiverThread.Start();
             }
             catch (Exception e)
@@ -186,15 +182,12 @@ namespace UnityOSC
                 {
                     OSCPacket packet = OSCPacket.Unpack(bytes);
                     _lastReceivedPacket = packet;
-                    PacketReceivedEvent(_serverId, _lastReceivedPacket);
+                    PacketReceivedEvent(this, _lastReceivedPacket);
                 }
             }
             catch
             {
-                if (_receiverThread != null)
-                {
-                    throw new Exception(String.Format("Can't create server at port {0}", _localPort));
-                }
+                throw new Exception(String.Format("Can't create server at port {0}", _localPort));
             }
         }
 
@@ -205,7 +198,6 @@ namespace UnityOSC
         {
             while (true)
             {
-                //UnityEngine.Debug.Log("koko");
                 Receive();
 
                 if (_udpClient.Available == 0)
