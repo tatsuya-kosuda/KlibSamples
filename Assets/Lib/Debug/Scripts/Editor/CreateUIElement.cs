@@ -32,6 +32,15 @@ namespace Kosu.UnityLibrary
             var g = PrefabUtility.InstantiatePrefab(Resources.Load(TEMPLATE_PATH)) as GameObject;
             PrefabUtility.UnpackPrefabInstance(g, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
             OnCreatedObject(g, menuCommand.context as GameObject, "DebugUI Canvas");
+            g.transform.SetAsLastSibling();
+            var eventSystem = GameObject.FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+
+            if (eventSystem == null)
+            {
+                var eg = new GameObject("EventSystem");
+                eg.AddComponent<UnityEngine.EventSystems.EventSystem>();
+                eg.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            }
         }
 
         [MenuItem("GameObject/DebugUI/Text", priority = 10)]

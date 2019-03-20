@@ -268,7 +268,6 @@ GameObject:
   - component: {fileID: 5697628552129933533}
   - component: {fileID: 5697628552129933532}
   - component: {fileID: 5697628552129933535}
-  - component: {fileID: 2739922104313519935}
   m_Layer: 5
   m_Name: DebugUITemplate
   m_TagString: Untagged
@@ -356,18 +355,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!225 &2739922104313519935
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5697628552129933529}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &5697628552155675778
 GameObject:
   m_ObjectHideFlags: 0
