@@ -39,7 +39,20 @@ namespace Kosu.UnityLibrary
             };
             _slider.onValueChanged = (f) =>
             {
-                Debug.Log($"OnValueChanged slider : val = {f}");
+                switch (Random.Range(0, 3))
+                {
+                    case 0:
+                        Debug.Log($"OnValueChanged slider : val = {f}");
+                        break;
+
+                    case 1:
+                        Debug.LogWarning($"OnValueChanged slider : val = {f}");
+                        break;
+
+                    case 2:
+                        Debug.LogError($"OnValueChanged slider : val = {f}");
+                        break;
+                }
             };
             _toggle.onValueChanged = (b) =>
             {
