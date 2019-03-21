@@ -43,6 +43,24 @@ namespace Kosu.UnityLibrary
         [SerializeField]
         private DebugUIButton _udpOSCRecieverButtton = null;
 
+        [SerializeField]
+        private DebugUIButton _udpJsonConnectButtton = null;
+
+        [SerializeField]
+        private DebugUIButton _udpJsonSendButtton = null;
+
+        [SerializeField]
+        private DebugUIButton _udpJsonRecieverButtton = null;
+
+        [SerializeField]
+        private DebugUIButton _tcpJsonConnectButtton = null;
+
+        [SerializeField]
+        private DebugUIButton _tcpJsonSendButtton = null;
+
+        [SerializeField]
+        private DebugUIButton _tcpJsonRecieverButtton = null;
+
         private TCPOSCSender _tcpOSCSender;
 
         private TCPOSCReciever _tcpOSCReciever;
@@ -58,6 +76,14 @@ namespace Kosu.UnityLibrary
         private UDPOSCSender _udpOSCSender;
 
         private UDPOSCReciever _udpOSCReciever;
+
+        private UDPJsonSender _udpJsonSender;
+
+        private UDPJsonReciever _udpJsonReciever;
+
+        private TCPJsonSender _tcpJsonSender;
+
+        private TCPJsonReciever _tcpJsonReciever;
 
         protected override void Bind()
         {
@@ -152,6 +178,96 @@ namespace Kosu.UnityLibrary
                     }
                 };
             };
+            _udpJsonConnectButtton.onClick = () =>
+            {
+                _udpJsonSender = new UDPJsonSender(NetworkUtils.GetIP(NetworkUtils.ADDRESSFAM.IPv4), 20004);
+            };
+            _udpJsonSendButtton.onClick = () =>
+            {
+                _udpJsonSender?.Send(new SampleJsonData()
+                {
+                    test1 = "test1",
+                    test2 = "test2",
+                    test3 = 10,
+                    test4 = 1.111f
+                });
+                _udpJsonSender?.Send(new SampleJsonData2()
+                {
+                    test5 = "test1",
+                    test6 = "test2",
+                    test7 = 10,
+                    test8 = 1.111f
+                });
+            };
+            _udpJsonRecieverButtton.onClick = () =>
+            {
+                _udpJsonReciever = new UDPJsonReciever(20004)
+                {
+                    IsQueueing = true,
+                    onDataRecieved = (msg) =>
+                    {
+                        var recievedData = JsonUtility.FromJson<BaseJsonData>(msg);
+
+                        switch (recievedData.className)
+                        {
+                            case nameof(SampleJsonData):
+                                var data = JsonUtility.FromJson<SampleJsonData>(msg);
+                                Debug.Log($"recieved samplejsondata : test1 = {data.test1} test2 = {data.test2} test3 = {data.test3} test4 = {data.test4}");
+                                break;
+
+                            case nameof(SampleJsonData2):
+                                var data2 = JsonUtility.FromJson<SampleJsonData2>(msg);
+                                Debug.Log($"recieved samplejsondata2 : test5 = {data2.test5} test6 = {data2.test6} test7 = {data2.test7} test8 = {data2.test8}");
+                                break;
+                        }
+                    }
+                };
+            };
+            _tcpJsonConnectButtton.onClick = () =>
+            {
+                _tcpJsonSender = new TCPJsonSender(NetworkUtils.GetIP(NetworkUtils.ADDRESSFAM.IPv4), 20005);
+            };
+            _tcpJsonSendButtton.onClick = () =>
+            {
+                _tcpJsonSender?.Send(new SampleJsonData()
+                {
+                    test1 = "test1",
+                    test2 = "test2",
+                    test3 = 10,
+                    test4 = 1.111f
+                });
+                _tcpJsonSender?.Send(new SampleJsonData2()
+                {
+                    test5 = "test1",
+                    test6 = "test2",
+                    test7 = 10,
+                    test8 = 1.111f
+                });
+            };
+            _tcpJsonRecieverButtton.onClick = () =>
+            {
+                _tcpJsonReciever = new TCPJsonReciever(NetworkUtils.GetIP(NetworkUtils.ADDRESSFAM.IPv4), 20005)
+                {
+                    IsQueueing = true,
+                    onDataRecieved = (msg) =>
+                    {
+                        var recievedData = JsonUtility.FromJson<BaseJsonData>(msg);
+
+                        switch (recievedData.className)
+                        {
+                            case nameof(SampleJsonData):
+                                var data = JsonUtility.FromJson<SampleJsonData>(msg);
+                                Debug.Log($"recieved samplejsondata : test1 = {data.test1} test2 = {data.test2} test3 = {data.test3} test4 = {data.test4}");
+                                break;
+
+                            case nameof(SampleJsonData2):
+                                var data2 = JsonUtility.FromJson<SampleJsonData2>(msg);
+                                Debug.Log($"recieved samplejsondata2 : test5 = {data2.test5} test6 = {data2.test6} test7 = {data2.test7} test8 = {data2.test8}");
+                                break;
+                        }
+                    }
+                };
+            };
         }
 
         protected override void UnBind()
@@ -173,6 +289,14 @@ namespace Kosu.UnityLibrary
             _udpReciever = null;
             _udpSender?.Close();
             _udpSender = null;
+            _udpJsonReciever?.Close();
+            _udpJsonReciever = null;
+            _udpJsonSender?.Close();
+            _udpJsonSender = null;
+            _tcpJsonReciever?.Close();
+            _tcpJsonReciever = null;
+            _tcpJsonSender?.Close();
+            _tcpJsonSender = null;
         }
 
     }
