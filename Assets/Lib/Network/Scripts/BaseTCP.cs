@@ -8,7 +8,7 @@ using UniRx;
 
 namespace Kosu.UnityLibrary
 {
-    public class BaseTCPSender
+    public class BaseTCPSender : ISender
     {
 
         private TcpClient _tcpClient;
@@ -127,10 +127,10 @@ namespace Kosu.UnityLibrary
 
     }
 
-    public class BaseTCPReciever<T> where T : class
+    public class BaseTCPReciever<T> : IReciever where T : class
     {
 
-        public System.Action<T> onLatestDataRacieved;
+        public System.Action<T> onLatestDataRecieved;
 
         public System.Action<T> onDataRecieved;
 
@@ -215,10 +215,10 @@ namespace Kosu.UnityLibrary
             _startServerStream = null;
             _updateListenPacketStream?.Dispose();
             _updateListenPacketStream = null;
-            _tcpListener?.Stop();
-            _tcpListener = null;
             _th?.Abort();
             _th = null;
+            _tcpListener?.Stop();
+            _tcpListener = null;
         }
 
         private void Recieve()
@@ -258,7 +258,7 @@ namespace Kosu.UnityLibrary
 
         protected virtual void OnLatestDataRecieved(T recievedData)
         {
-            onLatestDataRacieved.SafeInvoke(recievedData);
+            onLatestDataRecieved.SafeInvoke(recievedData);
         }
 
         protected void UpdateListenPacket()

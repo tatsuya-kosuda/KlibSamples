@@ -14,23 +14,6 @@ namespace Kosu.UnityLibrary
             Connect(host, port);
         }
 
-        public static OSCMessage CreateOSCMessage(string address, params object[] objects)
-        {
-            var msg = new OSCMessage(address);
-
-            foreach (object msgvalue in objects)
-            {
-                msg.Append(msgvalue);
-            }
-
-            return msg;
-        }
-
-        public static OSCBundle CreateOSCBundle(string address, params object[] objects)
-        {
-            return null;
-        }
-
         protected override byte[] Serialize<T>(T data)
         {
             if (!(data is OSCPacket))

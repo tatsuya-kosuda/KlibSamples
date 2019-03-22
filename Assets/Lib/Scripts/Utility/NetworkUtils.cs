@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityOSC;
 
 namespace Kosu.UnityLibrary
 {
@@ -56,6 +57,23 @@ namespace Kosu.UnityLibrary
             }
 
             return output;
+        }
+
+        public static OSCMessage CreateOSCMessage(string address, params object[] objects)
+        {
+            var msg = new OSCMessage(address);
+
+            foreach (object msgvalue in objects)
+            {
+                msg.Append(msgvalue);
+            }
+
+            return msg;
+        }
+
+        public static OSCBundle CreateOSCBundle(string address, params object[] objects)
+        {
+            return null;
         }
 
     }

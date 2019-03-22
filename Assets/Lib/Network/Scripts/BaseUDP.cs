@@ -8,7 +8,8 @@ using UniRx;
 
 namespace Kosu.UnityLibrary
 {
-    public class BaseUDPSender
+
+    public class BaseUDPSender : ISender
     {
 
         private UdpClient _udp;
@@ -82,10 +83,10 @@ namespace Kosu.UnityLibrary
 
     }
 
-    public class BaseUDPReciever<T> where T : class
+    public class BaseUDPReciever<T> : IReciever where T : class
     {
 
-        public System.Action<T> onLatestDataRacieved;
+        public System.Action<T> onLatestDataRecieved;
 
         public System.Action<T> onDataRecieved;
 
@@ -136,10 +137,10 @@ namespace Kosu.UnityLibrary
         {
             _updateListenPacketStream?.Dispose();
             _updateListenPacketStream = null;
-            _udp?.Close();
-            _udp = null;
             _th?.Abort();
             _th = null;
+            _udp?.Close();
+            _udp = null;
         }
 
         protected void Recieve()
@@ -171,7 +172,7 @@ namespace Kosu.UnityLibrary
 
         protected virtual void OnLatestDataRecieved(T recievedData)
         {
-            onLatestDataRacieved.SafeInvoke(recievedData);
+            onLatestDataRecieved.SafeInvoke(recievedData);
         }
 
         protected void UpdateListenPacket()
