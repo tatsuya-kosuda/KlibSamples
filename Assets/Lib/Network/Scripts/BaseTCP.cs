@@ -21,6 +21,8 @@ namespace Kosu.UnityLibrary
 
         protected int _port;
 
+        private NetworkStream _nStream;
+
         public BaseTCPSender(string host, int port)
         {
             Constructed(host, port);
@@ -65,7 +67,7 @@ namespace Kosu.UnityLibrary
                 }
                 catch (SocketException e)
                 {
-                    Debug.LogError(e.Message);
+                    Debug.LogError($"[{e.ErrorCode}]{e.Message}");
                 }
 
                 if (!_isConnected)
@@ -79,6 +81,8 @@ namespace Kosu.UnityLibrary
         {
             _connectStream?.Dispose();
             _connectStream = null;
+            _nStream?.Dispose();
+            _nStream = null;
             _tcpClient?.Close();
             _tcpClient = null;
         }
@@ -92,25 +96,21 @@ namespace Kosu.UnityLibrary
                 return;
             }
 
+            if (_nStream == null) { _nStream = _tcpClient.GetStream(); }
+
             try
             {
-                using (NetworkStream stream = _tcpClient.GetStream())
+                if (_nStream.CanWrite)
                 {
-                    if (stream.CanWrite)
-                    {
-                        var bytes = Serialize(data);
-                        stream.Write(bytes, 0, bytes.Length);
-                        Debug.Log("send to tcp server : length = " + bytes.Length + "(byte)");
-                    }
+                    var bytes = Serialize(data);
+                    _nStream.Write(bytes, 0, bytes.Length);
+                    Debug.Log("send to tcp server : length = " + bytes.Length + "(byte)");
                 }
             }
             catch (SocketException e)
             {
                 Debug.LogError("SocketException : " + e.ToString());
             }
-
-            _isConnected = _tcpClient.Connected;
-            Connect();
         }
 
         protected virtual byte[] Serialize<T>(T data) where T : class
