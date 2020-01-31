@@ -26,14 +26,22 @@ namespace Kosu.UnityLibrary
 
         public System.Action<float> onValueChanged;
 
+        private bool _setDefaultValue;
+
         private void Awake()
         {
+            if (_setDefaultValue)
+            {
+                return;
+            }
+
             _slider = GetComponentInChildren<Slider>();
             _inputField = GetComponentInChildren<InputField>();
             _labelText.text = _label;
             _slider.minValue = _min;
             _slider.maxValue = _max;
             _slider.value = _defaultValue;
+            _valueText.text = _defaultValue.ToString("F2");
         }
 
         private void OnEnable()
@@ -60,6 +68,21 @@ namespace Kosu.UnityLibrary
         {
             _valueText.text = val.ToString("F2");
             onValueChanged.SafeInvoke(val);
+        }
+
+        public void SetDefaultValue(float val)
+        {
+            _setDefaultValue = true;
+
+            if (_slider == null) { _slider = GetComponentInChildren<Slider>(); }
+
+            if (_inputField == null) { _inputField = GetComponentInChildren<InputField>(); }
+
+            _slider.value = val;
+            _slider.minValue = _min;
+            _slider.maxValue = _max;
+            _labelText.text = _label;
+            _valueText.text = val.ToString("F2");
         }
 
     }

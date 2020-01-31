@@ -17,6 +17,9 @@ namespace Kosu.UnityLibrary
 
         private System.IDisposable _visibleStream;
 
+        [SerializeField]
+        private bool _isDefaultShow = false;
+
         private void Awake()
         {
             AfterAwake();
@@ -35,6 +38,15 @@ namespace Kosu.UnityLibrary
                     Show();
                 }
             }, gameObject);
+
+            if (_isDefaultShow)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
         }
 
         private void OnEnable()

@@ -18,11 +18,26 @@ namespace Kosu.UnityLibrary
 
         public System.Action onClick;
 
+        private bool _setLabel;
+
         private void Awake()
         {
             _button = GetComponent<Button>();
-            _labelText = GetComponentInChildren<Text>();
-            _labelText.text = _label;
+
+            if (_setLabel == false)
+            {
+                _labelText = GetComponentInChildren<Text>();
+                _labelText.text = _label;
+            }
+        }
+
+        public void SetLabel(string label)
+        {
+            _setLabel = true;
+
+            if (_labelText == null) { _labelText = GetComponentInChildren<Text>(); }
+
+            _labelText.text = label;
         }
 
         private void OnEnable()

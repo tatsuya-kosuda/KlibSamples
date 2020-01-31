@@ -21,11 +21,19 @@ namespace Kosu.UnityLibrary
 
         public System.Action<bool> onValueChanged;
 
+        private bool _setLabel;
+
+        private bool _setDefaultValue;
+
         private void Awake()
         {
-            _labelText.text = _label;
-            _toggle = GetComponent<Toggle>();
-            _toggle.isOn = _defaultValue;
+            if (_setLabel == false) { _labelText.text = _label; }
+
+            if (_setDefaultValue == false)
+            {
+                _toggle = GetComponent<Toggle>();
+                _toggle.isOn = _defaultValue;
+            }
         }
 
         private void OnEnable()
@@ -45,8 +53,17 @@ namespace Kosu.UnityLibrary
 
         public void SetLabel(string label)
         {
-            _label = label;
-            _labelText.text = _label;
+            _setLabel = true;
+            _labelText.text = label;
+        }
+
+        public void SetDefaultValue(bool defaultValue)
+        {
+            _setDefaultValue = true;
+
+            if (_toggle == null) { _toggle = GetComponent<Toggle>(); }
+
+            _toggle.isOn = defaultValue;
         }
 
     }

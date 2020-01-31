@@ -18,9 +18,15 @@ namespace Kosu.UnityLibrary
 
         public System.Action<string> onEndEdit;
 
+        private bool _setLabel;
+
         private void Awake()
         {
-            _labelText.text = _label;
+            if (_setLabel == false)
+            {
+                _labelText.text = _label;
+            }
+
             _inputField = GetComponentInChildren<InputField>();
         }
 
@@ -41,8 +47,8 @@ namespace Kosu.UnityLibrary
 
         public void SetLabel(string label)
         {
-            _label = label;
-            _labelText.text = _label;
+            _setLabel = true;
+            _labelText.text = label;
         }
 
     }

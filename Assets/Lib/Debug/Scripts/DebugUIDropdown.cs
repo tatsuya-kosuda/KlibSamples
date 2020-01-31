@@ -18,10 +18,22 @@ namespace Kosu.UnityLibrary
 
         public System.Action<int> onValueChanged;
 
+        private bool _setLabel;
+
+        private bool _setDefaultValue;
+
+        [SerializeField]
+        private int _defaultValue = 0;
+
         private void Awake()
         {
-            _dropDown = GetComponentInChildren<Dropdown>();
-            _labelText.text = _label;
+            if (_setLabel == false) { _labelText.text = _label; }
+
+            if (_setDefaultValue == false)
+            {
+                _dropDown = GetComponentInChildren<Dropdown>();
+                _dropDown.value = _defaultValue;
+            }
         }
 
         private void OnEnable()
@@ -41,8 +53,17 @@ namespace Kosu.UnityLibrary
 
         public void SetLabel(string label)
         {
-            _label = label;
-            _labelText.text = _label;
+            _setLabel = true;
+            _labelText.text = label;
+        }
+
+        public void SetDefaultValue(int value)
+        {
+            _setDefaultValue = true;
+
+            if (_dropDown == null) { _dropDown = GetComponentInChildren<Dropdown>(); }
+
+            _dropDown.value = value;
         }
 
         public Dropdown.OptionData GetOptionData(int index)
