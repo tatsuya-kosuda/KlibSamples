@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Kosu.UnityLibrary
 {
@@ -31,8 +31,7 @@ namespace Kosu.UnityLibrary
 
         protected virtual void Start()
         {
-            if (SystemInfo.supportsImageEffects == false ||
-                _shader == null ||
+            if (_shader == null ||
                 _shader.isSupported == false)
             {
                 enabled = false;
