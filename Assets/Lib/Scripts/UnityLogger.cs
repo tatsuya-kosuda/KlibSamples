@@ -17,10 +17,10 @@ namespace Kosu.UnityLibrary
 
         public LogSetting()
         {
-            localPath = "C:\\METoA\\log\\";
+            localPath = "C:\\Unity\\log\\";
             beforeSaveFileName = "";
             intervalMinutes = 60;
-            drivePath = "1zn-XmIhHYP1STKzHGLNM6PBfl_FY3fjn";
+            drivePath = "";
             filePrefix = "";
         }
     }
@@ -45,7 +45,7 @@ namespace Kosu.UnityLibrary
             Application.logMessageReceived += LogCallbackHandler;
             _setting = DataUtils.LoadDataFromJson<LogSetting>(LogSetting.PATH);
 
-            if (_setting.beforeSaveFileName != null && !string.IsNullOrEmpty(_setting.beforeSaveFileName))
+            if (_setting.beforeSaveFileName != null && string.IsNullOrEmpty(_setting.beforeSaveFileName) == false)
             {
                 UploadToGoogleDrive(_setting.beforeSaveFileName);
             }
@@ -64,9 +64,13 @@ namespace Kosu.UnityLibrary
                 _sw = null;
             }
 
+            if (string.IsNullOrEmpty(_setting.drivePath))
+            {
 #if !UNITY_EDITOR
-            _setting.beforeSaveFileName = _fileName;
+                _setting.beforeSaveFileName = _fileName;
 #endif
+            }
+
             DataUtils.SaveDataToJson(_setting, LogSetting.PATH);
         }
 
@@ -124,7 +128,8 @@ namespace Kosu.UnityLibrary
 
         private void UploadToGoogleDrive(string fileName)
         {
-            if (Application.internetReachability == NetworkReachability.NotReachable)
+            if (Application.internetReachability == NetworkReachability.NotReachable ||
+                string.IsNullOrEmpty(_setting.drivePath))
             {
                 return;
             }
