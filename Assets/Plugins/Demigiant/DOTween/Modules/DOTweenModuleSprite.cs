@@ -62,6 +62,7 @@ namespace DG.Tweening
                 s.Append(target.DOColor(c.color, colorDuration).SetEase(Ease.Linear));
             }
 
+            s.SetTarget(target);
             return s;
         }
 

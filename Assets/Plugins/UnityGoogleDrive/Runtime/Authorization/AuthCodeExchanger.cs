@@ -59,7 +59,7 @@ namespace UnityGoogleDrive
             { OnDone.Invoke(this); }
         }
 
-        private void HandleRequestComplete(AsyncOperation requestYeild)
+        private void HandleRequestComplete(AsyncOperation requestYield)
         {
             if (CheckRequestErrors(exchangeRequest))
             {

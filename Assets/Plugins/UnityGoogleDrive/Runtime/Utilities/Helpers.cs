@@ -51,14 +51,13 @@ namespace UnityGoogleDrive
         /// </summary>
         public const string ScriptMimeType = "application/vnd.google-apps.script";
 
-#if NET_4_6 || NET_STANDARD_2_0
         /// <summary>
         /// Looks for the files located at the provided path.
         /// </summary>
         /// <param name="path">File's path in Google Drive. Add front slash to find all files in a folder.</param>
         /// <param name="appData">Whether to use the AppData space instead of the drive root.</param>
         /// <param name="fields">Required fields for the list request. To request file's fields, use 'files(id, name, mimeType, ...)'.</param>
-        /// <param name="mimeType">File's MIME type.</param>
+        /// <param name="mime">File's MIME type.</param>
         /// <param name="trashed">Whether to include trashed files.</param>
         public static async System.Threading.Tasks.Task<List<Data.File>> FindFilesByPathAsync(string path, bool appData = false, List<string> fields = null, string mime = null, bool trashed = false)
         {
@@ -243,7 +242,6 @@ namespace UnityGoogleDrive
 
             return result.Count == 0 ? null : result;
         }
-#endif
 
         public static string CalculateMD5Checksum(byte[] content)
         {

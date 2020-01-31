@@ -7,7 +7,7 @@ namespace UnityGoogleDrive
     [CustomEditor(typeof(GoogleDriveSettings))]
     public class GoogleDriveSettingsEditor : Editor
     {
-        protected GoogleDriveSettings TargetSettings { get { return target as GoogleDriveSettings; } }
+        protected GoogleDriveSettings TargetSettings => target as GoogleDriveSettings;
 
         private SerializedProperty genericClientCredentials;
         private SerializedProperty uriSchemeClientCredentials;
@@ -24,7 +24,7 @@ namespace UnityGoogleDrive
         private readonly static GUIContent accessScopesContent = new GUIContent("Access Scopes", "Scopes of access to the user's Google Drive the app will request.");
         private readonly static GUIContent loopbackUriContent = new GUIContent("Loopback URI", "A web address for the loopback authentication requests. Defult is 'localhost'.");
         private readonly static GUIContent loopbackResponseHtmlContent = new GUIContent("Loopback Response HTML", "HTML page shown to the user when loopback response is received.");
-        private readonly static GUIContent accessTokenPrefsKeyContent = new GUIContent("Acces Token Key", "PlayerPrefs key used to store access token.");
+        private readonly static GUIContent accessTokenPrefsKeyContent = new GUIContent("Access Token Key", "PlayerPrefs key used to store access token.");
         private readonly static GUIContent refreshTokenPrefsKeyContent = new GUIContent("Refresh Token Key", "PlayerPrefs key used to store refresh token.");
         private readonly static GUIContent deleteCachedTokensContent = new GUIContent("Delete cached tokens", "Removes cached access and refresh tokens forcing user to login on the next request.");
 
@@ -40,14 +40,13 @@ namespace UnityGoogleDrive
                 AssetDatabase.CreateAsset(settings, path);
                 AssetDatabase.Refresh();
                 AssetDatabase.SaveAssets();
-                Debug.Log(string.Format("UnityGoogleDrive: Settings file didn't exist and was created at: {0}.\n" +
-                                        "You're free to move it, just make sure it stays in the root of a 'Resources' folder.", path));
+                Debug.Log($"UnityGoogleDrive: Settings file didn't exist and was created at: {path}.\n" +
+                          "You're free to move it, just make sure it stays in the root of a 'Resources' folder.");
             }
 
             return settings;
         }
 
-#if UNITY_2018_3_OR_NEWER
         [SettingsProvider]
         internal static SettingsProvider CreateProjectSettingsProvider()
         {
@@ -55,13 +54,6 @@ namespace UnityGoogleDrive
             var keywords = SettingsProvider.GetSearchKeywordsFromPath(assetPath);
             return AssetSettingsProvider.CreateProviderFromAssetPath("Project/Google Drive", assetPath, keywords);
         }
-#else
-        [MenuItem("Edit/Project Settings/Google Drive Settings")]
-        private static void SelectSettings()
-        {
-            Selection.activeObject = GetOrCreateSettings();
-        }
-#endif
 
         private void OnEnable()
         {

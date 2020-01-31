@@ -9,7 +9,7 @@ namespace UnityGoogleDrive
     /// Allows uploading a <see cref="Data.ResourceData"/> and (optinally) raw payload data in a resumable fashion.
     /// </summary>
     /// <typeparam name="TRequest">Type of the uploaded data.</typeparam>
-    /// <see cref="https://developers.google.com/drive/api/v3/resumable-upload"/>
+    /// <see href="https://developers.google.com/drive/api/v3/resumable-upload"/>
     public class GoogleDriveResumableUploadRequest<TRequest> : GoogleDriveUploadRequest<TRequest, string> where TRequest : Data.ResourceData
     {
         /// <summary>
@@ -19,8 +19,8 @@ namespace UnityGoogleDrive
         /// <summary>
         /// Progress of the data upload, in 0.0 to 1.0 range.
         /// </summary>
-        public override float Progress { get { return EvaluateUploadProgress(); } }
-        public override string ResponseData { get { return ResumableSessionUri; } }
+        public override float Progress => EvaluateUploadProgress();
+        public override string ResponseData => ResumableSessionUri;
 
         /// <summary>
         /// The type of upload request to the /upload URI. Acceptable values are:
@@ -28,10 +28,10 @@ namespace UnityGoogleDrive
         ///   - multipart - Multipart upload. Upload both the media and its metadata, in a single request.
         ///   - resumable - Resumable upload. Upload the file in a resumable fashion.
         /// </summary>
-        [QueryParameter] public override string UploadType { get { return "resumable"; } }
+        [QueryParameter] public override string UploadType => "resumable";
 
-        protected override bool AutoCompleteOnDone { get { return false; } }
-        protected bool ResumableSessionInitiated { get { return !string.IsNullOrEmpty(ResumableSessionUri); } }
+        protected override bool AutoCompleteOnDone => false;
+        protected bool ResumableSessionInitiated => !string.IsNullOrEmpty(ResumableSessionUri);
         protected int ResumeOffset { get; set; }
 
         private UnityWebRequest uploadRequest;
@@ -63,9 +63,9 @@ namespace UnityGoogleDrive
             }
         }
 
-        protected override void HandleWebRequestDone(AsyncOperation requestYeild)
+        protected override void HandleWebRequestDone(AsyncOperation requestYield)
         {
-            base.HandleWebRequestDone(requestYeild);
+            base.HandleWebRequestDone(requestYield);
 
             if (IsError) { CompleteRequest(); return; }
 
@@ -106,7 +106,7 @@ namespace UnityGoogleDrive
             }
 
             statusRequest = new UnityWebRequest(ResumableSessionUri, UnityWebRequest.kHttpVerbPUT);
-            statusRequest.SetRequestHeader("Content-Range", string.Format("bytes */{0}", RequestPayload.Length));
+            statusRequest.SetRequestHeader("Content-Range", $"bytes */{RequestPayload.Length}");
             statusRequest.SendWebRequest().completed += HandleStatusRequestCompleted;
         }
 
@@ -127,7 +127,7 @@ namespace UnityGoogleDrive
             // Unexpected response.
             else
             {
-                AppendError(string.Format("Failed to resume upload. HTTP error: {0}", statusRequest.error));
+                AppendError($"Failed to resume upload. HTTP error: {statusRequest.error}");
                 CompleteRequest();
             }
 
@@ -150,7 +150,7 @@ namespace UnityGoogleDrive
                 var partialPayload = new byte[RequestPayload.Length - ResumeOffset];
                 Array.Copy(RequestPayload, ResumeOffset, partialPayload, 0, partialPayload.Length);
                 uploadRequest = UnityWebRequest.Put(ResumableSessionUri, partialPayload);
-                uploadRequest.SetRequestHeader("Content-Range", string.Format("bytes {0}-{1}/{2}", ResumeOffset, RequestPayload.Length - 1, RequestPayload.Length));
+                uploadRequest.SetRequestHeader("Content-Range", $"bytes {ResumeOffset}-{RequestPayload.Length - 1}/{RequestPayload.Length}");
             }
 
             uploadRequest.SendWebRequest().completed += HandleUploadRequestCompleted;
@@ -159,7 +159,7 @@ namespace UnityGoogleDrive
         private void HandleUploadRequestCompleted(AsyncOperation asyncOperation)
         {
             if (!string.IsNullOrEmpty(uploadRequest.error))
-            { AppendError(string.Format("Failed to upload using resumable scheme. HTTP error: {0}", uploadRequest.error)); }
+            { AppendError($"Failed to upload using resumable scheme. HTTP error: {uploadRequest.error}"); }
 
             CompleteRequest();
             uploadRequest.Dispose();

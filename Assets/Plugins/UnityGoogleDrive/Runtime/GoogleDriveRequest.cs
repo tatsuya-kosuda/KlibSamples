@@ -26,7 +26,7 @@ namespace UnityGoogleDrive
         public abstract bool IsError { get; }
         public abstract string Error { get; protected set; }
 
-        public abstract GoogleDriveRequestYeildInstruction SendNonGeneric();
+        public abstract GoogleDriveRequestYieldInstruction SendNonGeneric();
         public abstract T GetResponseData<T> () where T : Data.ResourceData;
         public abstract void Abort();
         public abstract void Dispose();
@@ -61,11 +61,11 @@ namespace UnityGoogleDrive
         /// <summary>
         /// Progress of the data download, in 0.0 to 1.0 range.
         /// </summary>
-        public override float Progress { get { return WebRequest != null ? WebRequest.downloadProgress : 0; } }
+        public override float Progress => WebRequest != null ? WebRequest.downloadProgress : 0;
         /// <summary>
         /// Whether the request is currently executing.
         /// </summary>
-        public override bool IsRunning { get { return YeildInstruction != null && !IsDone; } }
+        public override bool IsRunning => YieldInstruction != null&& !IsDone;
         /// <summary>
         /// Whether the request has finished executing and it's safe to use <see cref="ResponseData"/>.
         /// </summary>
@@ -74,7 +74,7 @@ namespace UnityGoogleDrive
         /// Whether the request has finished with errors.
         /// Use <see cref="Error"/> for error description.
         /// </summary>
-        public override bool IsError { get { return !string.IsNullOrEmpty(Error); } }
+        public override bool IsError => !string.IsNullOrEmpty(Error);
         /// <summary>
         /// When <see cref="IsError"/> is true contains description of the occured error.
         /// </summary>
@@ -104,11 +104,10 @@ namespace UnityGoogleDrive
         [QueryParameter] public string UserIp { get; set; }
 
         protected static GoogleDriveSettings Settings { get; private set; }
-        protected static AuthController AuthController { get; private set; }
 
         protected UnityWebRequest WebRequest { get; private set; }
-        protected GoogleDriveRequestYeildInstruction<TResponse> YeildInstruction { get; private set; }
-        protected virtual bool AutoCompleteOnDone { get { return true; } }
+        protected GoogleDriveRequestYieldInstruction<TResponse> YieldInstruction { get; private set; }
+        protected virtual bool AutoCompleteOnDone => true;
 
         public GoogleDriveRequest(string uri, string method)
         {
@@ -116,29 +115,27 @@ namespace UnityGoogleDrive
             Method = method;
 
             if (Settings == null) { Settings = GoogleDriveSettings.LoadFromResources(); }
-
-            if (AuthController == null) { AuthController = new AuthController(Settings); }
         }
 
         /// <summary>
         /// Begin communicating with the Google Drive API to execute the request.
         /// </summary>
         /// <returns>
-        /// A yeild instruction indicating the progress/completion state of the request.
+        /// A yield instruction indicating the progress/completion state of the request.
         /// Yield this object to wait until the request <see cref="IsDone"/> or use <see cref="OnDone"/> event.
         /// </returns>
-        public GoogleDriveRequestYeildInstruction<TResponse> Send()
+        public GoogleDriveRequestYieldInstruction<TResponse> Send()
         {
             if (!IsRunning)
             {
-                YeildInstruction = new GoogleDriveRequestYeildInstruction<TResponse>(this);
+                YieldInstruction = new GoogleDriveRequestYieldInstruction<TResponse>(this);
                 SendWebRequest();
             }
 
-            return YeildInstruction;
+            return YieldInstruction;
         }
 
-        public override GoogleDriveRequestYeildInstruction SendNonGeneric()
+        public override GoogleDriveRequestYieldInstruction SendNonGeneric()
         {
             return Send();
         }
@@ -196,7 +193,7 @@ namespace UnityGoogleDrive
 
         protected void SetAuthorizationHeader(UnityWebRequest webRequest)
         {
-            webRequest.SetRequestHeader("Authorization", string.Format("Bearer {0}", AuthController.AccessToken));
+            webRequest.SetRequestHeader("Authorization", $"Bearer {AuthController.AccessToken}");
         }
 
         protected void SetDefaultContentHeader(UnityWebRequest webRequest)
@@ -233,7 +230,7 @@ namespace UnityGoogleDrive
             WebRequest.SendWebRequest().completed += HandleWebRequestDone;
         }
 
-        protected virtual void HandleWebRequestDone(AsyncOperation requestYeild)
+        protected virtual void HandleWebRequestDone(AsyncOperation requestYield)
         {
             if (WebRequest.responseCode == GoogleDriveSettings.UnauthorizedResponseCode)
             {
@@ -311,7 +308,7 @@ namespace UnityGoogleDrive
         /// </summary>
         private static string ToFirstLower(string content)
         {
-            var firstChar = Char.ToLowerInvariant(content[0]);
+            var firstChar = char.ToLowerInvariant(content[0]);
 
             if (content.Length > 1) { return string.Concat(firstChar, content.Substring(1)); }
             else { return firstChar.ToString(); }

@@ -8,16 +8,16 @@ namespace UnityGoogleDrive
     [System.Serializable]
     public class UriSchemeClientCredentials : IClientCredentials
     {
-        public string AuthUri { get { return "https://accounts.google.com/o/oauth2/v2/auth"; } }
-        public string TokenUri { get { return "https://accounts.google.com/o/oauth2/token"; } }
-        public string ClientId { get { return cliendId; } }
-        public string ClientSecret { get { return null; } } // Client secret is not required in custom URI scheme.
-        public string ReversedClientId { get { return reversedCliendId; } }
-        public string PlistVersion { get { return plistVersion; } }
-        public string BundleId { get { return bundleId; } }
+        public string AuthUri => "https://accounts.google.com/o/oauth2/v2/auth";
+        public string TokenUri => "https://accounts.google.com/o/oauth2/token";
+        public string ClientId => clientId;
+        public string ClientSecret => null; // Client secret is not required in custom URI scheme.
+        public string ReversedClientId => reversedClientId;
+        public string PlistVersion => plistVersion;
+        public string BundleId => bundleId;
 
-        [SerializeField] private string cliendId = null;
-        [SerializeField] private string reversedCliendId = null;
+        [SerializeField] private string clientId = null;
+        [SerializeField] private string reversedClientId = null;
         [SerializeField] private string plistVersion = null;
         [SerializeField] private string bundleId = null;
 
@@ -31,8 +31,8 @@ namespace UnityGoogleDrive
 
             var rootNode = xml.DocumentElement.ChildNodes[0];
             var dict = ParsePlistDictionary(rootNode);
-            cliendId = dict["CLIENT_ID"];
-            reversedCliendId = dict["REVERSED_CLIENT_ID"];
+            clientId = dict["CLIENT_ID"];
+            reversedClientId = dict["REVERSED_CLIENT_ID"];
             plistVersion = dict["PLIST_VERSION"];
             bundleId = dict["BUNDLE_ID"];
         }
