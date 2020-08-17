@@ -1,8 +1,6 @@
-
 ﻿#if (NET_4_6 || NET_STANDARD_2_0)
 
-    using System;
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +18,8 @@ namespace UniRx
         /// <param name="source">Source sequence to await.</param>
         public static AsyncSubject<TSource> GetAwaiter<TSource>(this IObservable<TSource> source)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
+            if (source == null) throw new ArgumentNullException("source");
+            
             return RunAsync(source, CancellationToken.None);
         }
 
@@ -32,7 +30,7 @@ namespace UniRx
         /// <param name="source">Source sequence to await.</param>
         public static AsyncSubject<TSource> GetAwaiter<TSource>(this IConnectableObservable<TSource> source)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return RunAsync(source, CancellationToken.None);
         }
@@ -45,7 +43,7 @@ namespace UniRx
         /// <param name="cancellationToken">Cancellation token.</param>
         public static AsyncSubject<TSource> GetAwaiter<TSource>(this IObservable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return RunAsync(source, cancellationToken);
         }
@@ -58,7 +56,7 @@ namespace UniRx
         /// <param name="cancellationToken">Cancellation token.</param>
         public static AsyncSubject<TSource> GetAwaiter<TSource>(this IConnectableObservable<TSource> source, CancellationToken cancellationToken)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return RunAsync(source, cancellationToken);
         }
@@ -114,11 +112,13 @@ namespace UniRx
             // Separate method used to avoid heap allocation of closure when no cancellation is needed,
             // e.g. when CancellationToken.None is provided to the RunAsync overloads.
             //
+
             var ctr = token.Register(() =>
             {
                 subscription.Dispose();
                 Cancel(subject, token);
             });
+
             //
             // No null-check for ctr is needed:
             //

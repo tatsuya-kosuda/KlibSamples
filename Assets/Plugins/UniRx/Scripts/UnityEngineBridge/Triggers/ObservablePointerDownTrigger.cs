@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (onPointerDown != null) { onPointerDown.OnNext(eventData); }
+            if (onPointerDown != null) onPointerDown.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerDownAsObservable()

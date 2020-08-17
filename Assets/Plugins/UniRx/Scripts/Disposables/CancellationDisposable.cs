@@ -25,7 +25,7 @@ namespace UniRx
         public CancellationDisposable(CancellationTokenSource cts)
         {
             if (cts == null)
-            { throw new ArgumentNullException("cts"); }
+                throw new ArgumentNullException("cts");
 
             _cts = cts;
         }

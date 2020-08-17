@@ -1,18 +1,16 @@
-
 ﻿#if CSHARP_7_OR_LATER || (UNITY_2018_3_OR_NEWER && (NET_STANDARD_2_0 || NET_4_6))
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #endif
 
-    using System;
-
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UniRx.InternalUtil;
 #if !UniRxLibrary
-    using UnityEngine;
+using UnityEngine;
 #endif
 #if CSHARP_7_OR_LATER || (UNITY_2018_3_OR_NEWER && (NET_STANDARD_2_0 || NET_4_6))
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 #endif
 
 namespace UniRx
@@ -65,7 +63,6 @@ namespace UniRx
         public void Dispose()
         {
             var sourceList = Interlocked.Exchange(ref list, null);
-
             if (sourceList != null)
             {
                 sourceList.UnsubscribeNode(this);
@@ -119,9 +116,8 @@ namespace UniRx
                 if (!EqualityComparer.Equals(this.value, value))
                 {
                     SetValue(value);
-
                     if (isDisposed)
-                    { return; }
+                        return;
 
                     RaiseOnNext(ref value);
                 }
@@ -151,7 +147,6 @@ namespace UniRx
         void RaiseOnNext(ref T value)
         {
             var node = root;
-
             while (node != null)
             {
                 node.OnNext(value);
@@ -167,9 +162,8 @@ namespace UniRx
         public void SetValueAndForceNotify(T value)
         {
             SetValue(value);
-
             if (isDisposed)
-            { return; }
+                return;
 
             RaiseOnNext(ref value);
         }
@@ -184,9 +178,9 @@ namespace UniRx
 
             // raise latest value on subscribe
             observer.OnNext(value);
+
             // subscribe node, node as subscription.
             var next = new ObserverNode<T>(this, observer);
-
             if (root == null)
             {
                 root = last = next;
@@ -197,7 +191,6 @@ namespace UniRx
                 next.Previous = last;
                 last = next;
             }
-
             return next;
         }
 
@@ -207,7 +200,6 @@ namespace UniRx
             {
                 root = node.Next;
             }
-
             if (node == last)
             {
                 last = node.Previous;
@@ -217,7 +209,6 @@ namespace UniRx
             {
                 node.Previous.Next = node.Next;
             }
-
             if (node.Next != null)
             {
                 node.Next.Previous = node.Previous;
@@ -232,7 +223,7 @@ namespace UniRx
 
         protected virtual void Dispose(bool disposing)
         {
-            if (isDisposed) { return; }
+            if (isDisposed) return;
 
             var node = root;
             root = last = null;
@@ -365,7 +356,6 @@ namespace UniRx
 
             // subscribe node, node as subscription.
             var next = new ObserverNode<T>(this, observer);
-
             if (root == null)
             {
                 root = last = next;
@@ -388,9 +378,9 @@ namespace UniRx
 
         protected virtual void Dispose(bool disposing)
         {
-            if (isDisposed) { return; }
-
+            if (isDisposed) return;
             sourceConnection.Dispose();
+
             var node = root;
             root = last = null;
             isDisposed = true;
@@ -408,7 +398,6 @@ namespace UniRx
             {
                 root = node.Next;
             }
-
             if (node == last)
             {
                 last = node.Previous;
@@ -418,7 +407,6 @@ namespace UniRx
             {
                 node.Previous.Next = node.Next;
             }
-
             if (node.Next != null)
             {
                 node.Next.Previous = node.Previous;
@@ -427,7 +415,7 @@ namespace UniRx
 
         void IObserver<T>.OnNext(T value)
         {
-            if (isDisposed) { return; }
+            if (isDisposed) return;
 
             if (canPublishValueOnSubscribe)
             {
@@ -438,11 +426,12 @@ namespace UniRx
             }
 
             canPublishValueOnSubscribe = true;
+
             // SetValue
             this.latestValue = value;
+
             // call source.OnNext
             var node = root;
-
             while (node != null)
             {
                 node.OnNext(value);
@@ -453,9 +442,9 @@ namespace UniRx
         void IObserver<T>.OnError(Exception error)
         {
             lastException = error;
+
             // call source.OnError
             var node = root;
-
             while (node != null)
             {
                 node.OnError(error);
@@ -516,8 +505,8 @@ namespace UniRx
         public static Task<T> WaitUntilValueChangedAsync<T>(this IReadOnlyReactiveProperty<T> source, CancellationToken cancellationToken = default(CancellationToken))
         {
             var tcs = new CancellableTaskCompletionSource<T>();
-            var disposable = new SingleAssignmentDisposable();
 
+            var disposable = new SingleAssignmentDisposable();
             if (source.HasValue)
             {
                 // Skip first value
@@ -546,6 +535,7 @@ namespace UniRx
             }
 
             cancellationToken.Register(Callback, Tuple.Create(tcs, disposable.Disposable), false);
+
             return tcs.Task;
         }
 
@@ -594,9 +584,8 @@ namespace UniRx
                 foreach (var item in xs)
                 {
                     if (item == false)
-                    { return false; }
+                        return false;
                 }
-
                 return true;
             });
         }
@@ -612,9 +601,8 @@ namespace UniRx
                 foreach (var item in xs)
                 {
                     if (item == true)
-                    { return false; }
+                        return false;
                 }
-
                 return true;
             });
         }

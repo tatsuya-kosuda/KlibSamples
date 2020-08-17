@@ -26,28 +26,33 @@ namespace UniRx.Examples
             // UnityEvent as Observable
             // (shortcut, MyButton.OnClickAsObservable())
             MyButton.onClick.AsObservable().Subscribe(_ => enemy.CurrentHp.Value -= 99);
+
             // Toggle, Input etc as Observable(OnValueChangedAsObservable is helper for provide isOn value on subscribe)
             // SubscribeToInteractable is UniRx.UI Extension Method, same as .interactable = x)
             MyToggle.OnValueChangedAsObservable().SubscribeToInteractable(MyButton);
+
             // input shows delay after 1 second
 #if !(UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
             MyInput.OnValueChangedAsObservable()
 #else
             MyInput.OnValueChangeAsObservable()
 #endif
-            .Where(x => x != null)
-            .Delay(TimeSpan.FromSeconds(1))
-            .SubscribeToText(MyText); // SubscribeToText is UniRx.UI Extension Method
+                .Where(x => x != null)
+                .Delay(TimeSpan.FromSeconds(1))
+                .SubscribeToText(MyText); // SubscribeToText is UniRx.UI Extension Method
+
             // converting for human visibility
             MySlider.OnValueChangedAsObservable()
-            .SubscribeToText(MyText, x => Math.Round(x, 2).ToString());
+                .SubscribeToText(MyText, x => Math.Round(x, 2).ToString());
+
             // from RxProp, CurrentHp changing(Button Click) is observable
             enemy.CurrentHp.SubscribeToText(MyText);
             enemy.IsDead.Where(isDead => isDead == true)
-            .Subscribe(_ =>
-            {
-                MyToggle.interactable = MyButton.interactable = false;
-            });
+                .Subscribe(_ =>
+                {
+                    MyToggle.interactable = MyButton.interactable = false;
+                });
+
             // initial text:)
             IntRxProp.SubscribeToText(MyText);
         }

@@ -27,7 +27,6 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 var castValue = default(TResult);
-
                 try
                 {
                     castValue = (TResult)(object)value;
@@ -36,7 +35,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 

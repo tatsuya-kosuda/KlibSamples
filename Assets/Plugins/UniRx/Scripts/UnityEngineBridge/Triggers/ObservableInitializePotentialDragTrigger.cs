@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IInitializePotentialDragHandler.OnInitializePotentialDrag(PointerEventData eventData)
         {
-            if (onInitializePotentialDrag != null) { onInitializePotentialDrag.OnNext(eventData); }
+            if (onInitializePotentialDrag != null) onInitializePotentialDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnInitializePotentialDragAsObservable()

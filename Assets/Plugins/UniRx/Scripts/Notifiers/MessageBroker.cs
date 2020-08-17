@@ -60,27 +60,24 @@ namespace UniRx
         public void Publish<T>(T message)
         {
             object notifier;
-
             lock (notifiers)
             {
-                if (isDisposed) { return; }
+                if (isDisposed) return;
 
                 if (!notifiers.TryGetValue(typeof(T), out notifier))
                 {
                     return;
                 }
             }
-
             ((ISubject<T>)notifier).OnNext(message);
         }
 
         public IObservable<T> Receive<T>()
         {
             object notifier;
-
             lock (notifiers)
             {
-                if (isDisposed) { throw new ObjectDisposedException("MessageBroker"); }
+                if (isDisposed) throw new ObjectDisposedException("MessageBroker");
 
                 if (!notifiers.TryGetValue(typeof(T), out notifier))
                 {
@@ -122,13 +119,11 @@ namespace UniRx
         public IObservable<Unit> PublishAsync<T>(T message)
         {
             UniRx.InternalUtil.ImmutableList<Func<T, IObservable<Unit>>> notifier;
-
             lock (notifiers)
             {
-                if (isDisposed) { throw new ObjectDisposedException("AsyncMessageBroker"); }
+                if (isDisposed) throw new ObjectDisposedException("AsyncMessageBroker");
 
                 object _notifier;
-
                 if (notifiers.TryGetValue(typeof(T), out _notifier))
                 {
                     notifier = (UniRx.InternalUtil.ImmutableList<Func<T, IObservable<Unit>>>)_notifier;
@@ -141,12 +136,10 @@ namespace UniRx
 
             var data = notifier.Data;
             var awaiter = new IObservable<Unit>[data.Length];
-
             for (int i = 0; i < data.Length; i++)
             {
                 awaiter[i] = data[i].Invoke(message);
             }
-
             return Observable.WhenAll(awaiter);
         }
 
@@ -154,10 +147,9 @@ namespace UniRx
         {
             lock (notifiers)
             {
-                if (isDisposed) { throw new ObjectDisposedException("AsyncMessageBroker"); }
+                if (isDisposed) throw new ObjectDisposedException("AsyncMessageBroker");
 
                 object _notifier;
-
                 if (!notifiers.TryGetValue(typeof(T), out _notifier))
                 {
                     var notifier = UniRx.InternalUtil.ImmutableList<Func<T, IObservable<Unit>>>.Empty;
@@ -203,11 +195,11 @@ namespace UniRx
                 lock (parent.notifiers)
                 {
                     object _notifier;
-
                     if (parent.notifiers.TryGetValue(typeof(T), out _notifier))
                     {
                         var notifier = (ImmutableList<Func<T, IObservable<Unit>>>)_notifier;
                         notifier = notifier.Remove(asyncMessageReceiver);
+
                         parent.notifiers[typeof(T)] = notifier;
                     }
                 }

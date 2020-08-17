@@ -41,7 +41,9 @@ namespace UniRx.Operators
                 isRunNext = false;
                 e = parent.sources.GetEnumerator();
                 subscription = new SerialDisposable();
+
                 var schedule = Scheduler.DefaultSchedulers.TailRecursion.Schedule(RecursiveRun);
+
                 return StableCompositeDisposable.Create(schedule, subscription, Disposable.Create(() =>
                 {
                     lock (gate)
@@ -57,8 +59,7 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     this.nextSelf = self;
-
-                    if (isDisposed) { return; }
+                    if (isDisposed) return;
 
                     var current = default(IObservable<T>);
                     var hasNext = false;
@@ -67,12 +68,10 @@ namespace UniRx.Operators
                     try
                     {
                         hasNext = e.MoveNext();
-
                         if (hasNext)
                         {
                             current = e.Current;
-
-                            if (current == null) { throw new InvalidOperationException("sequence is null."); }
+                            if (current == null) throw new InvalidOperationException("sequence is null.");
                         }
                         else
                         {
@@ -89,7 +88,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
 
@@ -97,7 +95,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
-
                         return;
                     }
 
@@ -129,7 +126,6 @@ namespace UniRx.Operators
                 else
                 {
                     e.Dispose();
-
                     if (!isDisposed)
                     {
                         try { observer.OnCompleted(); }

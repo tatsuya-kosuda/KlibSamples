@@ -27,17 +27,19 @@ namespace UniRx.Examples
         {
             // merge Button click and push enter key on input field.
             var submit = Observable.Merge(
-                             AddButton.OnClickAsObservable().Select(_ => ToDoInput.text),
-                             ToDoInput.OnEndEditAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Return)));
+                AddButton.OnClickAsObservable().Select(_ => ToDoInput.text),
+                ToDoInput.OnEndEditAsObservable().Where(_ => Input.GetKeyDown(KeyCode.Return)));
+
             // add to reactive collection
             submit.Where(x => x != "")
-            .Subscribe(x =>
-            {
-                ToDoInput.text = ""; // clear input field
-                var item = Instantiate(SampleItemPrefab) as GameObject;
-                (item.GetComponentInChildren(typeof(Text)) as Text).text = x;
-                toDos.Add(item);
-            });
+                  .Subscribe(x =>
+                  {
+                      ToDoInput.text = ""; // clear input field
+                      var item = Instantiate(SampleItemPrefab) as GameObject;
+                      (item.GetComponentInChildren(typeof(Text)) as Text).text = x;
+                      toDos.Add(item);
+                  });
+
             // Collection Change Handling
             toDos.ObserveCountChanged().Subscribe(x => Title.text = "TODO App, ItemCount:" + x);
             toDos.ObserveAdd().Subscribe(x =>
@@ -48,17 +50,17 @@ namespace UniRx.Examples
             {
                 GameObject.Destroy(x.Value);
             });
+
             // Clear
             ClearButton.OnClickAsObservable()
-            .Subscribe(_ =>
-            {
-                var removeTargets = toDos.Where(x => x.GetComponent<Toggle>().isOn).ToArray();
-
-                foreach (var item in removeTargets)
+                .Subscribe(_ =>
                 {
-                    toDos.Remove(item);
-                }
-            });
+                    var removeTargets = toDos.Where(x => x.GetComponent<Toggle>().isOn).ToArray();
+                    foreach (var item in removeTargets)
+                    {
+                        toDos.Remove(item);
+                    }
+                });
         }
     }
 }

@@ -49,6 +49,7 @@ namespace UniRx.Operators
             {
                 var l = parent.left.Subscribe(new LeftZipObserver(this));
                 var r = parent.right.Subscribe(new RightZipObserver(this));
+
                 return StableCompositeDisposable.Create(l, r, Disposable.Create(() =>
                 {
                     lock (gate)
@@ -75,7 +76,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
-
                     return;
                 }
                 else
@@ -91,7 +91,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 
@@ -146,8 +145,7 @@ namespace UniRx.Operators
                     lock (parent.gate)
                     {
                         parent.leftCompleted = true;
-
-                        if (parent.rightCompleted) { parent.OnCompleted(); }
+                        if (parent.rightCompleted) parent.OnCompleted();
                     }
                 }
             }
@@ -183,8 +181,7 @@ namespace UniRx.Operators
                     lock (parent.gate)
                     {
                         parent.rightCompleted = true;
-
-                        if (parent.leftCompleted) { parent.OnCompleted(); }
+                        if (parent.leftCompleted) parent.OnCompleted();
                     }
                 }
             }
@@ -233,7 +230,6 @@ namespace UniRx.Operators
                 }
 
                 var disposables = new IDisposable[length + 1];
-
                 for (int i = 0; i < length; i++)
                 {
                     var source = parent.sources[i];
@@ -251,6 +247,7 @@ namespace UniRx.Operators
                         }
                     }
                 });
+
                 return StableCompositeDisposable.CreateUnsafe(disposables);
             }
 
@@ -258,7 +255,6 @@ namespace UniRx.Operators
             void Dequeue(int index)
             {
                 var allQueueHasValue = true;
-
                 for (int i = 0; i < length; i++)
                 {
                     if (queues[i].Count == 0)
@@ -271,11 +267,9 @@ namespace UniRx.Operators
                 if (!allQueueHasValue)
                 {
                     var allCompletedWithoutSelf = true;
-
                     for (int i = 0; i < length; i++)
                     {
-                        if (i == index) { continue; }
-
+                        if (i == index) continue;
                         if (!isDone[i])
                         {
                             allCompletedWithoutSelf = false;
@@ -287,7 +281,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
-
                         return;
                     }
                     else
@@ -297,7 +290,6 @@ namespace UniRx.Operators
                 }
 
                 var array = new T[length];
-
                 for (int i = 0; i < length; i++)
                 {
                     array[i] = queues[i].Dequeue();
@@ -357,7 +349,6 @@ namespace UniRx.Operators
                     {
                         parent.isDone[index] = true;
                         var allTrue = true;
-
                         for (int i = 0; i < parent.length; i++)
                         {
                             if (!parent.isDone[i])
@@ -391,12 +382,12 @@ namespace UniRx.Operators
             IObservable<T1> source1,
             IObservable<T2> source2,
             IObservable<T3> source3,
-            ZipFunc<T1, T2, T3, TR> resultSelector)
+              ZipFunc<T1, T2, T3, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -429,13 +420,12 @@ namespace UniRx.Operators
                 var s1 = parent.source1.Subscribe(new ZipObserver<T1>(gate, this, 0, q1));
                 var s2 = parent.source2.Subscribe(new ZipObserver<T2>(gate, this, 1, q2));
                 var s3 = parent.source3.Subscribe(new ZipObserver<T3>(gate, this, 2, q3));
+
                 return StableCompositeDisposable.Create(s1, s2, s3, Disposable.Create(() =>
                 {
                     lock (gate)
                     {
-                        q1.Clear();
-                        q2.Clear();
-                        q3.Clear();
+                        q1.Clear(); q2.Clear(); q3.Clear();
                     }
                 }));
             }
@@ -478,13 +468,13 @@ namespace UniRx.Operators
             IObservable<T2> source2,
             IObservable<T3> source3,
             IObservable<T4> source4,
-            ZipFunc<T1, T2, T3, T4, TR> resultSelector)
+              ZipFunc<T1, T2, T3, T4, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -520,14 +510,12 @@ namespace UniRx.Operators
                 var s2 = parent.source2.Subscribe(new ZipObserver<T2>(gate, this, 1, q2));
                 var s3 = parent.source3.Subscribe(new ZipObserver<T3>(gate, this, 2, q3));
                 var s4 = parent.source4.Subscribe(new ZipObserver<T4>(gate, this, 3, q4));
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, Disposable.Create(() =>
                 {
                     lock (gate)
                     {
-                        q1.Clear();
-                        q2.Clear();
-                        q3.Clear();
-                        q4.Clear();
+                        q1.Clear(); q2.Clear(); q3.Clear(); q4.Clear();
                     }
                 }));
             }
@@ -572,14 +560,14 @@ namespace UniRx.Operators
             IObservable<T3> source3,
             IObservable<T4> source4,
             IObservable<T5> source5,
-            ZipFunc<T1, T2, T3, T4, T5, TR> resultSelector)
+              ZipFunc<T1, T2, T3, T4, T5, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -618,15 +606,12 @@ namespace UniRx.Operators
                 var s3 = parent.source3.Subscribe(new ZipObserver<T3>(gate, this, 2, q3));
                 var s4 = parent.source4.Subscribe(new ZipObserver<T4>(gate, this, 3, q4));
                 var s5 = parent.source5.Subscribe(new ZipObserver<T5>(gate, this, 4, q5));
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5, Disposable.Create(() =>
                 {
                     lock (gate)
                     {
-                        q1.Clear();
-                        q2.Clear();
-                        q3.Clear();
-                        q4.Clear();
-                        q5.Clear();
+                        q1.Clear(); q2.Clear(); q3.Clear(); q4.Clear(); q5.Clear();
                     }
                 }));
             }
@@ -673,15 +658,15 @@ namespace UniRx.Operators
             IObservable<T4> source4,
             IObservable<T5> source5,
             IObservable<T6> source6,
-            ZipFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
+              ZipFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  source6.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                source6.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -723,16 +708,12 @@ namespace UniRx.Operators
                 var s4 = parent.source4.Subscribe(new ZipObserver<T4>(gate, this, 3, q4));
                 var s5 = parent.source5.Subscribe(new ZipObserver<T5>(gate, this, 4, q5));
                 var s6 = parent.source6.Subscribe(new ZipObserver<T6>(gate, this, 5, q6));
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5, s6, Disposable.Create(() =>
                 {
                     lock (gate)
                     {
-                        q1.Clear();
-                        q2.Clear();
-                        q3.Clear();
-                        q4.Clear();
-                        q5.Clear();
-                        q6.Clear();
+                        q1.Clear(); q2.Clear(); q3.Clear(); q4.Clear(); q5.Clear(); q6.Clear();
                     }
                 }));
             }
@@ -781,16 +762,16 @@ namespace UniRx.Operators
             IObservable<T5> source5,
             IObservable<T6> source6,
             IObservable<T7> source7,
-            ZipFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
+              ZipFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  source6.IsRequiredSubscribeOnCurrentThread() ||
-                  source7.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                source6.IsRequiredSubscribeOnCurrentThread() ||
+                source7.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -835,17 +816,12 @@ namespace UniRx.Operators
                 var s5 = parent.source5.Subscribe(new ZipObserver<T5>(gate, this, 4, q5));
                 var s6 = parent.source6.Subscribe(new ZipObserver<T6>(gate, this, 5, q6));
                 var s7 = parent.source7.Subscribe(new ZipObserver<T7>(gate, this, 6, q7));
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5, s6, s7, Disposable.Create(() =>
                 {
                     lock (gate)
                     {
-                        q1.Clear();
-                        q2.Clear();
-                        q3.Clear();
-                        q4.Clear();
-                        q5.Clear();
-                        q6.Clear();
-                        q7.Clear();
+                        q1.Clear(); q2.Clear(); q3.Clear(); q4.Clear(); q5.Clear(); q6.Clear(); q7.Clear();
                     }
                 }));
             }
@@ -908,7 +884,6 @@ namespace UniRx.Operators
         public void Dequeue(int index)
         {
             var allQueueHasValue = true;
-
             for (int i = 0; i < length; i++)
             {
                 if (queues[i].Count == 0)
@@ -921,11 +896,9 @@ namespace UniRx.Operators
             if (!allQueueHasValue)
             {
                 var allCompletedWithoutSelf = true;
-
                 for (int i = 0; i < length; i++)
                 {
-                    if (i == index) { continue; }
-
+                    if (i == index) continue;
                     if (!isDone[i])
                     {
                         allCompletedWithoutSelf = false;
@@ -937,7 +910,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
-
                     return;
                 }
                 else
@@ -947,7 +919,6 @@ namespace UniRx.Operators
             }
 
             var result = default(T);
-
             try
             {
                 result = GetResult();
@@ -956,10 +927,8 @@ namespace UniRx.Operators
             {
                 try { observer.OnError(ex); }
                 finally { Dispose(); }
-
                 return;
             }
-
             OnNext(result);
         }
 
@@ -967,7 +936,6 @@ namespace UniRx.Operators
         {
             isDone[index] = true;
             var allTrue = true;
-
             for (int i = 0; i < length; i++)
             {
                 if (!isDone[i])

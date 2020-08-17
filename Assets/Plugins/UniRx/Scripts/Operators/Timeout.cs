@@ -9,7 +9,7 @@ namespace UniRx.Operators
         readonly DateTimeOffset? dueTimeDT;
         readonly IScheduler scheduler;
 
-        public TimeoutObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler)
+        public TimeoutObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler) 
             : base(scheduler == Scheduler.CurrentThread || source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
@@ -17,7 +17,7 @@ namespace UniRx.Operators
             this.scheduler = scheduler;
         }
 
-        public TimeoutObservable(IObservable<T> source, DateTimeOffset dueTime, IScheduler scheduler)
+        public TimeoutObservable(IObservable<T> source, DateTimeOffset dueTime, IScheduler scheduler) 
             : base(scheduler == Scheduler.CurrentThread || source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
@@ -57,6 +57,7 @@ namespace UniRx.Operators
                 timerSubscription = new SerialDisposable();
                 timerSubscription.Disposable = RunTimer(objectId);
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(timerSubscription, sourceSubscription);
             }
 
@@ -71,11 +72,9 @@ namespace UniRx.Operators
                             isTimeout = true;
                         }
                     }
-
                     if (isTimeout)
                     {
-                        try { observer.OnError(new TimeoutException()); }
-                        finally { Dispose(); }
+                        try { observer.OnError(new TimeoutException()); } finally { Dispose(); }
                     }
                 });
             }
@@ -84,15 +83,13 @@ namespace UniRx.Operators
             {
                 ulong useObjectId;
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                     useObjectId = objectId;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Disposable = Disposable.Empty; // cancel old timer
                 observer.OnNext(value);
@@ -102,37 +99,29 @@ namespace UniRx.Operators
             public override void OnError(Exception error)
             {
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Dispose();
-
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Dispose();
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -152,8 +141,10 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 sourceSubscription = new SingleAssignmentDisposable();
+
                 timerSubscription = parent.scheduler.Schedule(parent.dueTimeDT.Value, OnNext);
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(timerSubscription, sourceSubscription);
             }
 
@@ -162,22 +153,19 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (isFinished) { return; }
-
+                    if (isFinished) return;
                     isFinished = true;
                 }
 
                 sourceSubscription.Dispose();
-
-                try { observer.OnError(new TimeoutException()); }
-                finally { Dispose(); }
+                try { observer.OnError(new TimeoutException()); } finally { Dispose(); }
             }
 
             public override void OnNext(T value)
             {
                 lock (gate)
                 {
-                    if (!isFinished) { observer.OnNext(value); }
+                    if (!isFinished) observer.OnNext(value);
                 }
             }
 
@@ -185,18 +173,16 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (isFinished) { return; }
-
+                    if (isFinished) return;
                     isFinished = true;
                     timerSubscription.Dispose();
                 }
-
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
+
                 lock (gate)
                 {
                     if (!isFinished)
@@ -204,9 +190,7 @@ namespace UniRx.Operators
                         isFinished = true;
                         timerSubscription.Dispose();
                     }
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
         }

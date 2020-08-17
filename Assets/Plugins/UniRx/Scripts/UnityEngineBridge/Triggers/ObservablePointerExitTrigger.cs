@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            if (onPointerExit != null) { onPointerExit.OnNext(eventData); }
+            if (onPointerExit != null) onPointerExit.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerExitAsObservable()

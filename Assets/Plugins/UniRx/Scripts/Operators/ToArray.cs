@@ -35,39 +35,31 @@ namespace UniRx.Operators
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
             }
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 TSource[] result;
-
                 try
                 {
                     result = list.ToArray();
                 }
-                catch (Exception ex)
+                catch (Exception ex) 
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
 
                 base.observer.OnNext(result);
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }

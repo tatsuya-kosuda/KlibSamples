@@ -36,32 +36,26 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 var isPassed = false;
-
                 try
                 {
                     isPassed = parent.predicate(value);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
 
                 if (isPassed)
                 {
                     var v = default(TR);
-
                     try
                     {
                         v = parent.selector(value);
                     }
                     catch (Exception ex)
                     {
-                        try { observer.OnError(ex); }
-                        finally { Dispose(); }
-
+                        try { observer.OnError(ex); } finally { Dispose(); }
                         return;
                     }
 
@@ -71,14 +65,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

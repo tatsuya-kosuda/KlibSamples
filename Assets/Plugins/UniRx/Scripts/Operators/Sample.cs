@@ -42,9 +42,10 @@ namespace UniRx.Operators
             {
                 sourceSubscription = new SingleAssignmentDisposable();
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+
+
                 IDisposable scheduling;
                 var periodicScheduler = parent.scheduler as ISchedulerPeriodic;
-
                 if (periodicScheduler != null)
                 {
                     scheduling = periodicScheduler.SchedulePeriodic(parent.interval, OnNextTick);
@@ -67,11 +68,9 @@ namespace UniRx.Operators
                         isUpdated = false;
                         observer.OnNext(value);
                     }
-
                     if (isCompleted)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); }
+                        try { observer.OnCompleted(); } finally { Dispose(); }
                     }
                 }
             }
@@ -86,14 +85,11 @@ namespace UniRx.Operators
                         isUpdated = false;
                         observer.OnNext(value);
                     }
-
                     if (isCompleted)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); }
+                        try { observer.OnCompleted(); } finally { Dispose(); }
                     }
                 }
-
                 self(parent.interval);
             }
 
@@ -110,8 +106,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { base.observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { base.observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -163,7 +158,9 @@ namespace UniRx.Operators
             {
                 sourceSubscription = new SingleAssignmentDisposable();
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 var scheduling = this.parent.intervalSource.Subscribe(new SampleTick(this));
+
                 return StableCompositeDisposable.Create(sourceSubscription, scheduling);
             }
 
@@ -180,8 +177,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { base.observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { base.observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -212,11 +208,9 @@ namespace UniRx.Operators
                             parent.isUpdated = false;
                             parent.observer.OnNext(parent.latestValue);
                         }
-
                         if (parent.isCompleted)
                         {
-                            try { parent.observer.OnCompleted(); }
-                            finally { parent.Dispose(); }
+                            try { parent.observer.OnCompleted(); } finally { parent.Dispose(); }
                         }
                     }
                 }
@@ -235,11 +229,9 @@ namespace UniRx.Operators
                             parent.isUpdated = false;
                             parent.observer.OnNext(value);
                         }
-
                         if (parent.isCompleted)
                         {
-                            try { parent.observer.OnCompleted(); }
-                            finally { parent.Dispose(); }
+                            try { parent.observer.OnCompleted(); } finally { parent.Dispose(); }
                         }
                     }
                 }

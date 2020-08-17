@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
-            if (onDrop != null) { onDrop.OnNext(eventData); }
+            if (onDrop != null) onDrop.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnDropAsObservable()

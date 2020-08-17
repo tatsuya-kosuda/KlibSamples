@@ -1,9 +1,9 @@
 ﻿using System;
 
 #if UniRxLibrary
-    using UnityObservable = UniRx.ObservableUnity;
+using UnityObservable = UniRx.ObservableUnity;
 #else
-    using UnityObservable = UniRx.Observable;
+using UnityObservable = UniRx.Observable;
 #endif
 
 namespace UniRx.Operators
@@ -44,13 +44,13 @@ namespace UniRx.Operators
             {
                 cancelable = new SerialDisposable();
                 var subscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(cancelable, subscription);
             }
 
             public override void OnNext(T value)
             {
                 ulong currentid;
-
                 lock (gate)
                 {
                     hasValue = true;
@@ -62,7 +62,7 @@ namespace UniRx.Operators
                 var d = new SingleAssignmentDisposable();
                 cancelable.Disposable = d;
                 d.Disposable = UnityObservable.TimerFrame(parent.frameCount, parent.frameCountType)
-                               .Subscribe(new ThrottleFrameTick(this, currentid));
+                    .Subscribe(new ThrottleFrameTick(this, currentid));
             }
 
             public override void OnError(Exception error)
@@ -73,9 +73,7 @@ namespace UniRx.Operators
                 {
                     hasValue = false;
                     id = unchecked(id + 1);
-
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -89,12 +87,9 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(latestValue);
                     }
-
                     hasValue = false;
                     id = unchecked(id + 1);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 
@@ -125,7 +120,6 @@ namespace UniRx.Operators
                         {
                             parent.observer.OnNext(parent.latestValue);
                         }
-
                         parent.hasValue = false;
                     }
                 }

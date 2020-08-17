@@ -32,7 +32,6 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 var e = default(IEnumerator<T>);
-
                 try
                 {
                     e = parent.source.GetEnumerator();
@@ -49,20 +48,16 @@ namespace UniRx.Operators
                     {
                         bool hasNext;
                         var current = default(T);
-
                         try
                         {
                             hasNext = e.MoveNext();
-
-                            if (hasNext) { current = e.Current; }
+                            if (hasNext) current = e.Current;
                         }
                         catch (Exception ex)
                         {
                             e.Dispose();
-
                             try { observer.OnError(ex); }
                             finally { Dispose(); }
-
                             break;
                         }
 
@@ -73,10 +68,8 @@ namespace UniRx.Operators
                         else
                         {
                             e.Dispose();
-
                             try { observer.OnCompleted(); }
                             finally { Dispose(); }
-
                             break;
                         }
                     }
@@ -95,20 +88,16 @@ namespace UniRx.Operators
 
                     bool hasNext;
                     var current = default(T);
-
                     try
                     {
                         hasNext = e.MoveNext();
-
-                        if (hasNext) { current = e.Current; }
+                        if (hasNext) current = e.Current;
                     }
                     catch (Exception ex)
                     {
                         e.Dispose();
-
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
 
@@ -120,11 +109,11 @@ namespace UniRx.Operators
                     else
                     {
                         e.Dispose();
-
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
                     }
                 });
+
                 return flag;
             }
 

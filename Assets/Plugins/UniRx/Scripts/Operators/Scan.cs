@@ -49,7 +49,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
                 }
@@ -118,7 +117,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 

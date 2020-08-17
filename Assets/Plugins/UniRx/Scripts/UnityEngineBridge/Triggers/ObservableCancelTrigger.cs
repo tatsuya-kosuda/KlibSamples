@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void ICancelHandler.OnCancel(BaseEventData eventData)
         {
-            if (onCancel != null) { onCancel.OnNext(eventData); }
+            if (onCancel != null) onCancel.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnCancelAsObservable()

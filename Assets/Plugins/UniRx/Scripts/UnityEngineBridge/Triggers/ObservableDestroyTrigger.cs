@@ -33,9 +33,7 @@ namespace UniRx.Triggers
             if (!calledDestroy)
             {
                 calledDestroy = true;
-
-                if (disposablesOnDestroy != null) { disposablesOnDestroy.Dispose(); }
-
+                if (disposablesOnDestroy != null) disposablesOnDestroy.Dispose();
                 if (onDestroy != null) { onDestroy.OnNext(Unit.Default); onDestroy.OnCompleted(); }
             }
         }
@@ -43,10 +41,8 @@ namespace UniRx.Triggers
         /// <summary>This function is called when the MonoBehaviour will be destroyed.</summary>
         public IObservable<Unit> OnDestroyAsObservable()
         {
-            if (this == null) { return Observable.Return(Unit.Default); }
-
-            if (calledDestroy) { return Observable.Return(Unit.Default); }
-
+            if (this == null) return Observable.Return(Unit.Default);
+            if (calledDestroy) return Observable.Return(Unit.Default);
             return onDestroy ?? (onDestroy = new Subject<Unit>());
         }
 
@@ -64,8 +60,7 @@ namespace UniRx.Triggers
                 return;
             }
 
-            if (disposablesOnDestroy == null) { disposablesOnDestroy = new CompositeDisposable(); }
-
+            if (disposablesOnDestroy == null) disposablesOnDestroy = new CompositeDisposable();
             disposablesOnDestroy.Add(disposable);
         }
     }

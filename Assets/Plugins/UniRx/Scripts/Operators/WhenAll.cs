@@ -29,12 +29,10 @@ namespace UniRx.Operators
             else
             {
                 var xs = sourcesEnumerable as IList<IObservable<T>>;
-
                 if (xs == null)
                 {
                     xs = new List<IObservable<T>>(sourcesEnumerable); // materialize observables
                 }
-
                 return new WhenAll_(xs, observer, cancel).Run();
             }
         }
@@ -61,17 +59,14 @@ namespace UniRx.Operators
                 if (length == 0)
                 {
                     OnNext(new T[0]);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
-
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                     return Disposable.Empty;
                 }
 
                 completedCount = 0;
                 values = new T[length];
-                var subscriptions = new IDisposable[length];
 
+                var subscriptions = new IDisposable[length];
                 for (int index = 0; index < length; index++)
                 {
                     var source = sources[index];
@@ -89,14 +84,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class WhenAllCollectionObserver : IObserver<T>
@@ -141,7 +134,6 @@ namespace UniRx.Operators
                         {
                             isCompleted = true;
                             parent.completedCount++;
-
                             if (parent.completedCount == parent.length)
                             {
                                 parent.OnNext(parent.values);
@@ -175,17 +167,14 @@ namespace UniRx.Operators
                 if (length == 0)
                 {
                     OnNext(new T[0]);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
-
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                     return Disposable.Empty;
                 }
 
                 completedCount = 0;
                 values = new T[length];
-                var subscriptions = new IDisposable[length];
 
+                var subscriptions = new IDisposable[length];
                 for (int index = 0; index < length; index++)
                 {
                     var source = sources[index];
@@ -203,14 +192,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class WhenAllCollectionObserver : IObserver<T>
@@ -255,7 +242,6 @@ namespace UniRx.Operators
                         {
                             isCompleted = true;
                             parent.completedCount++;
-
                             if (parent.completedCount == parent.length)
                             {
                                 parent.OnNext(parent.values);
@@ -294,12 +280,10 @@ namespace UniRx.Operators
             else
             {
                 var xs = sourcesEnumerable as IList<IObservable<Unit>>;
-
                 if (xs == null)
                 {
                     xs = new List<IObservable<Unit>>(sourcesEnumerable); // materialize observables
                 }
-
                 return new WhenAll_(xs, observer, cancel).Run();
             }
         }
@@ -325,16 +309,13 @@ namespace UniRx.Operators
                 if (length == 0)
                 {
                     OnNext(Unit.Default);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
-
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                     return Disposable.Empty;
                 }
 
                 completedCount = 0;
-                var subscriptions = new IDisposable[length];
 
+                var subscriptions = new IDisposable[length];
                 for (int index = 0; index < sources.Length; index++)
                 {
                     var source = sources[index];
@@ -352,14 +333,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class WhenAllCollectionObserver : IObserver<Unit>
@@ -395,7 +374,6 @@ namespace UniRx.Operators
                         {
                             isCompleted = true;
                             parent.completedCount++;
-
                             if (parent.completedCount == parent.length)
                             {
                                 parent.OnNext(Unit.Default);
@@ -428,16 +406,13 @@ namespace UniRx.Operators
                 if (length == 0)
                 {
                     OnNext(Unit.Default);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
-
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                     return Disposable.Empty;
                 }
 
                 completedCount = 0;
-                var subscriptions = new IDisposable[length];
 
+                var subscriptions = new IDisposable[length];
                 for (int index = 0; index < length; index++)
                 {
                     var source = sources[index];
@@ -455,14 +430,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class WhenAllCollectionObserver : IObserver<Unit>
@@ -498,7 +471,6 @@ namespace UniRx.Operators
                         {
                             isCompleted = true;
                             parent.completedCount++;
-
                             if (parent.completedCount == parent.length)
                             {
                                 parent.OnNext(Unit.Default);

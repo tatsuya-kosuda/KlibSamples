@@ -32,7 +32,7 @@ namespace UniRx
         public CompositeDisposable(int capacity)
         {
             if (capacity < 0)
-            { throw new ArgumentOutOfRangeException("capacity"); }
+                throw new ArgumentOutOfRangeException("capacity");
 
             _disposables = new List<IDisposable>(capacity);
         }
@@ -45,7 +45,7 @@ namespace UniRx
         public CompositeDisposable(params IDisposable[] disposables)
         {
             if (disposables == null)
-            { throw new ArgumentNullException("disposables"); }
+                throw new ArgumentNullException("disposables");
 
             _disposables = new List<IDisposable>(disposables);
             _count = _disposables.Count;
@@ -59,7 +59,7 @@ namespace UniRx
         public CompositeDisposable(IEnumerable<IDisposable> disposables)
         {
             if (disposables == null)
-            { throw new ArgumentNullException("disposables"); }
+                throw new ArgumentNullException("disposables");
 
             _disposables = new List<IDisposable>(disposables);
             _count = _disposables.Count;
@@ -84,23 +84,20 @@ namespace UniRx
         public void Add(IDisposable item)
         {
             if (item == null)
-            { throw new ArgumentNullException("item"); }
+                throw new ArgumentNullException("item");
 
             var shouldDispose = false;
-
             lock (_gate)
             {
                 shouldDispose = _disposed;
-
                 if (!_disposed)
                 {
                     _disposables.Add(item);
                     _count++;
                 }
             }
-
             if (shouldDispose)
-            { item.Dispose(); }
+                item.Dispose();
         }
 
         /// <summary>
@@ -112,7 +109,7 @@ namespace UniRx
         public bool Remove(IDisposable item)
         {
             if (item == null)
-            { throw new ArgumentNullException("item"); }
+                throw new ArgumentNullException("item");
 
             var shouldDispose = false;
 
@@ -128,7 +125,6 @@ namespace UniRx
                     // do manual Swiss cheese detection to shrink the list if there's a lot of holes in it.
                     //
                     var i = _disposables.IndexOf(item);
-
                     if (i >= 0)
                     {
                         shouldDispose = true;
@@ -142,14 +138,14 @@ namespace UniRx
 
                             foreach (var d in old)
                                 if (d != null)
-                                { _disposables.Add(d); }
+                                    _disposables.Add(d);
                         }
                     }
                 }
             }
 
             if (shouldDispose)
-            { item.Dispose(); }
+                item.Dispose();
 
             return shouldDispose;
         }
@@ -160,7 +156,6 @@ namespace UniRx
         public void Dispose()
         {
             var currentDisposables = default(IDisposable[]);
-
             lock (_gate)
             {
                 if (!_disposed)
@@ -176,7 +171,7 @@ namespace UniRx
             {
                 foreach (var d in currentDisposables)
                     if (d != null)
-                    { d.Dispose(); }
+                        d.Dispose();
             }
         }
 
@@ -186,7 +181,6 @@ namespace UniRx
         public void Clear()
         {
             var currentDisposables = default(IDisposable[]);
-
             lock (_gate)
             {
                 currentDisposables = _disposables.ToArray();
@@ -196,7 +190,7 @@ namespace UniRx
 
             foreach (var d in currentDisposables)
                 if (d != null)
-                { d.Dispose(); }
+                    d.Dispose();
         }
 
         /// <summary>
@@ -208,7 +202,7 @@ namespace UniRx
         public bool Contains(IDisposable item)
         {
             if (item == null)
-            { throw new ArgumentNullException("item"); }
+                throw new ArgumentNullException("item");
 
             lock (_gate)
             {
@@ -226,18 +220,16 @@ namespace UniRx
         public void CopyTo(IDisposable[] array, int arrayIndex)
         {
             if (array == null)
-            { throw new ArgumentNullException("array"); }
-
+                throw new ArgumentNullException("array");
             if (arrayIndex < 0 || arrayIndex >= array.Length)
-            { throw new ArgumentOutOfRangeException("arrayIndex"); }
+                throw new ArgumentOutOfRangeException("arrayIndex");
 
             lock (_gate)
             {
                 var disArray = new List<IDisposable>();
-
                 foreach (var item in _disposables)
                 {
-                    if (item != null) { disArray.Add(item); }
+                    if (item != null) disArray.Add(item);
                 }
 
                 Array.Copy(disArray.ToArray(), 0, array, arrayIndex, array.Length - arrayIndex);
@@ -264,7 +256,7 @@ namespace UniRx
             {
                 foreach (var d in _disposables)
                 {
-                    if (d != null) { res.Add(d); }
+                    if (d != null) res.Add(d);
                 }
             }
 

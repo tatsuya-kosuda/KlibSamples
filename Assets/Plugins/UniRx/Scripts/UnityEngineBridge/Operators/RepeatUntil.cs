@@ -51,6 +51,7 @@ namespace UniRx.Operators
                 e = parent.sources.GetEnumerator();
                 subscription = new SerialDisposable();
                 schedule = new SingleAssignmentDisposable();
+
                 stopper = parent.trigger.Subscribe(_ =>
                 {
                     lock (gate)
@@ -62,7 +63,9 @@ namespace UniRx.Operators
                         observer.OnCompleted();
                     }
                 }, observer.OnError);
+
                 schedule.Disposable = Scheduler.CurrentThread.Schedule(RecursiveRun);
+
                 return new CompositeDisposable(schedule, subscription, stopper, Disposable.Create(() =>
                 {
                     lock (gate)
@@ -78,10 +81,8 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     this.nextSelf = self;
-
-                    if (isDisposed) { return; }
-
-                    if (isStopped) { return; }
+                    if (isDisposed) return;
+                    if (isStopped) return;
 
                     var current = default(IObservable<T>);
                     var hasNext = false;
@@ -90,12 +91,10 @@ namespace UniRx.Operators
                     try
                     {
                         hasNext = e.MoveNext();
-
                         if (hasNext)
                         {
                             current = e.Current;
-
-                            if (current == null) { throw new InvalidOperationException("sequence is null."); }
+                            if (current == null) throw new InvalidOperationException("sequence is null.");
                         }
                         else
                         {
@@ -141,7 +140,6 @@ namespace UniRx.Operators
             static IEnumerator SubscribeAfterEndOfFrame(SingleAssignmentDisposable d, IObservable<T> source, IObserver<T> observer, GameObject lifeTimeChecker)
             {
                 yield return YieldInstructionCache.WaitForEndOfFrame;
-
                 if (!d.IsDisposed && lifeTimeChecker != null)
                 {
                     d.Disposable = source.Subscribe(observer);
@@ -168,7 +166,6 @@ namespace UniRx.Operators
                 else
                 {
                     e.Dispose();
-
                     if (!isDisposed)
                     {
                         try { observer.OnCompleted(); }

@@ -82,6 +82,7 @@ namespace UniRx.Operators
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.source.Subscribe(this);
                 return collectionDisposable;
             }
@@ -89,16 +90,13 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IObservable<TResult> nextObservable;
-
                 try
                 {
                     nextObservable = parent.selector(value);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
 
@@ -112,21 +110,18 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
             public override void OnCompleted()
             {
                 isStopped = true;
-
                 if (collectionDisposable.Count == 1)
                 {
                     lock (gate)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
                 else
@@ -159,21 +154,18 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     if (parent.isStopped && parent.collectionDisposable.Count == 1)
                     {
                         lock (parent.gate)
                         {
-                            try { observer.OnCompleted(); }
-                            finally { Dispose(); };
+                            try { observer.OnCompleted(); } finally { Dispose(); };
                         }
                     }
                 }
@@ -200,6 +192,7 @@ namespace UniRx.Operators
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.source.Subscribe(this);
                 return collectionDisposable;
             }
@@ -207,16 +200,13 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IObservable<TResult> nextObservable;
-
                 try
                 {
                     nextObservable = parent.selectorWithIndex(value, index++);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
 
@@ -230,21 +220,18 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
             public override void OnCompleted()
             {
                 isStopped = true;
-
                 if (collectionDisposable.Count == 1)
                 {
                     lock (gate)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
                 else
@@ -277,21 +264,18 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     if (parent.isStopped && parent.collectionDisposable.Count == 1)
                     {
                         lock (parent.gate)
                         {
-                            try { observer.OnCompleted(); }
-                            finally { Dispose(); };
+                            try { observer.OnCompleted(); } finally { Dispose(); };
                         }
                     }
                 }
@@ -315,25 +299,20 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IEnumerable<TResult> nextEnumerable;
-
                 try
                 {
                     nextEnumerable = parent.selectorEnumerable(value);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
 
                 var e = nextEnumerable.GetEnumerator();
-
                 try
                 {
                     var hasNext = true;
-
                     while (hasNext)
                     {
                         hasNext = false;
@@ -342,7 +321,6 @@ namespace UniRx.Operators
                         try
                         {
                             hasNext = e.MoveNext();
-
                             if (hasNext)
                             {
                                 current = e.Current;
@@ -350,9 +328,7 @@ namespace UniRx.Operators
                         }
                         catch (Exception exception)
                         {
-                            try { observer.OnError(exception); }
-                            finally { Dispose(); }
-
+                            try { observer.OnError(exception); } finally { Dispose(); }
                             return;
                         }
 
@@ -373,14 +349,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -402,7 +376,6 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IEnumerable<TResult> nextEnumerable;
-
                 try
                 {
                     nextEnumerable = parent.selectorEnumerableWithIndex(value, index++);
@@ -414,11 +387,9 @@ namespace UniRx.Operators
                 }
 
                 var e = nextEnumerable.GetEnumerator();
-
                 try
                 {
                     var hasNext = true;
-
                     while (hasNext)
                     {
                         hasNext = false;
@@ -427,7 +398,6 @@ namespace UniRx.Operators
                         try
                         {
                             hasNext = e.MoveNext();
-
                             if (hasNext)
                             {
                                 current = e.Current;
@@ -435,9 +405,7 @@ namespace UniRx.Operators
                         }
                         catch (Exception exception)
                         {
-                            try { observer.OnError(exception); }
-                            finally { Dispose(); }
-
+                            try { observer.OnError(exception); } finally { Dispose(); }
                             return;
                         }
 
@@ -458,14 +426,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -556,6 +522,7 @@ namespace UniRx.Operators
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.source.Subscribe(this);
                 return collectionDisposable;
             }
@@ -563,7 +530,6 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IObservable<TCollection> nextObservable;
-
                 try
                 {
                     nextObservable = parent.collectionSelector(value);
@@ -584,21 +550,18 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
             public override void OnCompleted()
             {
                 isStopped = true;
-
                 if (collectionDisposable.Count == 1)
                 {
                     lock (gate)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
                 else
@@ -624,7 +587,6 @@ namespace UniRx.Operators
                 public override void OnNext(TCollection value)
                 {
                     TResult resultValue;
-
                     try
                     {
                         resultValue = parent.parent.resultSelector(sourceValue, value);
@@ -645,21 +607,18 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     if (parent.isStopped && parent.collectionDisposable.Count == 1)
                     {
                         lock (parent.gate)
                         {
-                            try { observer.OnCompleted(); }
-                            finally { Dispose(); };
+                            try { observer.OnCompleted(); } finally { Dispose(); };
                         }
                     }
                 }
@@ -686,6 +645,7 @@ namespace UniRx.Operators
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.source.Subscribe(this);
                 return collectionDisposable;
             }
@@ -694,7 +654,6 @@ namespace UniRx.Operators
             {
                 var i = index++;
                 IObservable<TCollection> nextObservable;
-
                 try
                 {
                     nextObservable = parent.collectionSelectorWithIndex(value, i);
@@ -715,21 +674,18 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
             public override void OnCompleted()
             {
                 isStopped = true;
-
                 if (collectionDisposable.Count == 1)
                 {
                     lock (gate)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
                 else
@@ -758,16 +714,13 @@ namespace UniRx.Operators
                 public override void OnNext(TCollection value)
                 {
                     TResult resultValue;
-
                     try
                     {
                         resultValue = parent.parent.resultSelectorWithIndex(sourceValue, sourceIndex, value, index++);
                     }
                     catch (Exception ex)
                     {
-                        try { observer.OnError(ex); }
-                        finally { Dispose(); };
-
+                        try { observer.OnError(ex); } finally { Dispose(); };
                         return;
                     }
 
@@ -781,21 +734,18 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     if (parent.isStopped && parent.collectionDisposable.Count == 1)
                     {
                         lock (parent.gate)
                         {
-                            try { observer.OnCompleted(); }
-                            finally { Dispose(); };
+                            try { observer.OnCompleted(); } finally { Dispose(); };
                         }
                     }
                 }
@@ -819,25 +769,20 @@ namespace UniRx.Operators
             public override void OnNext(TSource value)
             {
                 IEnumerable<TCollection> nextEnumerable;
-
                 try
                 {
                     nextEnumerable = parent.collectionSelectorEnumerable(value);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
 
                 var e = nextEnumerable.GetEnumerator();
-
                 try
                 {
                     var hasNext = true;
-
                     while (hasNext)
                     {
                         hasNext = false;
@@ -846,7 +791,6 @@ namespace UniRx.Operators
                         try
                         {
                             hasNext = e.MoveNext();
-
                             if (hasNext)
                             {
                                 current = parent.resultSelector(value, e.Current);
@@ -854,9 +798,7 @@ namespace UniRx.Operators
                         }
                         catch (Exception exception)
                         {
-                            try { observer.OnError(exception); }
-                            finally { Dispose(); }
-
+                            try { observer.OnError(exception); } finally { Dispose(); }
                             return;
                         }
 
@@ -877,14 +819,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -907,26 +847,21 @@ namespace UniRx.Operators
             {
                 var i = index++;
                 IEnumerable<TCollection> nextEnumerable;
-
                 try
                 {
                     nextEnumerable = parent.collectionSelectorEnumerableWithIndex(value, i);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
 
                 var e = nextEnumerable.GetEnumerator();
-
                 try
                 {
                     var sequenceI = 0;
                     var hasNext = true;
-
                     while (hasNext)
                     {
                         hasNext = false;
@@ -935,7 +870,6 @@ namespace UniRx.Operators
                         try
                         {
                             hasNext = e.MoveNext();
-
                             if (hasNext)
                             {
                                 current = parent.resultSelectorWithIndex(value, i, e.Current, sequenceI++);
@@ -943,9 +877,7 @@ namespace UniRx.Operators
                         }
                         catch (Exception exception)
                         {
-                            try { observer.OnError(exception); }
-                            finally { Dispose(); }
-
+                            try { observer.OnError(exception); } finally { Dispose(); }
                             return;
                         }
 
@@ -966,14 +898,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

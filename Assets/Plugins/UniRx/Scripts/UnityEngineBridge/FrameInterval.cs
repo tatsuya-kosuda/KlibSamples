@@ -82,7 +82,7 @@ namespace UniRx
         public override bool Equals(object obj)
         {
             if (!(obj is FrameInterval<T>))
-            { return false; }
+                return false;
 
             var other = (FrameInterval<T>)obj;
             return this.Equals(other);
@@ -95,6 +95,7 @@ namespace UniRx
         public override int GetHashCode()
         {
             var valueHashCode = Value == null ? 1963 : Value.GetHashCode();
+
             return Interval.GetHashCode() ^ valueHashCode;
         }
 

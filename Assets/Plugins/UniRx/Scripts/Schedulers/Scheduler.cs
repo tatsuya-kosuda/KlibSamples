@@ -118,6 +118,7 @@ namespace UniRx
             // InvokeRec1
             var group = new CompositeDisposable(1);
             var gate = new object();
+
             Action recursiveAction = null;
             recursiveAction = () => action(() =>
             {
@@ -129,11 +130,10 @@ namespace UniRx
                     lock (gate)
                     {
                         if (isAdded)
-                        { group.Remove(d); }
+                            group.Remove(d);
                         else
-                        { isDone = true; }
+                            isDone = true;
                     }
-
                     recursiveAction();
                 });
 
@@ -146,15 +146,19 @@ namespace UniRx
                     }
                 }
             });
+
             group.Add(scheduler.Schedule(recursiveAction));
+
             return group;
         }
 
         public static IDisposable Schedule(this IScheduler scheduler, TimeSpan dueTime, Action<Action<TimeSpan>> action)
         {
             // InvokeRec2
+
             var group = new CompositeDisposable(1);
             var gate = new object();
+
             Action recursiveAction = null;
             recursiveAction = () => action(dt =>
             {
@@ -166,11 +170,10 @@ namespace UniRx
                     lock (gate)
                     {
                         if (isAdded)
-                        { group.Remove(d); }
+                            group.Remove(d);
                         else
-                        { isDone = true; }
+                            isDone = true;
                     }
-
                     recursiveAction();
                 });
 
@@ -183,15 +186,19 @@ namespace UniRx
                     }
                 }
             });
+
             group.Add(scheduler.Schedule(dueTime, recursiveAction));
+
             return group;
         }
 
         public static IDisposable Schedule(this IScheduler scheduler, DateTimeOffset dueTime, Action<Action<DateTimeOffset>> action)
         {
             // InvokeRec3
+
             var group = new CompositeDisposable(1);
             var gate = new object();
+
             Action recursiveAction = null;
             recursiveAction = () => action(dt =>
             {
@@ -203,11 +210,10 @@ namespace UniRx
                     lock (gate)
                     {
                         if (isAdded)
-                        { group.Remove(d); }
+                            group.Remove(d);
                         else
-                        { isDone = true; }
+                            isDone = true;
                     }
-
                     recursiveAction();
                 });
 
@@ -220,7 +226,9 @@ namespace UniRx
                     }
                 }
             });
+
             group.Add(scheduler.Schedule(dueTime, recursiveAction));
+
             return group;
         }
     }

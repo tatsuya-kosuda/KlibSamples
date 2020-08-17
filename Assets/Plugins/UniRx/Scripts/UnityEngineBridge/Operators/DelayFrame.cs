@@ -46,9 +46,11 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 cancelationToken = new BooleanDisposable();
+
                 var _sourceSubscription = new SingleAssignmentDisposable();
                 sourceSubscription = _sourceSubscription;
                 _sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(cancelationToken, sourceSubscription);
             }
 
@@ -71,7 +73,7 @@ namespace UniRx.Operators
                     {
                         while (q.Count > 0 && !hasError)
                         {
-                            if (cancelationToken.IsDisposed) { break; }
+                            if (cancelationToken.IsDisposed) break;
 
                             lock (gate)
                             {
@@ -99,8 +101,7 @@ namespace UniRx.Operators
                         {
                             cancelationToken.Dispose();
 
-                            try { observer.OnError(error); }
-                            finally { Dispose(); }
+                            try { observer.OnError(error); } finally { Dispose(); }
                         }
                     }
                     else if (calledCompleted)
@@ -108,7 +109,7 @@ namespace UniRx.Operators
                         lock (gate)
                         {
                             // not self only
-                            if (runningEnumeratorCount != 1) { yield break; }
+                            if (runningEnumeratorCount != 1) yield break;
                         }
 
                         if (!cancelationToken.IsDisposed)
@@ -131,10 +132,9 @@ namespace UniRx.Operators
 
             public override void OnNext(T value)
             {
-                if (cancelationToken.IsDisposed) { return; }
+                if (cancelationToken.IsDisposed) return;
 
                 Queue<T> targetQueue = null;
-
                 lock (gate)
                 {
                     if (!readyDrainEnumerator)
@@ -150,7 +150,6 @@ namespace UniRx.Operators
                         {
                             currentQueueReference.Enqueue(value);
                         }
-
                         return;
                     }
                 }
@@ -160,15 +159,12 @@ namespace UniRx.Operators
                     case FrameCountType.Update:
                         MainThreadDispatcher.StartUpdateMicroCoroutine(DrainQueue(targetQueue, parent.frameCount));
                         break;
-
                     case FrameCountType.FixedUpdate:
                         MainThreadDispatcher.StartFixedUpdateMicroCoroutine(DrainQueue(targetQueue, parent.frameCount));
                         break;
-
                     case FrameCountType.EndOfFrame:
                         MainThreadDispatcher.StartEndOfFrameMicroCoroutine(DrainQueue(targetQueue, parent.frameCount));
                         break;
-
                     default:
                         throw new ArgumentException("Invalid FrameCountType:" + parent.frameCountType);
                 }
@@ -178,7 +174,7 @@ namespace UniRx.Operators
             {
                 sourceSubscription.Dispose(); // stop subscription
 
-                if (cancelationToken.IsDisposed) { return; }
+                if (cancelationToken.IsDisposed) return;
 
                 lock (gate)
                 {
@@ -191,16 +187,14 @@ namespace UniRx.Operators
                 }
 
                 cancelationToken.Dispose();
-
-                try { base.observer.OnError(error); }
-                finally { Dispose(); }
+                try { base.observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 sourceSubscription.Dispose(); // stop subscription
 
-                if (cancelationToken.IsDisposed) { return; }
+                if (cancelationToken.IsDisposed) return;
 
                 lock (gate)
                 {
@@ -222,15 +216,12 @@ namespace UniRx.Operators
                     case FrameCountType.Update:
                         MainThreadDispatcher.StartUpdateMicroCoroutine(DrainQueue(null, parent.frameCount));
                         break;
-
                     case FrameCountType.FixedUpdate:
                         MainThreadDispatcher.StartFixedUpdateMicroCoroutine(DrainQueue(null, parent.frameCount));
                         break;
-
                     case FrameCountType.EndOfFrame:
                         MainThreadDispatcher.StartEndOfFrameMicroCoroutine(DrainQueue(null, parent.frameCount));
                         break;
-
                     default:
                         throw new ArgumentException("Invalid FrameCountType:" + parent.frameCountType);
                 }

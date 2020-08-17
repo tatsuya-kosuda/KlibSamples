@@ -10,7 +10,7 @@ namespace UniRx
     {
         /// <summary>Dispose self on target gameObject has been destroyed. Return value is self disposable.</summary>
         public static T AddTo<T>(this T disposable, GameObject gameObject)
-        where T : IDisposable
+            where T : IDisposable
         {
             if (gameObject == null)
             {
@@ -19,7 +19,6 @@ namespace UniRx
             }
 
             var trigger = gameObject.GetComponent<ObservableDestroyTrigger>();
-
             if (trigger == null)
             {
                 trigger = gameObject.AddComponent<ObservableDestroyTrigger>();
@@ -35,6 +34,7 @@ namespace UniRx
             }
 
 #pragma warning restore 618
+
             trigger.AddDisposableOnDestroy(disposable);
             return disposable;
         }
@@ -44,8 +44,7 @@ namespace UniRx
             while (true)
             {
                 yield return null;
-
-                if (trigger.IsActivated) { yield break; }
+                if (trigger.IsActivated) yield break;
 
                 if (targetGameObject == null) // isDestroy
                 {
@@ -57,7 +56,7 @@ namespace UniRx
 
         /// <summary>Dispose self on target gameObject has been destroyed. Return value is self disposable.</summary>
         public static T AddTo<T>(this T disposable, Component gameObjectComponent)
-        where T : IDisposable
+            where T : IDisposable
         {
             if (gameObjectComponent == null)
             {
@@ -73,7 +72,7 @@ namespace UniRx
         /// <para>Return value is self disposable.</para>
         /// </summary>
         public static T AddTo<T>(this T disposable, ICollection<IDisposable> container, GameObject gameObject)
-        where T : IDisposable
+            where T : IDisposable
         {
             return disposable.AddTo(container).AddTo(gameObject);
         }
@@ -83,7 +82,7 @@ namespace UniRx
         /// <para>Return value is self disposable.</para>
         /// </summary>
         public static T AddTo<T>(this T disposable, ICollection<IDisposable> container, Component gameObjectComponent)
-        where T : IDisposable
+            where T : IDisposable
         {
             return disposable.AddTo(container).AddTo(gameObjectComponent);
         }

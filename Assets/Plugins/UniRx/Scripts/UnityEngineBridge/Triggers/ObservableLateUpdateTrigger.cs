@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>LateUpdate is called every frame, if the Behaviour is enabled.</summary>
         void LateUpdate()
         {
-            if (lateUpdate != null) { lateUpdate.OnNext(Unit.Default); }
+            if (lateUpdate != null) lateUpdate.OnNext(Unit.Default);
         }
 
         /// <summary>LateUpdate is called every frame, if the Behaviour is enabled.</summary>

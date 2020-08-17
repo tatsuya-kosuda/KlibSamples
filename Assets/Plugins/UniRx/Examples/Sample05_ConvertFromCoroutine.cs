@@ -3,7 +3,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 #if UNITY_2018_3_OR_NEWER
-    #pragma warning disable CS0618
+#pragma warning disable CS0618
 #endif
 
 namespace UniRx.Examples
@@ -21,13 +21,12 @@ namespace UniRx.Examples
         static IEnumerator GetWWWCore(string url, IObserver<string> observer, CancellationToken cancellationToken)
         {
             var www = new UnityEngine.WWW(url);
-
             while (!www.isDone && !cancellationToken.IsCancellationRequested)
             {
                 yield return null;
             }
 
-            if (cancellationToken.IsCancellationRequested) { yield break; }
+            if (cancellationToken.IsCancellationRequested) yield break;
 
             if (www.error != null)
             {
@@ -42,5 +41,5 @@ namespace UniRx.Examples
     }
 }
 #if UNITY_2018_3_OR_NEWER
-    #pragma warning restore CS0618
+#pragma warning restore CS0618
 #endif

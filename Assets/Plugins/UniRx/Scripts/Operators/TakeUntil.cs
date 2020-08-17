@@ -34,7 +34,9 @@ namespace UniRx.Operators
                 var otherSubscription = new SingleAssignmentDisposable();
                 var otherObserver = new TakeUntilOther(this, otherSubscription);
                 otherSubscription.Disposable = parent.other.Subscribe(otherObserver);
+
                 var sourceSubscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(otherSubscription, sourceSubscription);
             }
 
@@ -50,8 +52,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -59,8 +60,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 

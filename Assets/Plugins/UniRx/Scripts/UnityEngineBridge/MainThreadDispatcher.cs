@@ -1,5 +1,5 @@
 #if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
-    #define SupportCustomYieldInstruction
+#define SupportCustomYieldInstruction
 #endif
 
 using System;
@@ -111,7 +111,6 @@ namespace UniRx
                 if (routine.MoveNext())
                 {
                     var current = routine.Current;
-
                     if (current == null)
                     {
                         goto ENQUEUE;
@@ -121,14 +120,12 @@ namespace UniRx
 #if UNITY_2018_3_OR_NEWER
 #pragma warning disable CS0618
 #endif
-
                     if (type == typeof(WWW))
                     {
                         var www = (WWW)current;
                         editorQueueWorker.Enqueue(_ => ConsumeEnumerator(UnwrapWaitWWW(www, routine)), null);
                         return;
                     }
-
 #if UNITY_2018_3_OR_NEWER
 #pragma warning restore CS0618
 #endif
@@ -151,7 +148,6 @@ namespace UniRx
                         Debug.Log("Can't wait coroutine on UnityEditor");
                         goto ENQUEUE;
                     }
-
 #if SupportCustomYieldInstruction
                     else if (current is IEnumerator)
                     {
@@ -159,8 +155,8 @@ namespace UniRx
                         editorQueueWorker.Enqueue(_ => ConsumeEnumerator(UnwrapEnumerator(enumerator, routine)), null);
                         return;
                     }
-
 #endif
+
                     ENQUEUE:
                     editorQueueWorker.Enqueue(_ => ConsumeEnumerator(routine), null); // next update
                 }
@@ -175,7 +171,6 @@ namespace UniRx
                 {
                     yield return null;
                 }
-
                 ConsumeEnumerator(continuation);
             }
 #if UNITY_2018_3_OR_NEWER
@@ -188,25 +183,22 @@ namespace UniRx
                 {
                     yield return null;
                 }
-
                 ConsumeEnumerator(continuation);
             }
 
             IEnumerator UnwrapWaitForSeconds(float second, IEnumerator continuation)
             {
                 var startTime = DateTimeOffset.UtcNow;
-
                 while (true)
                 {
                     yield return null;
-                    var elapsed = (DateTimeOffset.UtcNow - startTime).TotalSeconds;
 
+                    var elapsed = (DateTimeOffset.UtcNow - startTime).TotalSeconds;
                     if (elapsed >= second)
                     {
                         break;
                     }
                 };
-
                 ConsumeEnumerator(continuation);
             }
 
@@ -216,7 +208,6 @@ namespace UniRx
                 {
                     yield return null;
                 }
-
                 ConsumeEnumerator(continuation);
             }
         }
@@ -227,12 +218,11 @@ namespace UniRx
         public static void Post(Action<object> action, object state)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.Enqueue(action, state); return; }
 
 #endif
-            var dispatcher = Instance;
 
+            var dispatcher = Instance;
             if (!isQuitting && !object.ReferenceEquals(dispatcher, null))
             {
                 dispatcher.queueWorker.Enqueue(action, state);
@@ -243,9 +233,7 @@ namespace UniRx
         public static void Send(Action<object> action, object state)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.Enqueue(action, state); return; }
-
 #endif
 
             if (mainThreadToken != null)
@@ -257,7 +245,6 @@ namespace UniRx
                 catch (Exception ex)
                 {
                     var dispatcher = MainThreadDispatcher.Instance;
-
                     if (dispatcher != null)
                     {
                         dispatcher.unhandledExceptionCallback(ex);
@@ -274,9 +261,7 @@ namespace UniRx
         public static void UnsafeSend(Action action)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.UnsafeInvoke(action); return; }
-
 #endif
 
             try
@@ -286,7 +271,6 @@ namespace UniRx
             catch (Exception ex)
             {
                 var dispatcher = MainThreadDispatcher.Instance;
-
                 if (dispatcher != null)
                 {
                     dispatcher.unhandledExceptionCallback(ex);
@@ -298,9 +282,7 @@ namespace UniRx
         public static void UnsafeSend<T>(Action<T> action, T state)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.UnsafeInvoke(action, state); return; }
-
 #endif
 
             try
@@ -310,7 +292,6 @@ namespace UniRx
             catch (Exception ex)
             {
                 var dispatcher = MainThreadDispatcher.Instance;
-
                 if (dispatcher != null)
                 {
                     dispatcher.unhandledExceptionCallback(ex);
@@ -328,19 +309,16 @@ namespace UniRx
             else
             {
 #if UNITY_EDITOR
-
                 // call from other thread
                 if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.PseudoStartCoroutine(routine); return; }
-
 #endif
-                var dispatcher = Instance;
 
+                var dispatcher = Instance;
                 if (!isQuitting && !object.ReferenceEquals(dispatcher, null))
                 {
                     dispatcher.queueWorker.Enqueue(_ =>
                     {
                         var dispacher2 = Instance;
-
                         if (dispacher2 != null)
                         {
                             (dispacher2 as MonoBehaviour).StartCoroutine(routine);
@@ -353,12 +331,10 @@ namespace UniRx
         public static void StartUpdateMicroCoroutine(IEnumerator routine)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.PseudoStartCoroutine(routine); return; }
-
 #endif
-            var dispatcher = Instance;
 
+            var dispatcher = Instance;
             if (dispatcher != null)
             {
                 dispatcher.updateMicroCoroutine.AddCoroutine(routine);
@@ -368,12 +344,10 @@ namespace UniRx
         public static void StartFixedUpdateMicroCoroutine(IEnumerator routine)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.PseudoStartCoroutine(routine); return; }
-
 #endif
-            var dispatcher = Instance;
 
+            var dispatcher = Instance;
             if (dispatcher != null)
             {
                 dispatcher.fixedUpdateMicroCoroutine.AddCoroutine(routine);
@@ -383,12 +357,10 @@ namespace UniRx
         public static void StartEndOfFrameMicroCoroutine(IEnumerator routine)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.PseudoStartCoroutine(routine); return; }
-
 #endif
-            var dispatcher = Instance;
 
+            var dispatcher = Instance;
             if (dispatcher != null)
             {
                 dispatcher.endOfFrameMicroCoroutine.AddCoroutine(routine);
@@ -398,12 +370,10 @@ namespace UniRx
         new public static Coroutine StartCoroutine(IEnumerator routine)
         {
 #if UNITY_EDITOR
-
             if (!ScenePlaybackDetector.IsPlaying) { EditorThreadDispatcher.Instance.PseudoStartCoroutine(routine); return null; }
-
 #endif
-            var dispatcher = Instance;
 
+            var dispatcher = Instance;
             if (dispatcher != null)
             {
                 return (dispatcher as MonoBehaviour).StartCoroutine(routine);
@@ -446,7 +416,6 @@ namespace UniRx
                 {
                     throw new NullReferenceException("MainThreadDispatcher is not initialized.");
                 }
-
                 return instance.name;
             }
         }
@@ -473,10 +442,8 @@ namespace UniRx
             if (!initialized)
             {
 #if UNITY_EDITOR
-
                 // Don't try to add a GameObject when the scene is not playing. Only valid in the Editor, EditorView.
-                if (!ScenePlaybackDetector.IsPlaying) { return; }
-
+                if (!ScenePlaybackDetector.IsPlaying) return;
 #endif
                 MainThreadDispatcher dispatcher = null;
 
@@ -526,12 +493,15 @@ namespace UniRx
                 instance = this;
                 mainThreadToken = new object();
                 initialized = true;
+
                 updateMicroCoroutine = new MicroCoroutine(ex => unhandledExceptionCallback(ex));
                 fixedUpdateMicroCoroutine = new MicroCoroutine(ex => unhandledExceptionCallback(ex));
                 endOfFrameMicroCoroutine = new MicroCoroutine(ex => unhandledExceptionCallback(ex));
+
                 StartCoroutine(RunUpdateMicroCoroutine());
                 StartCoroutine(RunFixedUpdateMicroCoroutine());
                 StartCoroutine(RunEndOfFrameMicroCoroutine());
+
                 DontDestroyOnLoad(gameObject);
             }
             else
@@ -590,7 +560,6 @@ namespace UniRx
             {
                 // Try to remove game object if it's empty
                 var components = aDispatcher.gameObject.GetComponents<Component>();
-
                 if (aDispatcher.gameObject.transform.childCount == 0 && components.Length == 2)
                 {
                     if (components[0] is Transform && components[1] is MainThreadDispatcher)
@@ -609,7 +578,6 @@ namespace UniRx
         public static void CullAllExcessDispatchers()
         {
             var dispatchers = GameObject.FindObjectsOfType<MainThreadDispatcher>();
-
             for (int i = 0; i < dispatchers.Length; i++)
             {
                 DestroyDispatcher(dispatchers[i]);
@@ -622,6 +590,7 @@ namespace UniRx
             {
                 instance = GameObject.FindObjectOfType<MainThreadDispatcher>();
                 initialized = instance != null;
+
                 /*
                 // Although `this` still refers to a gameObject, it won't be found.
                 var foundDispatcher = GameObject.FindObjectOfType<MainThreadDispatcher>();
@@ -650,7 +619,6 @@ namespace UniRx
                     unhandledExceptionCallback(ex);
                 }
             }
-
             queueWorker.ExecuteAll(unhandledExceptionCallback);
         }
 
@@ -667,7 +635,7 @@ namespace UniRx
 
         void LateUpdate()
         {
-            if (lateUpdate != null) { lateUpdate.OnNext(Unit.Default); }
+            if (lateUpdate != null) lateUpdate.OnNext(Unit.Default);
         }
 
         public static IObservable<Unit> LateUpdateAsObservable()
@@ -679,7 +647,7 @@ namespace UniRx
 
         void OnApplicationFocus(bool focus)
         {
-            if (onApplicationFocus != null) { onApplicationFocus.OnNext(focus); }
+            if (onApplicationFocus != null) onApplicationFocus.OnNext(focus);
         }
 
         public static IObservable<bool> OnApplicationFocusAsObservable()
@@ -691,7 +659,7 @@ namespace UniRx
 
         void OnApplicationPause(bool pause)
         {
-            if (onApplicationPause != null) { onApplicationPause.OnNext(pause); }
+            if (onApplicationPause != null) onApplicationPause.OnNext(pause);
         }
 
         public static IObservable<bool> OnApplicationPauseAsObservable()
@@ -704,8 +672,7 @@ namespace UniRx
         void OnApplicationQuit()
         {
             isQuitting = true;
-
-            if (onApplicationQuit != null) { onApplicationQuit.OnNext(Unit.Default); }
+            if (onApplicationQuit != null) onApplicationQuit.OnNext(Unit.Default);
         }
 
         public static IObservable<Unit> OnApplicationQuitAsObservable()

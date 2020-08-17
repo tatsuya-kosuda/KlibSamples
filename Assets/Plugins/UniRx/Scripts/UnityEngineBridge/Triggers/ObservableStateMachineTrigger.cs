@@ -41,7 +41,7 @@ namespace UniRx.Triggers
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (onStateExit != null) { onStateExit.OnNext(new OnStateInfo(animator, stateInfo, layerIndex)); }
+            if (onStateExit != null) onStateExit.OnNext(new OnStateInfo(animator, stateInfo, layerIndex));
         }
 
         public IObservable<OnStateInfo> OnStateExitAsObservable()
@@ -55,7 +55,7 @@ namespace UniRx.Triggers
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (onStateEnter != null) { onStateEnter.OnNext(new OnStateInfo(animator, stateInfo, layerIndex)); }
+            if (onStateEnter != null) onStateEnter.OnNext(new OnStateInfo(animator, stateInfo, layerIndex));
         }
 
         public IObservable<OnStateInfo> OnStateEnterAsObservable()
@@ -69,7 +69,7 @@ namespace UniRx.Triggers
 
         public override void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (onStateIK != null) { onStateIK.OnNext(new OnStateInfo(animator, stateInfo, layerIndex)); }
+            if(onStateIK !=null) onStateIK.OnNext(new OnStateInfo(animator, stateInfo, layerIndex));
         }
 
         public IObservable<OnStateInfo> OnStateIKAsObservable()
@@ -102,7 +102,7 @@ namespace UniRx.Triggers
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (onStateUpdate != null) { onStateUpdate.OnNext(new OnStateInfo(animator, stateInfo, layerIndex)); }
+            if (onStateUpdate != null) onStateUpdate.OnNext(new OnStateInfo(animator, stateInfo, layerIndex));
         }
 
         public IObservable<OnStateInfo> OnStateUpdateAsObservable()
@@ -116,7 +116,7 @@ namespace UniRx.Triggers
 
         public override void OnStateMachineEnter(Animator animator, int stateMachinePathHash)
         {
-            if (onStateMachineEnter != null) { onStateMachineEnter.OnNext(new OnStateMachineInfo(animator, stateMachinePathHash)); }
+            if (onStateMachineEnter != null) onStateMachineEnter.OnNext(new OnStateMachineInfo(animator, stateMachinePathHash));
         }
 
         public IObservable<OnStateMachineInfo> OnStateMachineEnterAsObservable()
@@ -130,7 +130,7 @@ namespace UniRx.Triggers
 
         public override void OnStateMachineExit(Animator animator, int stateMachinePathHash)
         {
-            if (onStateMachineExit != null) { onStateMachineExit.OnNext(new OnStateMachineInfo(animator, stateMachinePathHash)); }
+            if (onStateMachineExit != null) onStateMachineExit.OnNext(new OnStateMachineInfo(animator, stateMachinePathHash));
         }
 
         public IObservable<OnStateMachineInfo> OnStateMachineExitAsObservable()

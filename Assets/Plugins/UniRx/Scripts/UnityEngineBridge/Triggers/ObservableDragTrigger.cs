@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            if (onDrag != null) { onDrag.OnNext(eventData); }
+            if (onDrag != null) onDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnDragAsObservable()

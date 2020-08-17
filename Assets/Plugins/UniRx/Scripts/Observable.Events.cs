@@ -5,9 +5,8 @@ namespace UniRx
 {
     public static partial class Observable
     {
-        public static IObservable<EventPattern<TEventArgs>> FromEventPattern<TDelegate, TEventArgs>(Func<EventHandler<TEventArgs>, TDelegate> conversion, Action<TDelegate> addHandler,
-                                                                                                    Action<TDelegate> removeHandler)
-        where TEventArgs : EventArgs
+        public static IObservable<EventPattern<TEventArgs>> FromEventPattern<TDelegate, TEventArgs>(Func<EventHandler<TEventArgs>, TDelegate> conversion, Action<TDelegate> addHandler, Action<TDelegate> removeHandler)
+            where TEventArgs : EventArgs
         {
             return new FromEventPatternObservable<TDelegate, TEventArgs>(conversion, addHandler, removeHandler);
         }

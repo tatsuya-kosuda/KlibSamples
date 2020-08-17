@@ -28,24 +28,21 @@ namespace UniRx
                 lock (gate)
                 {
                     return (current == True)
-                           ? UniRx.Disposable.Empty
-                           : current;
+                        ? UniRx.Disposable.Empty
+                        : current;
                 }
             }
             set
             {
                 var shouldDispose = false;
-
                 lock (gate)
                 {
                     shouldDispose = (current == True);
-
                     if (!shouldDispose)
                     {
                         current = value;
                     }
                 }
-
                 if (shouldDispose && value != null)
                 {
                     value.Dispose();
@@ -66,7 +63,7 @@ namespace UniRx
                 }
             }
 
-            if (old != null) { old.Dispose(); }
+            if (old != null) old.Dispose();
         }
     }
 }

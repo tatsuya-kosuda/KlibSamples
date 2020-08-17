@@ -49,7 +49,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
                 }
@@ -69,7 +68,6 @@ namespace UniRx.Operators
                 }
 
                 observer.OnNext(accumulation);
-
                 try { observer.OnCompleted(); }
                 finally { Dispose(); }
             }
@@ -116,7 +114,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
             }
@@ -130,7 +127,6 @@ namespace UniRx.Operators
             public override void OnCompleted()
             {
                 observer.OnNext(accumulation);
-
                 try { observer.OnCompleted(); }
                 finally { Dispose(); }
             }
@@ -179,7 +175,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
             }
@@ -193,7 +188,6 @@ namespace UniRx.Operators
             public override void OnCompleted()
             {
                 TResult result;
-
                 try
                 {
                     result = parent.resultSelector(accumulation);
@@ -205,7 +199,6 @@ namespace UniRx.Operators
                 }
 
                 observer.OnNext(result);
-
                 try { observer.OnCompleted(); }
                 finally { Dispose(); }
             }

@@ -17,6 +17,7 @@ namespace UniRx.Operators
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
         {
             var fromCoroutineObserver = new FromCoroutine(observer, cancel);
+
 #if (NETFX_CORE || NET_4_6 || NET_STANDARD_2_0 || UNITY_WSA_10_0)
             var moreCancel = new CancellationDisposable();
             var token = moreCancel.Token;
@@ -24,7 +25,9 @@ namespace UniRx.Operators
             var moreCancel = new BooleanDisposable();
             var token = new CancellationToken(moreCancel);
 #endif
+
             MainThreadDispatcher.SendStartCoroutine(coroutine(fromCoroutineObserver, token));
+
             return moreCancel;
         }
 
@@ -76,6 +79,7 @@ namespace UniRx.Operators
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
         {
             var microCoroutineObserver = new FromMicroCoroutine(observer, cancel);
+
 #if (NETFX_CORE || NET_4_6 || NET_STANDARD_2_0 || UNITY_WSA_10_0)
             var moreCancel = new CancellationDisposable();
             var token = moreCancel.Token;
@@ -89,15 +93,12 @@ namespace UniRx.Operators
                 case FrameCountType.Update:
                     MainThreadDispatcher.StartUpdateMicroCoroutine(coroutine(microCoroutineObserver, token));
                     break;
-
                 case FrameCountType.FixedUpdate:
                     MainThreadDispatcher.StartFixedUpdateMicroCoroutine(coroutine(microCoroutineObserver, token));
                     break;
-
                 case FrameCountType.EndOfFrame:
                     MainThreadDispatcher.StartEndOfFrameMicroCoroutine(coroutine(microCoroutineObserver, token));
                     break;
-
                 default:
                     throw new ArgumentException("Invalid FrameCountType:" + frameCountType);
             }

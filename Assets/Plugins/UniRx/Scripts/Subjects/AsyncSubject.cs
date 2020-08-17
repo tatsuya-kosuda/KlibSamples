@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UniRx.InternalUtil;
 
 #if (NET_4_6 || NET_STANDARD_2_0)
-    using System.Runtime.CompilerServices;
-    using System.Threading;
+using System.Runtime.CompilerServices;
+using System.Threading;
 #endif
 
 namespace UniRx
@@ -28,11 +28,8 @@ namespace UniRx
             get
             {
                 ThrowIfDisposed();
-
-                if (!isStopped) { throw new InvalidOperationException("AsyncSubject is not completed yet"); }
-
-                if (lastError != null) { lastError.Throw(); }
-
+                if (!isStopped) throw new InvalidOperationException("AsyncSubject is not completed yet");
+                if (lastError != null) lastError.Throw();
                 return lastValue;
             }
         }
@@ -52,12 +49,10 @@ namespace UniRx
             IObserver<T> old;
             T v;
             bool hv;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -79,15 +74,13 @@ namespace UniRx
 
         public void OnError(Exception error)
         {
-            if (error == null) { throw new ArgumentNullException("error"); }
+            if (error == null) throw new ArgumentNullException("error");
 
             IObserver<T> old;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -103,8 +96,7 @@ namespace UniRx
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 this.hasValue = true;
                 this.lastValue = value;
@@ -113,7 +105,7 @@ namespace UniRx
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer == null) { throw new ArgumentNullException("observer"); }
+            if (observer == null) throw new ArgumentNullException("observer");
 
             var ex = default(Exception);
             var v = default(T);
@@ -122,11 +114,9 @@ namespace UniRx
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
                 if (!isStopped)
                 {
                     var listObserver = outObserver as ListObserver<T>;
-
                     if (listObserver != null)
                     {
                         outObserver = listObserver.Add(observer);
@@ -134,7 +124,6 @@ namespace UniRx
                     else
                     {
                         var current = outObserver;
-
                         if (current is EmptyObserver<T>)
                         {
                             outObserver = observer;
@@ -183,7 +172,7 @@ namespace UniRx
 
         void ThrowIfDisposed()
         {
-            if (isDisposed) { throw new ObjectDisposedException(""); }
+            if (isDisposed) throw new ObjectDisposedException("");
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -212,7 +201,6 @@ namespace UniRx
                         lock (parent.observerLock)
                         {
                             var listObserver = parent.outObserver as ListObserver<T>;
-
                             if (listObserver != null)
                             {
                                 parent.outObserver = listObserver.Remove(unsubscribeTarget);
@@ -250,12 +238,12 @@ namespace UniRx
         public void OnCompleted(Action continuation)
         {
             if (continuation == null)
-            { throw new ArgumentNullException("continuation"); }
+                throw new ArgumentNullException("continuation");
 
             OnCompleted(continuation, true);
         }
 
-        void OnCompleted(Action continuation, bool originalContext)
+         void OnCompleted(Action continuation, bool originalContext)
         {
             //
             // [OK] Use of unsafe Subscribe: this type's Subscribe implementation is safe.
@@ -271,7 +259,7 @@ namespace UniRx
             public AwaitObserver(Action callback, bool originalContext)
             {
                 if (originalContext)
-                { _context = SynchronizationContext.Current; }
+                    _context = SynchronizationContext.Current;
 
                 _callback = callback;
             }
@@ -331,7 +319,7 @@ namespace UniRx
             }
 
             if (!hasValue)
-            { throw new InvalidOperationException("NO_ELEMENTS"); }
+                throw new InvalidOperationException("NO_ELEMENTS");
 
             return lastValue;
         }

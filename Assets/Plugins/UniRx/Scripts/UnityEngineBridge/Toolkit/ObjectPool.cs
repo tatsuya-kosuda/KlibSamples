@@ -1,38 +1,36 @@
-
 ﻿#if UNITY_5_3_OR_NEWER
 
 using System;
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace UniRx.Toolkit
 {
-/// <summary>
-/// Bass class of ObjectPool.
-/// </summary>
-public abstract class ObjectPool<T> : IDisposable
-    where T : UnityEngine.Component
-{
-    bool isDisposed = false;
-    Queue<T> q;
-
     /// <summary>
-    /// Limit of instace count.
+    /// Bass class of ObjectPool.
     /// </summary>
-    protected int MaxPoolCount
+    public abstract class ObjectPool<T> : IDisposable
+        where T : UnityEngine.Component
     {
-        get
-        {
-            return int.MaxValue;
-        }
-    }
+        bool isDisposed = false;
+        Queue<T> q;
 
-    /// <summary>
-    /// Create instance when needed.
-    /// </summary>
-    protected abstract T CreateInstance();
+        /// <summary>
+        /// Limit of instace count.
+        /// </summary>
+        protected int MaxPoolCount
+        {
+            get
+            {
+                return int.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Create instance when needed.
+        /// </summary>
+        protected abstract T CreateInstance();
 
         /// <summary>
         /// Called before return to pool, useful for set active object(it is default behavior).
@@ -55,12 +53,10 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         protected virtual void OnClear(T instance)
         {
-            if (instance == null) { return; }
+            if (instance == null) return;
 
             var go = instance.gameObject;
-
-            if (go == null) { return; }
-
+            if (go == null) return;
             UnityEngine.Object.Destroy(go);
         }
 
@@ -71,8 +67,7 @@ public abstract class ObjectPool<T> : IDisposable
         {
             get
             {
-                if (q == null) { return 0; }
-
+                if (q == null) return 0;
                 return q.Count;
             }
         }
@@ -82,13 +77,13 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public T Rent()
         {
-            if (isDisposed) { throw new ObjectDisposedException("ObjectPool was already disposed."); }
-
-            if (q == null) { q = new Queue<T>(); }
+            if (isDisposed) throw new ObjectDisposedException("ObjectPool was already disposed.");
+            if (q == null) q = new Queue<T>();
 
             var instance = (q.Count > 0)
-                           ? q.Dequeue()
-                           : CreateInstance();
+                ? q.Dequeue()
+                : CreateInstance();
+
             OnBeforeRent(instance);
             return instance;
         }
@@ -98,11 +93,10 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public void Return(T instance)
         {
-            if (isDisposed) { throw new ObjectDisposedException("ObjectPool was already disposed."); }
+            if (isDisposed) throw new ObjectDisposedException("ObjectPool was already disposed.");
+            if (instance == null) throw new ArgumentNullException("instance");
 
-            if (instance == null) { throw new ArgumentNullException("instance"); }
-
-            if (q == null) { q = new Queue<T>(); }
+            if (q == null) q = new Queue<T>();
 
             if ((q.Count + 1) == MaxPoolCount)
             {
@@ -118,34 +112,30 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public void Clear(bool callOnBeforeRent = false)
         {
-            if (q == null) { return; }
-
+            if (q == null) return;
             while (q.Count != 0)
             {
                 var instance = q.Dequeue();
-
                 if (callOnBeforeRent)
                 {
                     OnBeforeRent(instance);
                 }
-
                 OnClear(instance);
             }
         }
 
         /// <summary>
-        /// Trim pool instances.
+        /// Trim pool instances. 
         /// </summary>
         /// <param name="instanceCountRatio">0.0f = clear all ~ 1.0f = live all.</param>
         /// <param name="minSize">Min pool count.</param>
         /// <param name="callOnBeforeRent">If true, call OnBeforeRent before OnClear.</param>
         public void Shrink(float instanceCountRatio, int minSize, bool callOnBeforeRent = false)
         {
-            if (q == null) { return; }
+            if (q == null) return;
 
-            if (instanceCountRatio <= 0) { instanceCountRatio = 0; }
-
-            if (instanceCountRatio >= 1.0f) { instanceCountRatio = 1.0f; }
+            if (instanceCountRatio <= 0) instanceCountRatio = 0;
+            if (instanceCountRatio >= 1.0f) instanceCountRatio = 1.0f;
 
             var size = (int)(q.Count * instanceCountRatio);
             size = Math.Max(minSize, size);
@@ -153,12 +143,10 @@ public abstract class ObjectPool<T> : IDisposable
             while (q.Count > size)
             {
                 var instance = q.Dequeue();
-
                 if (callOnBeforeRent)
                 {
                     OnBeforeRent(instance);
                 }
-
                 OnClear(instance);
             }
         }
@@ -173,11 +161,11 @@ public abstract class ObjectPool<T> : IDisposable
         public IDisposable StartShrinkTimer(TimeSpan checkInterval, float instanceCountRatio, int minSize, bool callOnBeforeRent = false)
         {
             return Observable.Interval(checkInterval)
-                   .TakeWhile(_ => !isDisposed)
-                   .Subscribe(_ =>
-            {
-                Shrink(instanceCountRatio, minSize, callOnBeforeRent);
-            });
+                .TakeWhile(_ => !isDisposed)
+                .Subscribe(_ =>
+                {
+                    Shrink(instanceCountRatio, minSize, callOnBeforeRent);
+                });
         }
 
         /// <summary>
@@ -187,7 +175,7 @@ public abstract class ObjectPool<T> : IDisposable
         /// <param name="threshold">Create count per frame.</param>
         public IObservable<Unit> PreloadAsync(int preloadCount, int threshold)
         {
-            if (q == null) { q = new Queue<T>(preloadCount); }
+            if (q == null) q = new Queue<T>(preloadCount);
 
             return Observable.FromMicroCoroutine<Unit>((observer, cancel) => PreloadCore(preloadCount, threshold, observer, cancel));
         }
@@ -197,8 +185,7 @@ public abstract class ObjectPool<T> : IDisposable
             while (Count < preloadCount && !cancellationToken.IsCancellationRequested)
             {
                 var requireCount = preloadCount - Count;
-
-                if (requireCount <= 0) { break; }
+                if (requireCount <= 0) break;
 
                 var createCount = Math.Min(requireCount, threshold);
 
@@ -215,7 +202,6 @@ public abstract class ObjectPool<T> : IDisposable
                         yield break;
                     }
                 }
-
                 yield return null; // next frame.
             }
 
@@ -292,12 +278,10 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         protected virtual void OnClear(T instance)
         {
-            if (instance == null) { return; }
+            if (instance == null) return;
 
             var go = instance.gameObject;
-
-            if (go == null) { return; }
-
+            if (go == null) return;
             UnityEngine.Object.Destroy(go);
         }
 
@@ -308,8 +292,7 @@ public abstract class ObjectPool<T> : IDisposable
         {
             get
             {
-                if (q == null) { return 0; }
-
+                if (q == null) return 0;
                 return q.Count;
             }
         }
@@ -319,9 +302,8 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public IObservable<T> RentAsync()
         {
-            if (isDisposed) { throw new ObjectDisposedException("ObjectPool was already disposed."); }
-
-            if (q == null) { q = new Queue<T>(); }
+            if (isDisposed) throw new ObjectDisposedException("ObjectPool was already disposed.");
+            if (q == null) q = new Queue<T>();
 
             if (q.Count > 0)
             {
@@ -341,11 +323,10 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public void Return(T instance)
         {
-            if (isDisposed) { throw new ObjectDisposedException("ObjectPool was already disposed."); }
+            if (isDisposed) throw new ObjectDisposedException("ObjectPool was already disposed.");
+            if (instance == null) throw new ArgumentNullException("instance");
 
-            if (instance == null) { throw new ArgumentNullException("instance"); }
-
-            if (q == null) { q = new Queue<T>(); }
+            if (q == null) q = new Queue<T>();
 
             if ((q.Count + 1) == MaxPoolCount)
             {
@@ -357,18 +338,17 @@ public abstract class ObjectPool<T> : IDisposable
         }
 
         /// <summary>
-        /// Trim pool instances.
+        /// Trim pool instances. 
         /// </summary>
         /// <param name="instanceCountRatio">0.0f = clear all ~ 1.0f = live all.</param>
         /// <param name="minSize">Min pool count.</param>
         /// <param name="callOnBeforeRent">If true, call OnBeforeRent before OnClear.</param>
         public void Shrink(float instanceCountRatio, int minSize, bool callOnBeforeRent = false)
         {
-            if (q == null) { return; }
+            if (q == null) return;
 
-            if (instanceCountRatio <= 0) { instanceCountRatio = 0; }
-
-            if (instanceCountRatio >= 1.0f) { instanceCountRatio = 1.0f; }
+            if (instanceCountRatio <= 0) instanceCountRatio = 0;
+            if (instanceCountRatio >= 1.0f) instanceCountRatio = 1.0f;
 
             var size = (int)(q.Count * instanceCountRatio);
             size = Math.Max(minSize, size);
@@ -376,12 +356,10 @@ public abstract class ObjectPool<T> : IDisposable
             while (q.Count > size)
             {
                 var instance = q.Dequeue();
-
                 if (callOnBeforeRent)
                 {
                     OnBeforeRent(instance);
                 }
-
                 OnClear(instance);
             }
         }
@@ -396,11 +374,11 @@ public abstract class ObjectPool<T> : IDisposable
         public IDisposable StartShrinkTimer(TimeSpan checkInterval, float instanceCountRatio, int minSize, bool callOnBeforeRent = false)
         {
             return Observable.Interval(checkInterval)
-                   .TakeWhile(_ => !isDisposed)
-                   .Subscribe(_ =>
-            {
-                Shrink(instanceCountRatio, minSize, callOnBeforeRent);
-            });
+                .TakeWhile(_ => !isDisposed)
+                .Subscribe(_ =>
+                {
+                    Shrink(instanceCountRatio, minSize, callOnBeforeRent);
+                });
         }
 
         /// <summary>
@@ -408,17 +386,14 @@ public abstract class ObjectPool<T> : IDisposable
         /// </summary>
         public void Clear(bool callOnBeforeRent = false)
         {
-            if (q == null) { return; }
-
+            if (q == null) return;
             while (q.Count != 0)
             {
                 var instance = q.Dequeue();
-
                 if (callOnBeforeRent)
                 {
                     OnBeforeRent(instance);
                 }
-
                 OnClear(instance);
             }
         }
@@ -430,7 +405,7 @@ public abstract class ObjectPool<T> : IDisposable
         /// <param name="threshold">Create count per frame.</param>
         public IObservable<Unit> PreloadAsync(int preloadCount, int threshold)
         {
-            if (q == null) { q = new Queue<T>(preloadCount); }
+            if (q == null) q = new Queue<T>(preloadCount);
 
             return Observable.FromMicroCoroutine<Unit>((observer, cancel) => PreloadCore(preloadCount, threshold, observer, cancel));
         }
@@ -440,12 +415,11 @@ public abstract class ObjectPool<T> : IDisposable
             while (Count < preloadCount && !cancellationToken.IsCancellationRequested)
             {
                 var requireCount = preloadCount - Count;
-
-                if (requireCount <= 0) { break; }
+                if (requireCount <= 0) break;
 
                 var createCount = Math.Min(requireCount, threshold);
-                var loaders = new IObservable<Unit>[createCount];
 
+                var loaders = new IObservable<Unit>[createCount];
                 for (int i = 0; i < createCount; i++)
                 {
                     var instanceFuture = CreateInstanceAsync();
@@ -453,7 +427,6 @@ public abstract class ObjectPool<T> : IDisposable
                 }
 
                 var awaiter = Observable.WhenAll(loaders).ToYieldInstruction(false, cancellationToken);
-
                 while (!(awaiter.HasResult || awaiter.IsCanceled || awaiter.HasError))
                 {
                     yield return null;

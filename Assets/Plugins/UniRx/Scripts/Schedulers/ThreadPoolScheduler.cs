@@ -1,8 +1,6 @@
-
 ﻿#if !UNITY_METRO
 
 using System;
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +8,9 @@ using UniRx.InternalUtil;
 
 namespace UniRx
 {
-public static partial class Scheduler
-{
-    public static readonly IScheduler ThreadPool = new ThreadPoolScheduler();
+    public static partial class Scheduler
+    {
+        public static readonly IScheduler ThreadPool = new ThreadPoolScheduler();
 
         class ThreadPoolScheduler : IScheduler, ISchedulerPeriodic
         {
@@ -28,6 +26,7 @@ public static partial class Scheduler
             public IDisposable Schedule(Action action)
             {
                 var d = new BooleanDisposable();
+
                 System.Threading.ThreadPool.QueueUserWorkItem(_ =>
                 {
                     if (!d.IsDisposed)
@@ -35,6 +34,7 @@ public static partial class Scheduler
                         action();
                     }
                 });
+
                 return d;
             }
 
@@ -82,6 +82,7 @@ public static partial class Scheduler
                 {
                     _disposable = new SingleAssignmentDisposable();
                     _disposable.Disposable = Disposable.Create(Unroot);
+
                     _action = action;
                     _timer = new System.Threading.Timer(Tick, null, dueTime, TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite));
 
@@ -90,6 +91,7 @@ public static partial class Scheduler
                         if (!_hasRemoved)
                         {
                             s_timers.Add(_timer);
+
                             _hasAdded = true;
                         }
                     }
@@ -113,6 +115,7 @@ public static partial class Scheduler
                 private void Unroot()
                 {
                     _action = Stubs.Nop;
+
                     var timer = default(System.Threading.Timer);
 
                     lock (s_timers)
@@ -123,14 +126,14 @@ public static partial class Scheduler
                             _timer = null;
 
                             if (_hasAdded && timer != null)
-                            { s_timers.Remove(timer); }
+                                s_timers.Remove(timer);
 
                             _hasRemoved = true;
                         }
                     }
 
                     if (timer != null)
-                    { timer.Dispose(); }
+                        timer.Dispose();
                 }
 
                 public void Dispose()
@@ -177,7 +180,7 @@ public static partial class Scheduler
                         _timer = null;
 
                         if (timer != null)
-                        { s_timers.Remove(timer); }
+                            s_timers.Remove(timer);
                     }
 
                     if (timer != null)

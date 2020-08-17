@@ -49,10 +49,8 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (isCompleted) { return; }
-
+                    if (isCompleted) return;
                     list.Add(value);
-
                     if (!isRunning)
                     {
                         isRunning = true;
@@ -63,15 +61,12 @@ namespace UniRx.Operators
                             case FrameCountType.Update:
                                 MainThreadDispatcher.StartUpdateMicroCoroutine(timer);
                                 break;
-
                             case FrameCountType.FixedUpdate:
                                 MainThreadDispatcher.StartFixedUpdateMicroCoroutine(timer);
                                 break;
-
                             case FrameCountType.EndOfFrame:
                                 MainThreadDispatcher.StartEndOfFrameMicroCoroutine(timer);
                                 break;
-
                             default:
                                 break;
                         }
@@ -81,27 +76,22 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 List<T> currentList;
-
                 lock (gate)
                 {
                     isCompleted = true;
                     currentList = list;
                 }
-
                 if (currentList.Count != 0)
                 {
                     observer.OnNext(currentList);
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             // reuse, no gc allocate
@@ -122,20 +112,20 @@ namespace UniRx.Operators
 
                 public bool MoveNext()
                 {
-                    if (parent.cancellationToken.IsDisposed) { return false; }
+                    if (parent.cancellationToken.IsDisposed) return false;
 
                     List<T> currentList;
-
                     lock (parent.gate)
                     {
                         if (currentFrame++ == parent.parent.frameCount)
                         {
-                            if (parent.isCompleted) { return false; }
+                            if (parent.isCompleted) return false;
 
                             currentList = parent.list;
                             parent.list = new List<T>();
                             parent.isRunning = false;
-                            // exit lock
+
+                            // exit lock 
                         }
                         else
                         {
@@ -210,15 +200,12 @@ namespace UniRx.Operators
                             case FrameCountType.Update:
                                 MainThreadDispatcher.StartUpdateMicroCoroutine(timer);
                                 break;
-
                             case FrameCountType.FixedUpdate:
                                 MainThreadDispatcher.StartFixedUpdateMicroCoroutine(timer);
                                 break;
-
                             case FrameCountType.EndOfFrame:
                                 MainThreadDispatcher.StartEndOfFrameMicroCoroutine(timer);
                                 break;
-
                             default:
                                 break;
                         }
@@ -228,27 +215,22 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 bool running;
-
                 lock (gate)
                 {
                     running = isRunning;
                     isCompleted = true;
                 }
-
                 if (running)
                 {
                     observer.OnNext(Unit.Default);
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             // reuse, no gc allocate
@@ -269,16 +251,16 @@ namespace UniRx.Operators
 
                 public bool MoveNext()
                 {
-                    if (parent.cancellationToken.IsDisposed) { return false; }
+                    if (parent.cancellationToken.IsDisposed) return false;
 
                     lock (parent.gate)
                     {
                         if (currentFrame++ == parent.parent.frameCount)
                         {
-                            if (parent.isCompleted) { return false; }
-
+                            if (parent.isCompleted) return false;
                             parent.isRunning = false;
-                            // exit lock
+
+                            // exit lock 
                         }
                         else
                         {

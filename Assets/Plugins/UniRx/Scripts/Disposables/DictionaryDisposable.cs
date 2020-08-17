@@ -28,14 +28,14 @@ namespace UniRx
                     return inner[key];
                 }
             }
+
             set
             {
                 lock (inner)
                 {
-                    if (isDisposed) { value.Dispose(); }
+                    if (isDisposed) value.Dispose();
 
                     TValue oldValue;
-
                     if (TryGetValue(key, out oldValue))
                     {
                         oldValue.Dispose();
@@ -98,7 +98,6 @@ namespace UniRx
                 {
                     item.Value.Dispose();
                 }
-
                 inner.Clear();
             }
         }
@@ -108,16 +107,13 @@ namespace UniRx
             lock (inner)
             {
                 TValue oldValue;
-
                 if (inner.TryGetValue(key, out oldValue))
                 {
                     var isSuccessRemove = inner.Remove(key);
-
                     if (isSuccessRemove)
                     {
                         oldValue.Dispose();
                     }
-
                     return isSuccessRemove;
                 }
                 else
@@ -245,15 +241,13 @@ namespace UniRx
         {
             lock (inner)
             {
-                if (isDisposed) { return; }
-
+                if (isDisposed) return;
                 isDisposed = true;
 
                 foreach (var item in inner)
                 {
                     item.Value.Dispose();
                 }
-
                 inner.Clear();
             }
         }

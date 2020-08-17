@@ -15,8 +15,8 @@ namespace UniRx.Operators
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
         {
             observer = new Defer(observer, cancel);
-            IObservable<T> source;
 
+            IObservable<T> source;
             try
             {
                 source = observableFactory();

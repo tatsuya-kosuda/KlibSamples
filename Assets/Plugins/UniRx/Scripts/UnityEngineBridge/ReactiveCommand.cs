@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 
 #if CSHARP_7_OR_LATER || (UNITY_2018_3_OR_NEWER && (NET_STANDARD_2_0 || NET_4_6))
-    using System.Threading.Tasks;
-    using UniRx.InternalUtil;
+using System.Threading.Tasks;
+using UniRx.InternalUtil;
 #endif
 namespace UniRx
 {
@@ -86,8 +86,8 @@ namespace UniRx
         {
             this.canExecute = new ReactiveProperty<bool>(initialValue);
             this.canExecuteSubscription = canExecuteSource
-                                          .DistinctUntilChanged()
-                                          .SubscribeWithState(canExecute, (b, c) => c.Value = b);
+                .DistinctUntilChanged()
+                .SubscribeWithState(canExecute, (b, c) => c.Value = b);
         }
 
         /// <summary>Push parameter to subscribers when CanExecute.</summary>
@@ -121,7 +121,7 @@ namespace UniRx
         /// </summary>
         public void Dispose()
         {
-            if (IsDisposed) { return; }
+            if (IsDisposed) return;
 
             IsDisposed = true;
             canExecute.Dispose();
@@ -142,6 +142,7 @@ namespace UniRx
         public AsyncReactiveCommand()
             : base()
         {
+
         }
 
         /// <summary>
@@ -223,7 +224,6 @@ namespace UniRx
             {
                 canExecuteSource.Value = false;
                 var a = asyncActions.Data;
-
                 if (a.Length == 1)
                 {
                     try
@@ -240,7 +240,6 @@ namespace UniRx
                 else
                 {
                     var xs = new IObservable<Unit>[a.Length];
-
                     try
                     {
                         for (int i = 0; i < a.Length; i++)
@@ -279,7 +278,7 @@ namespace UniRx
         /// </summary>
         public void Dispose()
         {
-            if (IsDisposed) { return; }
+            if (IsDisposed) return;
 
             IsDisposed = true;
             asyncActions = UniRx.InternalUtil.ImmutableList<Func<T, IObservable<Unit>>>.Empty;
@@ -337,13 +336,16 @@ namespace UniRx
         public static Task<T> WaitUntilExecuteAsync<T>(this IReactiveCommand<T> source, CancellationToken cancellationToken = default(CancellationToken))
         {
             var tcs = new CancellableTaskCompletionSource<T>();
+
             var disposable = new SingleAssignmentDisposable();
             disposable.Disposable = source.Subscribe(x =>
             {
                 disposable.Dispose(); // finish subscription.
                 tcs.TrySetResult(x);
             }, ex => tcs.TrySetException(ex), () => tcs.TrySetCanceled());
+
             cancellationToken.Register(Callback, Tuple.Create(tcs, disposable.Disposable), false);
+
             return tcs.Task;
         }
 
@@ -377,6 +379,7 @@ namespace UniRx
             var d1 = command.CanExecute.SubscribeToInteractable(button);
             var d2 = button.OnClickAsObservable().SubscribeWithState(command, (x, c) => c.Execute(x));
             var d3 = command.Subscribe(onClick);
+
             return StableCompositeDisposable.Create(d1, d2, d3);
         }
 
@@ -419,8 +422,10 @@ namespace UniRx
         public static Task<T> WaitUntilExecuteAsync<T>(this IAsyncReactiveCommand<T> source, CancellationToken cancellationToken = default(CancellationToken))
         {
             var tcs = new CancellableTaskCompletionSource<T>();
+
             var subscription = source.Subscribe(x => { tcs.TrySetResult(x); return Observable.ReturnUnit(); });
             cancellationToken.Register(Callback, Tuple.Create(tcs, subscription), false);
+
             return tcs.Task;
         }
 
@@ -444,6 +449,7 @@ namespace UniRx
         {
             var d1 = command.CanExecute.SubscribeToInteractable(button);
             var d2 = button.OnClickAsObservable().SubscribeWithState(command, (x, c) => c.Execute(x));
+
             return StableCompositeDisposable.Create(d1, d2);
         }
 
@@ -455,6 +461,7 @@ namespace UniRx
             var d1 = command.CanExecute.SubscribeToInteractable(button);
             var d2 = button.OnClickAsObservable().SubscribeWithState(command, (x, c) => c.Execute(x));
             var d3 = command.Subscribe(asyncOnClick);
+
             return StableCompositeDisposable.Create(d1, d2, d3);
         }
 

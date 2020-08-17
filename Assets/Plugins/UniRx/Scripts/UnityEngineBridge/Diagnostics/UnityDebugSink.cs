@@ -34,9 +34,7 @@ namespace UniRx.Diagnostics
                     {
                         Debug.LogError(value.Message, value.Context);
                     }
-
                     break;
-
                 case LogType.Exception:
                     if (ctx == null)
                     {
@@ -46,9 +44,7 @@ namespace UniRx.Diagnostics
                     {
                         Debug.LogException(value.Exception, value.Context);
                     }
-
                     break;
-
                 case LogType.Log:
                     if (ctx == null)
                     {
@@ -58,9 +54,7 @@ namespace UniRx.Diagnostics
                     {
                         Debug.Log(value.Message, value.Context);
                     }
-
                     break;
-
                 case LogType.Warning:
                     if (ctx == null)
                     {
@@ -70,9 +64,7 @@ namespace UniRx.Diagnostics
                     {
                         Debug.LogWarning(value.Message, value.Context);
                     }
-
                     break;
-
                 default:
                     break;
             }

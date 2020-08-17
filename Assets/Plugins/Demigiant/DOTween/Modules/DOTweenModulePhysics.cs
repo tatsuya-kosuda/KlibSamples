@@ -13,7 +13,7 @@ using UnityEngine;
 #pragma warning disable 1591
 namespace DG.Tweening
 {
-    public static class DOTweenModulePhysics
+	public static class DOTweenModulePhysics
     {
         #region Shortcuts
 
@@ -80,11 +80,10 @@ namespace DG.Tweening
         /// <param name="towards">The position to look at</param><param name="duration">The duration of the tween</param>
         /// <param name="axisConstraint">Eventual axis constraint for the rotation</param>
         /// <param name="up">The vector that defines in which direction up is (default: Vector3.up)</param>
-        public static TweenerCore<Quaternion, Vector3, QuaternionOptions> DOLookAt(this Rigidbody target, Vector3 towards, float duration, AxisConstraint axisConstraint = AxisConstraint.None,
-                                                                                   Vector3? up = null)
+        public static TweenerCore<Quaternion, Vector3, QuaternionOptions> DOLookAt(this Rigidbody target, Vector3 towards, float duration, AxisConstraint axisConstraint = AxisConstraint.None, Vector3? up = null)
         {
             TweenerCore<Quaternion, Vector3, QuaternionOptions> t = DOTween.To(() => target.rotation, target.MoveRotation, towards, duration)
-                                                                    .SetTarget(target).SetSpecialStartupMode(SpecialStartupMode.SetLookAt);
+                .SetTarget(target).SetSpecialStartupMode(SpecialStartupMode.SetLookAt);
             t.plugOptions.axisConstraint = axisConstraint;
             t.plugOptions.up = (up == null) ? Vector3.up : (Vector3)up;
             return t;
@@ -102,30 +101,26 @@ namespace DG.Tweening
         /// <param name="snapping">If TRUE the tween will smoothly snap all values to integers</param>
         public static Sequence DOJump(this Rigidbody target, Vector3 endValue, float jumpPower, int numJumps, float duration, bool snapping = false)
         {
-            if (numJumps < 1) { numJumps = 1; }
-
+            if (numJumps < 1) numJumps = 1;
             float startPosY = 0;
             float offsetY = -1;
             bool offsetYSet = false;
             Sequence s = DOTween.Sequence();
             Tween yTween = DOTween.To(() => target.position, target.MovePosition, new Vector3(0, jumpPower, 0), duration / (numJumps * 2))
-                           .SetOptions(AxisConstraint.Y, snapping).SetEase(Ease.OutQuad).SetRelative()
-                           .SetLoops(numJumps * 2, LoopType.Yoyo)
-                           .OnStart(() => startPosY = target.position.y);
+                .SetOptions(AxisConstraint.Y, snapping).SetEase(Ease.OutQuad).SetRelative()
+                .SetLoops(numJumps * 2, LoopType.Yoyo)
+                .OnStart(() => startPosY = target.position.y);
             s.Append(DOTween.To(() => target.position, target.MovePosition, new Vector3(endValue.x, 0, 0), duration)
-                     .SetOptions(AxisConstraint.X, snapping).SetEase(Ease.Linear)
-                    ).Join(DOTween.To(() => target.position, target.MovePosition, new Vector3(0, 0, endValue.z), duration)
-                           .SetOptions(AxisConstraint.Z, snapping).SetEase(Ease.Linear)
-                          ).Join(yTween)
-            .SetTarget(target).SetEase(DOTween.defaultEaseType);
-            yTween.OnUpdate(() =>
-            {
-                if (!offsetYSet)
-                {
+                    .SetOptions(AxisConstraint.X, snapping).SetEase(Ease.Linear)
+                ).Join(DOTween.To(() => target.position, target.MovePosition, new Vector3(0, 0, endValue.z), duration)
+                    .SetOptions(AxisConstraint.Z, snapping).SetEase(Ease.Linear)
+                ).Join(yTween)
+                .SetTarget(target).SetEase(DOTween.defaultEaseType);
+            yTween.OnUpdate(() => {
+                if (!offsetYSet) {
                     offsetYSet = true;
                     offsetY = s.isRelative ? endValue.y : endValue.y - startPosY;
                 }
-
                 Vector3 pos = target.position;
                 pos.y += DOVirtual.EasedValue(0, offsetY, yTween.ElapsedPercentage(), Ease.OutQuad);
                 target.MovePosition(pos);
@@ -140,7 +135,7 @@ namespace DG.Tweening
         /// If you plan to publish there you should use a regular transform.DOPath.</para></summary>
         /// <param name="path">The waypoints to go through</param>
         /// <param name="duration">The duration of the tween</param>
-        /// <param name="pathType">The type of path: Linear (straight path) or CatmullRom (curved CatmullRom path)</param>
+        /// <param name="pathType">The type of path: Linear (straight path), CatmullRom (curved CatmullRom path) or CubicBezier (curved with control points)</param>
         /// <param name="pathMode">The path mode: 3D, side-scroller 2D, top-down 2D</param>
         /// <param name="resolution">The resolution of the path (useless in case of Linear paths): higher resolutions make for more detailed curved paths but are more expensive.
         /// Defaults to 10, but a value of 5 is usually enough if you don't have dramatic long curves between waypoints</param>
@@ -150,10 +145,10 @@ namespace DG.Tweening
             PathMode pathMode = PathMode.Full3D, int resolution = 10, Color? gizmoColor = null
         )
         {
-            if (resolution < 1) { resolution = 1; }
-
+            if (resolution < 1) resolution = 1;
             TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => target.position, target.MovePosition, new Path(pathType, path, resolution, gizmoColor), duration)
-                                                        .SetTarget(target).SetUpdate(UpdateType.Fixed);
+                .SetTarget(target).SetUpdate(UpdateType.Fixed);
+
             t.plugOptions.isRigidbody = true;
             t.plugOptions.mode = pathMode;
             return t;
@@ -165,7 +160,7 @@ namespace DG.Tweening
         /// If you plan to publish there you should use a regular transform.DOLocalPath.</para></summary>
         /// <param name="path">The waypoint to go through</param>
         /// <param name="duration">The duration of the tween</param>
-        /// <param name="pathType">The type of path: Linear (straight path) or CatmullRom (curved CatmullRom path)</param>
+        /// <param name="pathType">The type of path: Linear (straight path), CatmullRom (curved CatmullRom path) or CubicBezier (curved with control points)</param>
         /// <param name="pathMode">The path mode: 3D, side-scroller 2D, top-down 2D</param>
         /// <param name="resolution">The resolution of the path: higher resolutions make for more detailed curved paths but are more expensive.
         /// Defaults to 10, but a value of 5 is usually enough if you don't have dramatic long curves between waypoints</param>
@@ -175,12 +170,11 @@ namespace DG.Tweening
             PathMode pathMode = PathMode.Full3D, int resolution = 10, Color? gizmoColor = null
         )
         {
-            if (resolution < 1) { resolution = 1; }
-
+            if (resolution < 1) resolution = 1;
             Transform trans = target.transform;
-            TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)),
-                                                                   new Path(pathType, path, resolution, gizmoColor), duration)
-                                                        .SetTarget(target).SetUpdate(UpdateType.Fixed);
+            TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), new Path(pathType, path, resolution, gizmoColor), duration)
+                .SetTarget(target).SetUpdate(UpdateType.Fixed);
+
             t.plugOptions.isRigidbody = true;
             t.plugOptions.mode = pathMode;
             t.plugOptions.useLocalPosition = true;
@@ -192,7 +186,8 @@ namespace DG.Tweening
         )
         {
             TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => target.position, target.MovePosition, path, duration)
-                                                        .SetTarget(target);
+                .SetTarget(target);
+
             t.plugOptions.isRigidbody = true;
             t.plugOptions.mode = pathMode;
             return t;
@@ -203,7 +198,8 @@ namespace DG.Tweening
         {
             Transform trans = target.transform;
             TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), path, duration)
-                                                        .SetTarget(target);
+                .SetTarget(target);
+
             t.plugOptions.isRigidbody = true;
             t.plugOptions.mode = pathMode;
             t.plugOptions.useLocalPosition = true;
@@ -215,6 +211,6 @@ namespace DG.Tweening
         #endregion
 
         #endregion
-    }
+	}
 }
 #endif

@@ -28,15 +28,14 @@ namespace UniRx.Operators
                 : base(observer, cancel)
             {
                 hashSet = (parent.comparer == null)
-                          ? new HashSet<T>()
-                          : new HashSet<T>(parent.comparer);
+                    ? new HashSet<T>()
+                    : new HashSet<T>(parent.comparer);
             }
 
             public override void OnNext(T value)
             {
                 var key = default(T);
                 var isAdded = false;
-
                 try
                 {
                     key = value;
@@ -44,9 +43,7 @@ namespace UniRx.Operators
                 }
                 catch (Exception exception)
                 {
-                    try { observer.OnError(exception); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(exception); } finally { Dispose(); }
                     return;
                 }
 
@@ -58,14 +55,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -99,15 +94,14 @@ namespace UniRx.Operators
             {
                 this.parent = parent;
                 hashSet = (parent.comparer == null)
-                          ? new HashSet<TKey>()
-                          : new HashSet<TKey>(parent.comparer);
+                    ? new HashSet<TKey>()
+                    : new HashSet<TKey>(parent.comparer);
             }
 
             public override void OnNext(T value)
             {
                 var key = default(TKey);
                 var isAdded = false;
-
                 try
                 {
                     key = parent.keySelector(value);
@@ -115,9 +109,7 @@ namespace UniRx.Operators
                 }
                 catch (Exception exception)
                 {
-                    try { observer.OnError(exception); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(exception); } finally { Dispose(); }
                     return;
                 }
 
@@ -129,14 +121,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

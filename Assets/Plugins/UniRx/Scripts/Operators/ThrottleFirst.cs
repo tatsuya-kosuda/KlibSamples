@@ -8,7 +8,7 @@ namespace UniRx.Operators
         readonly TimeSpan dueTime;
         readonly IScheduler scheduler;
 
-        public ThrottleFirstObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler)
+        public ThrottleFirstObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler) 
             : base(scheduler == Scheduler.CurrentThread || source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
@@ -37,6 +37,7 @@ namespace UniRx.Operators
             {
                 cancelable = new SerialDisposable();
                 var subscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(cancelable, subscription);
             }
 
@@ -52,8 +53,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (!open) { return; }
-
+                    if (!open) return;
                     observer.OnNext(value);
                     open = false;
                 }
@@ -69,8 +69,7 @@ namespace UniRx.Operators
 
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -80,8 +79,7 @@ namespace UniRx.Operators
 
                 lock (gate)
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
         }

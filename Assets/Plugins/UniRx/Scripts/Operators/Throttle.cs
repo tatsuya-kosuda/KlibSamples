@@ -11,7 +11,7 @@ namespace UniRx.Operators
         readonly TimeSpan dueTime;
         readonly IScheduler scheduler;
 
-        public ThrottleObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler)
+        public ThrottleObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler) 
             : base(scheduler == Scheduler.CurrentThread || source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
@@ -42,6 +42,7 @@ namespace UniRx.Operators
             {
                 cancelable = new SerialDisposable();
                 var subscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(cancelable, subscription);
             }
 
@@ -53,7 +54,6 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(latestValue);
                     }
-
                     hasValue = false;
                 }
             }
@@ -61,7 +61,6 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 ulong currentid;
-
                 lock (gate)
                 {
                     hasValue = true;
@@ -83,9 +82,7 @@ namespace UniRx.Operators
                 {
                     hasValue = false;
                     id = unchecked(id + 1);
-
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -99,12 +96,9 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(latestValue);
                     }
-
                     hasValue = false;
                     id = unchecked(id + 1);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
         }

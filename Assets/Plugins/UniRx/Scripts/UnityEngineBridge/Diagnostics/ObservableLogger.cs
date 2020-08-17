@@ -13,11 +13,12 @@ namespace UniRx.Diagnostics
 
         private ObservableLogger()
         {
+
         }
 
         public static Action<LogEntry> RegisterLogger(Logger logger)
         {
-            if (logger.Name == null) { throw new ArgumentNullException("logger.Name is null"); }
+            if (logger.Name == null) throw new ArgumentNullException("logger.Name is null");
 
             return logPublisher.OnNext;
         }

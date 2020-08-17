@@ -1,9 +1,9 @@
 ﻿using System;
 
 #if UniRxLibrary
-    using UnityObservable = UniRx.ObservableUnity;
+using UnityObservable = UniRx.ObservableUnity;
 #else
-    using UnityObservable = UniRx.Observable;
+using UnityObservable = UniRx.Observable;
 #endif
 
 namespace UniRx.Operators
@@ -44,8 +44,10 @@ namespace UniRx.Operators
             {
                 sourceSubscription = new SingleAssignmentDisposable();
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+                
                 var scheduling = UnityObservable.IntervalFrame(parent.frameCount, parent.frameCountType)
-                                 .Subscribe(new SampleFrameTick(this));
+                    .Subscribe(new SampleFrameTick(this));
+
                 return StableCompositeDisposable.Create(sourceSubscription, scheduling);
             }
 
@@ -59,11 +61,9 @@ namespace UniRx.Operators
                         isUpdated = false;
                         observer.OnNext(value);
                     }
-
                     if (isCompleted)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); }
+                        try { observer.OnCompleted(); } finally { Dispose(); }
                     }
                 }
             }
@@ -81,8 +81,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { base.observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { base.observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -121,11 +120,9 @@ namespace UniRx.Operators
                             parent.isUpdated = false;
                             parent.observer.OnNext(value);
                         }
-
                         if (parent.isCompleted)
                         {
-                            try { parent.observer.OnCompleted(); }
-                            finally { parent.Dispose(); }
+                            try { parent.observer.OnCompleted(); } finally { parent.Dispose(); }
                         }
                     }
                 }

@@ -35,21 +35,17 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 T currentKey;
-
                 try
                 {
                     currentKey = value;
                 }
                 catch (Exception exception)
                 {
-                    try { observer.OnError(exception); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(exception); } finally { Dispose(); }
                     return;
                 }
 
                 var sameKey = false;
-
                 if (isFirst)
                 {
                     isFirst = false;
@@ -62,9 +58,7 @@ namespace UniRx.Operators
                     }
                     catch (Exception ex)
                     {
-                        try { observer.OnError(ex); }
-                        finally { Dispose(); }
-
+                        try { observer.OnError(ex); } finally { Dispose(); }
                         return;
                     }
                 }
@@ -78,14 +72,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -124,21 +116,17 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 TKey currentKey;
-
                 try
                 {
                     currentKey = parent.keySelector(value);
                 }
                 catch (Exception exception)
                 {
-                    try { observer.OnError(exception); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(exception); } finally { Dispose(); }
                     return;
                 }
 
                 var sameKey = false;
-
                 if (isFirst)
                 {
                     isFirst = false;
@@ -151,9 +139,7 @@ namespace UniRx.Operators
                     }
                     catch (Exception ex)
                     {
-                        try { observer.OnError(ex); }
-                        finally { Dispose(); }
-
+                        try { observer.OnError(ex); } finally { Dispose(); }
                         return;
                     }
                 }
@@ -167,14 +153,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

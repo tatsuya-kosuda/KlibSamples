@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            if (onUpdateSelected != null) { onUpdateSelected.OnNext(eventData); }
+            if (onUpdateSelected != null) onUpdateSelected.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnUpdateSelectedAsObservable()

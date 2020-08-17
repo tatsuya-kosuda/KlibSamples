@@ -11,7 +11,7 @@ namespace UniRx.Operators
         readonly TimeSpan dueTime;
         readonly IScheduler scheduler;
 
-        public DelayObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler)
+        public DelayObservable(IObservable<T> source, TimeSpan dueTime, IScheduler scheduler) 
             : base(scheduler == Scheduler.CurrentThread || source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
@@ -48,6 +48,7 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 cancelable = new SerialDisposable();
+
                 active = false;
                 running = false;
                 queue = new Queue<Timestamped<T>>();
@@ -57,9 +58,11 @@ namespace UniRx.Operators
                 exception = default(Exception);
                 ready = true;
                 delay = Scheduler.Normalize(parent.dueTime);
+
                 var _sourceSubscription = new SingleAssignmentDisposable();
                 sourceSubscription = _sourceSubscription; // assign to field
                 _sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(sourceSubscription, cancelable);
             }
 
@@ -71,6 +74,7 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     queue.Enqueue(new Timestamped<T>(value, next));
+
                     shouldRun = ready && !active;
                     active = true;
                 }
@@ -84,26 +88,29 @@ namespace UniRx.Operators
             public override void OnError(Exception error)
             {
                 sourceSubscription.Dispose();
+
                 var shouldRun = false;
 
                 lock (gate)
                 {
                     queue.Clear();
+
                     exception = error;
                     hasFailed = true;
+
                     shouldRun = !running;
                 }
 
                 if (shouldRun)
                 {
-                    try { base.observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { base.observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
             public override void OnCompleted()
             {
                 sourceSubscription.Dispose();
+
                 var next = parent.scheduler.Now.Add(delay);
                 var shouldRun = false;
 
@@ -111,6 +118,7 @@ namespace UniRx.Operators
                 {
                     completeAt = next;
                     onCompleted = true;
+
                     shouldRun = ready && !active;
                     active = true;
                 }
@@ -125,8 +133,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (hasFailed) { return; }
-
+                    if (hasFailed) return;
                     running = true;
                 }
 
@@ -136,9 +143,11 @@ namespace UniRx.Operators
                 {
                     var hasFailed = false;
                     var error = default(Exception);
+
                     var hasValue = false;
                     var value = default(T);
                     var hasCompleted = false;
+
                     var shouldRecurse = false;
                     var recurseDueTime = default(TimeSpan);
 
@@ -198,13 +207,11 @@ namespace UniRx.Operators
                     {
                         if (hasCompleted)
                         {
-                            try { base.observer.OnCompleted(); }
-                            finally { Dispose(); }
+                            try { base.observer.OnCompleted(); } finally { Dispose(); }
                         }
                         else if (hasFailed)
                         {
-                            try { base.observer.OnError(error); }
-                            finally { Dispose(); }
+                            try { base.observer.OnError(error); } finally { Dispose(); }
                         }
                         else if (shouldRecurse)
                         {

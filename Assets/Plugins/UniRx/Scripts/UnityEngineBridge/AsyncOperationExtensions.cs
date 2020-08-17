@@ -4,7 +4,7 @@ using System.Threading;
 using UnityEngine;
 
 #if !UniRxLibrary
-    using ObservableUnity = UniRx.Observable;
+using ObservableUnity = UniRx.Observable;
 #endif
 
 namespace UniRx
@@ -21,13 +21,13 @@ namespace UniRx
 
         // T: where T : AsyncOperation is ambigious with IObservable<T>.AsObservable
         public static IObservable<T> AsAsyncOperationObservable<T>(this T asyncOperation, IProgress<float> progress = null)
-        where T : AsyncOperation
+            where T : AsyncOperation
         {
             return ObservableUnity.FromCoroutine<T>((observer, cancellation) => AsObservableCore(asyncOperation, observer, progress, cancellation));
         }
 
         static IEnumerator AsObservableCore<T>(T asyncOperation, IObserver<T> observer, IProgress<float> reportProgress, CancellationToken cancel)
-        where T : AsyncOperation
+            where T : AsyncOperation
         {
             if (reportProgress != null)
             {
@@ -42,7 +42,6 @@ namespace UniRx
                         observer.OnError(ex);
                         yield break;
                     }
-
                     yield return null;
                 }
             }
@@ -54,7 +53,7 @@ namespace UniRx
                 }
             }
 
-            if (cancel.IsCancellationRequested) { yield break; }
+            if (cancel.IsCancellationRequested) yield break;
 
             if (reportProgress != null)
             {

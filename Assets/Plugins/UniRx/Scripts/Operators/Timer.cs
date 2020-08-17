@@ -10,7 +10,7 @@ namespace UniRx.Operators
         readonly IScheduler scheduler;
 
         public TimerObservable(DateTimeOffset dueTime, TimeSpan? period, IScheduler scheduler)
-        : base(scheduler == Scheduler.CurrentThread)
+            : base(scheduler == Scheduler.CurrentThread)
         {
             this.dueTimeA = dueTime;
             this.period = period;
@@ -18,7 +18,7 @@ namespace UniRx.Operators
         }
 
         public TimerObservable(TimeSpan dueTime, TimeSpan? period, IScheduler scheduler)
-        : base(scheduler == Scheduler.CurrentThread)
+            : base(scheduler == Scheduler.CurrentThread)
         {
             this.dueTimeB = dueTime;
             this.period = period;
@@ -28,9 +28,10 @@ namespace UniRx.Operators
         protected override IDisposable SubscribeCore(IObserver<long> observer, IDisposable cancel)
         {
             var timerObserver = new Timer(observer, cancel);
+
             var dueTime = (dueTimeA != null)
-                          ? dueTimeA.Value - scheduler.Now
-                          : dueTimeB.Value;
+                ? dueTimeA.Value - scheduler.Now
+                : dueTimeB.Value;
 
             // one-shot
             if (period == null)
@@ -44,7 +45,6 @@ namespace UniRx.Operators
             else
             {
                 var periodicScheduler = scheduler as ISchedulerPeriodic;
-
                 if (periodicScheduler != null)
                 {
                     if (dueTime == period.Value)
@@ -56,18 +56,22 @@ namespace UniRx.Operators
                     {
                         // Schedule Once + Scheudle Periodic
                         var disposable = new SerialDisposable();
+
                         disposable.Disposable = scheduler.Schedule(Scheduler.Normalize(dueTime), () =>
                         {
                             timerObserver.OnNext(); // run first
+
                             var timeP = Scheduler.Normalize(period.Value);
                             disposable.Disposable = periodicScheduler.SchedulePeriodic(timeP, timerObserver.OnNext); // run periodic
                         });
+
                         return disposable;
                     }
                 }
                 else
                 {
                     var timeP = Scheduler.Normalize(period.Value);
+
                     return scheduler.Schedule(Scheduler.Normalize(dueTime), self =>
                     {
                         timerObserver.OnNext();

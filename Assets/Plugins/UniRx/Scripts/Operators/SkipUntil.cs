@@ -32,10 +32,13 @@ namespace UniRx.Operators
             {
                 var sourceSubscription = new SingleAssignmentDisposable();
                 var sourceObserver = new SkipUntil(this, sourceSubscription);
+                
                 var otherSubscription = new SingleAssignmentDisposable();
                 var otherObserver = new SkipUntilOther(this, sourceObserver, otherSubscription);
+
                 sourceSubscription.Disposable = parent.source.Subscribe(sourceObserver);
                 otherSubscription.Disposable = parent.other.Subscribe(otherObserver);
+
                 return StableCompositeDisposable.Create(otherSubscription, sourceSubscription);
             }
 
@@ -103,8 +106,7 @@ namespace UniRx.Operators
 
                 public void OnError(Exception error)
                 {
-                    try { parent.observer.OnError(error); }
-                    finally { parent.Dispose(); }
+                    try { parent.observer.OnError(error); } finally { parent.Dispose(); }
                 }
 
                 public void OnCompleted()

@@ -7,41 +7,41 @@ namespace UniRx
     public static partial class Observable
     {
         /// <summary>
-        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator.
+        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator. 
         /// </summary>
         public static IObservable<T> Create<T>(Func<IObserver<T>, IDisposable> subscribe)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateObservable<T>(subscribe);
         }
 
         /// <summary>
-        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator(HotObservable).
+        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator(HotObservable). 
         /// </summary>
         public static IObservable<T> Create<T>(Func<IObserver<T>, IDisposable> subscribe, bool isRequiredSubscribeOnCurrentThread)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateObservable<T>(subscribe, isRequiredSubscribeOnCurrentThread);
         }
 
         /// <summary>
-        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator.
+        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator. 
         /// </summary>
         public static IObservable<T> CreateWithState<T, TState>(TState state, Func<TState, IObserver<T>, IDisposable> subscribe)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateObservable<T, TState>(state, subscribe);
         }
 
         /// <summary>
-        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator(HotObservable).
+        /// Create anonymous observable. Observer has exception durability. This is recommended for make operator and event like generator(HotObservable). 
         /// </summary>
         public static IObservable<T> CreateWithState<T, TState>(TState state, Func<TState, IObserver<T>, IDisposable> subscribe, bool isRequiredSubscribeOnCurrentThread)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateObservable<T, TState>(state, subscribe, isRequiredSubscribeOnCurrentThread);
         }
@@ -51,7 +51,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<T> CreateSafe<T>(Func<IObserver<T>, IDisposable> subscribe)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateSafeObservable<T>(subscribe);
         }
@@ -61,7 +61,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<T> CreateSafe<T>(Func<IObserver<T>, IDisposable> subscribe, bool isRequiredSubscribeOnCurrentThread)
         {
-            if (subscribe == null) { throw new ArgumentNullException("subscribe"); }
+            if (subscribe == null) throw new ArgumentNullException("subscribe");
 
             return new CreateSafeObservable<T>(subscribe, isRequiredSubscribeOnCurrentThread);
         }
@@ -158,8 +158,8 @@ namespace UniRx
         public static IObservable<bool> Return(bool value)
         {
             return (value == true)
-                   ? (IObservable<bool>)ImmutableReturnTrueObservable.Instance
-                   : (IObservable<bool>)ImmutableReturnFalseObservable.Instance;
+                ? (IObservable<bool>)ImmutableReturnTrueObservable.Instance
+                : (IObservable<bool>)ImmutableReturnFalseObservable.Instance;
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace UniRx
 
         public static IObservable<T> Repeat<T>(T value, IScheduler scheduler)
         {
-            if (scheduler == null) { throw new ArgumentNullException("scheduler"); }
+            if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             return new RepeatObservable<T>(value, null, scheduler);
         }
@@ -239,9 +239,8 @@ namespace UniRx
 
         public static IObservable<T> Repeat<T>(T value, int repeatCount, IScheduler scheduler)
         {
-            if (repeatCount < 0) { throw new ArgumentOutOfRangeException("repeatCount"); }
-
-            if (scheduler == null) { throw new ArgumentNullException("scheduler"); }
+            if (repeatCount < 0) throw new ArgumentOutOfRangeException("repeatCount");
+            if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             return new RepeatObservable<T>(value, repeatCount, scheduler);
         }
@@ -322,10 +321,10 @@ namespace UniRx
             return () =>
             {
                 var subject = new AsyncSubject<T>();
+
                 scheduler.Schedule(() =>
                 {
                     var result = default(T);
-
                     try
                     {
                         result = function();
@@ -335,10 +334,10 @@ namespace UniRx
                         subject.OnError(exception);
                         return;
                     }
-
                     subject.OnNext(result);
                     subject.OnCompleted();
                 });
+
                 return subject.AsObservable();
             };
         }
@@ -353,6 +352,7 @@ namespace UniRx
             return () =>
             {
                 var subject = new AsyncSubject<Unit>();
+
                 scheduler.Schedule(() =>
                 {
                     try
@@ -364,10 +364,10 @@ namespace UniRx
                         subject.OnError(exception);
                         return;
                     }
-
                     subject.OnNext(Unit.Default);
                     subject.OnCompleted();
                 });
+
                 return subject.AsObservable();
             };
         }

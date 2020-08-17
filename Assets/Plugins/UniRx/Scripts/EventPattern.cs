@@ -87,10 +87,9 @@ namespace UniRx
         public bool Equals(EventPattern<TSender, TEventArgs> other)
         {
             if (object.ReferenceEquals(null, other))
-            { return false; }
-
+                return false;
             if (object.ReferenceEquals(this, other))
-            { return true; }
+                return true;
 
             return EqualityComparer<TSender>.Default.Equals(Sender, other.Sender) && EqualityComparer<TEventArgs>.Default.Equals(EventArgs, other.EventArgs);
         }

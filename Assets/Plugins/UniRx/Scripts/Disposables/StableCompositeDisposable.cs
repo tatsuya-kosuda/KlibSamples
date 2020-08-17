@@ -17,9 +17,8 @@ namespace UniRx
         /// <returns>Group of disposable resources that are disposed together.</returns>
         public static ICancelable Create(IDisposable disposable1, IDisposable disposable2)
         {
-            if (disposable1 == null) { throw new ArgumentNullException("disposable1"); }
-
-            if (disposable2 == null) { throw new ArgumentNullException("disposable2"); }
+            if (disposable1 == null) throw new ArgumentNullException("disposable1");
+            if (disposable2 == null) throw new ArgumentNullException("disposable2");
 
             return new Binary(disposable1, disposable2);
         }
@@ -33,11 +32,9 @@ namespace UniRx
         /// <returns>Group of disposable resources that are disposed together.</returns>
         public static ICancelable Create(IDisposable disposable1, IDisposable disposable2, IDisposable disposable3)
         {
-            if (disposable1 == null) { throw new ArgumentNullException("disposable1"); }
-
-            if (disposable2 == null) { throw new ArgumentNullException("disposable2"); }
-
-            if (disposable3 == null) { throw new ArgumentNullException("disposable3"); }
+            if (disposable1 == null) throw new ArgumentNullException("disposable1");
+            if (disposable2 == null) throw new ArgumentNullException("disposable2");
+            if (disposable3 == null) throw new ArgumentNullException("disposable3");
 
             return new Trinary(disposable1, disposable2, disposable3);
         }
@@ -52,13 +49,10 @@ namespace UniRx
         /// <returns>Group of disposable resources that are disposed together.</returns>
         public static ICancelable Create(IDisposable disposable1, IDisposable disposable2, IDisposable disposable3, IDisposable disposable4)
         {
-            if (disposable1 == null) { throw new ArgumentNullException("disposable1"); }
-
-            if (disposable2 == null) { throw new ArgumentNullException("disposable2"); }
-
-            if (disposable3 == null) { throw new ArgumentNullException("disposable3"); }
-
-            if (disposable4 == null) { throw new ArgumentNullException("disposable4"); }
+            if (disposable1 == null) throw new ArgumentNullException("disposable1");
+            if (disposable2 == null) throw new ArgumentNullException("disposable2");
+            if (disposable3 == null) throw new ArgumentNullException("disposable3");
+            if (disposable4 == null) throw new ArgumentNullException("disposable4");
 
             return new Quaternary(disposable1, disposable2, disposable3, disposable4);
         }
@@ -70,7 +64,7 @@ namespace UniRx
         /// <returns>Group of disposable resources that are disposed together.</returns>
         public static ICancelable Create(params IDisposable[] disposables)
         {
-            if (disposables == null) { throw new ArgumentNullException("disposables"); }
+            if (disposables == null) throw new ArgumentNullException("disposables");
 
             return new NAry(disposables);
         }
@@ -92,7 +86,7 @@ namespace UniRx
         /// <returns>Group of disposable resources that are disposed together.</returns>
         public static ICancelable Create(IEnumerable<IDisposable> disposables)
         {
-            if (disposables == null) { throw new ArgumentNullException("disposables"); }
+            if (disposables == null) throw new ArgumentNullException("disposables");
 
             return new NAry(disposables);
         }
@@ -226,7 +220,7 @@ namespace UniRx
                 //
                 // Doing this on the list to avoid duplicate enumeration of disposables.
                 //
-                if (_disposables.Contains(null)) { throw new ArgumentException("Disposables can't contains null", "disposables"); }
+                if (_disposables.Contains(null)) throw new ArgumentException("Disposables can't contains null", "disposables");
             }
 
             public override bool IsDisposed
@@ -272,7 +266,6 @@ namespace UniRx
                 if (Interlocked.Increment(ref disposedCallCount) == 0)
                 {
                     var len = _disposables.Length;
-
                     for (int i = 0; i < len; i++)
                     {
                         _disposables[i].Dispose();

@@ -33,12 +33,10 @@ namespace UniRx.InternalUtil
         private void Percolate(int index)
         {
             if (index >= _size || index < 0)
-            { return; }
-
+                return;
             var parent = (index - 1) / 2;
-
             if (parent < 0 || parent == index)
-            { return; }
+                return;
 
             if (IsHigherPriority(index, parent))
             {
@@ -57,18 +55,16 @@ namespace UniRx.InternalUtil
         private void Heapify(int index)
         {
             if (index >= _size || index < 0)
-            { return; }
+                return;
 
             var left = 2 * index + 1;
             var right = 2 * index + 2;
             var first = index;
 
             if (left < _size && IsHigherPriority(left, first))
-            { first = left; }
-
+                first = left;
             if (right < _size && IsHigherPriority(right, first))
-            { first = right; }
-
+                first = right;
             if (first != index)
             {
                 var temp = _items[index];
@@ -83,7 +79,7 @@ namespace UniRx.InternalUtil
         public T Peek()
         {
             if (_size == 0)
-            { throw new InvalidOperationException("HEAP is Empty"); }
+                throw new InvalidOperationException("HEAP is Empty");
 
             return _items[0].Value;
         }
@@ -93,7 +89,6 @@ namespace UniRx.InternalUtil
             _items[index] = _items[--_size];
             _items[_size] = default(IndexedItem);
             Heapify();
-
             if (_size < _items.Length / 4)
             {
                 var temp = _items;
@@ -145,10 +140,8 @@ namespace UniRx.InternalUtil
             public int CompareTo(IndexedItem other)
             {
                 var c = Value.CompareTo(other.Value);
-
                 if (c == 0)
-                { c = Id.CompareTo(other.Id); }
-
+                    c = Id.CompareTo(other.Id);
                 return c;
             }
         }

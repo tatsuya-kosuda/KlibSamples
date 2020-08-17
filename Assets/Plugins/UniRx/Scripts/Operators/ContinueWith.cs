@@ -36,6 +36,7 @@ namespace UniRx.Operators
             {
                 var sourceDisposable = new SingleAssignmentDisposable();
                 serialDisposable.Disposable = sourceDisposable;
+
                 sourceDisposable.Disposable = parent.source.Subscribe(this);
                 return serialDisposable;
             }
@@ -48,8 +49,7 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             public override void OnCompleted()
@@ -57,20 +57,19 @@ namespace UniRx.Operators
                 if (seenValue)
                 {
                     try
-                    {
-                        var v = parent.selector(lastValue);
-                        // dispose source subscription
-                        serialDisposable.Disposable = v.Subscribe(observer);
-                    }
-                    catch (Exception error)
-                    {
-                        OnError(error);
-                    }
+	                {
+		                var v = parent.selector(lastValue);
+		                // dispose source subscription
+		                serialDisposable.Disposable = v.Subscribe(observer);
+	                }
+	                catch (Exception error)
+	                {
+		                OnError(error);
+	                }
                 }
                 else
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); };
+                    try { observer.OnCompleted(); } finally { Dispose(); };
                 }
             }
         }

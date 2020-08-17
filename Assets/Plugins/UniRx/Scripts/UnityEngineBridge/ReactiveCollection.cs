@@ -10,7 +10,7 @@ namespace UniRx
         public T Value { get; private set; }
 
         public CollectionAddEvent(int index, T value)
-            : this()
+            :this()
         {
             Index = index;
             Value = value;
@@ -117,8 +117,8 @@ namespace UniRx
         public bool Equals(CollectionReplaceEvent<T> other)
         {
             return Index.Equals(other.Index)
-                   && EqualityComparer<T>.Default.Equals(OldValue, other.OldValue)
-                   && EqualityComparer<T>.Default.Equals(NewValue, other.NewValue);
+                && EqualityComparer<T>.Default.Equals(OldValue, other.OldValue)
+                && EqualityComparer<T>.Default.Equals(NewValue, other.NewValue);
         }
     }
 
@@ -150,11 +150,12 @@ namespace UniRx
 
         public ReactiveCollection()
         {
+
         }
 
         public ReactiveCollection(IEnumerable<T> collection)
         {
-            if (collection == null) { throw new ArgumentNullException("collection"); }
+            if (collection == null) throw new ArgumentNullException("collection");
 
             foreach (var item in collection)
             {
@@ -172,11 +173,10 @@ namespace UniRx
             var beforeCount = Count;
             base.ClearItems();
 
-            if (collectionReset != null) { collectionReset.OnNext(Unit.Default); }
-
+            if (collectionReset != null) collectionReset.OnNext(Unit.Default);
             if (beforeCount > 0)
             {
-                if (countChanged != null) { countChanged.OnNext(Count); }
+                if (countChanged != null) countChanged.OnNext(Count);
             }
         }
 
@@ -184,9 +184,8 @@ namespace UniRx
         {
             base.InsertItem(index, item);
 
-            if (collectionAdd != null) { collectionAdd.OnNext(new CollectionAddEvent<T>(index, item)); }
-
-            if (countChanged != null) { countChanged.OnNext(Count); }
+            if (collectionAdd != null) collectionAdd.OnNext(new CollectionAddEvent<T>(index, item));
+            if (countChanged != null) countChanged.OnNext(Count);
         }
 
         public void Move(int oldIndex, int newIndex)
@@ -200,7 +199,7 @@ namespace UniRx
             base.RemoveItem(oldIndex);
             base.InsertItem(newIndex, item);
 
-            if (collectionMove != null) { collectionMove.OnNext(new CollectionMoveEvent<T>(oldIndex, newIndex, item)); }
+            if (collectionMove != null) collectionMove.OnNext(new CollectionMoveEvent<T>(oldIndex, newIndex, item));
         }
 
         protected override void RemoveItem(int index)
@@ -208,9 +207,8 @@ namespace UniRx
             T item = this[index];
             base.RemoveItem(index);
 
-            if (collectionRemove != null) { collectionRemove.OnNext(new CollectionRemoveEvent<T>(index, item)); }
-
-            if (countChanged != null) { countChanged.OnNext(Count); }
+            if (collectionRemove != null) collectionRemove.OnNext(new CollectionRemoveEvent<T>(index, item));
+            if (countChanged != null) countChanged.OnNext(Count);
         }
 
         protected override void SetItem(int index, T item)
@@ -218,7 +216,7 @@ namespace UniRx
             T oldItem = this[index];
             base.SetItem(index, item);
 
-            if (collectionReplace != null) { collectionReplace.OnNext(new CollectionReplaceEvent<T>(index, oldItem, item)); }
+            if (collectionReplace != null) collectionReplace.OnNext(new CollectionReplaceEvent<T>(index, oldItem, item));
         }
 
 
@@ -226,10 +224,9 @@ namespace UniRx
         Subject<int> countChanged = null;
         public IObservable<int> ObserveCountChanged(bool notifyCurrentCount = false)
         {
-            if (isDisposed) { return Observable.Empty<int>(); }
+            if (isDisposed) return Observable.Empty<int>();
 
             var subject = countChanged ?? (countChanged = new Subject<int>());
-
             if (notifyCurrentCount)
             {
                 return subject.StartWith(() => this.Count);
@@ -244,8 +241,7 @@ namespace UniRx
         Subject<Unit> collectionReset = null;
         public IObservable<Unit> ObserveReset()
         {
-            if (isDisposed) { return Observable.Empty<Unit>(); }
-
+            if (isDisposed) return Observable.Empty<Unit>();
             return collectionReset ?? (collectionReset = new Subject<Unit>());
         }
 
@@ -253,8 +249,7 @@ namespace UniRx
         Subject<CollectionAddEvent<T>> collectionAdd = null;
         public IObservable<CollectionAddEvent<T>> ObserveAdd()
         {
-            if (isDisposed) { return Observable.Empty<CollectionAddEvent<T>>(); }
-
+            if (isDisposed) return Observable.Empty<CollectionAddEvent<T>>();
             return collectionAdd ?? (collectionAdd = new Subject<CollectionAddEvent<T>>());
         }
 
@@ -262,8 +257,7 @@ namespace UniRx
         Subject<CollectionMoveEvent<T>> collectionMove = null;
         public IObservable<CollectionMoveEvent<T>> ObserveMove()
         {
-            if (isDisposed) { return Observable.Empty<CollectionMoveEvent<T>>(); }
-
+            if (isDisposed) return Observable.Empty<CollectionMoveEvent<T>>();
             return collectionMove ?? (collectionMove = new Subject<CollectionMoveEvent<T>>());
         }
 
@@ -271,8 +265,7 @@ namespace UniRx
         Subject<CollectionRemoveEvent<T>> collectionRemove = null;
         public IObservable<CollectionRemoveEvent<T>> ObserveRemove()
         {
-            if (isDisposed) { return Observable.Empty<CollectionRemoveEvent<T>>(); }
-
+            if (isDisposed) return Observable.Empty<CollectionRemoveEvent<T>>();
             return collectionRemove ?? (collectionRemove = new Subject<CollectionRemoveEvent<T>>());
         }
 
@@ -280,8 +273,7 @@ namespace UniRx
         Subject<CollectionReplaceEvent<T>> collectionReplace = null;
         public IObservable<CollectionReplaceEvent<T>> ObserveReplace()
         {
-            if (isDisposed) { return Observable.Empty<CollectionReplaceEvent<T>>(); }
-
+            if (isDisposed) return Observable.Empty<CollectionReplaceEvent<T>>();
             return collectionReplace ?? (collectionReplace = new Subject<CollectionReplaceEvent<T>>());
         }
 
@@ -327,7 +319,7 @@ namespace UniRx
         {
             Dispose(true);
         }
-
+        
         #endregion
     }
 

@@ -21,23 +21,19 @@ namespace UniRx
             {
                 var shouldDispose = false;
                 var old = default(IDisposable);
-
                 lock (gate)
                 {
                     shouldDispose = disposed;
-
                     if (!shouldDispose)
                     {
                         old = current;
                         current = value;
                     }
                 }
-
                 if (old != null)
                 {
                     old.Dispose();
                 }
-
                 if (shouldDispose && value != null)
                 {
                     value.Dispose();

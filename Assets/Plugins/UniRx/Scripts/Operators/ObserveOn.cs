@@ -18,7 +18,6 @@ namespace UniRx.Operators
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
         {
             var queueing = scheduler as ISchedulerQueueing;
-
             if (queueing == null)
             {
                 return new ObserveOn(this, observer, cancel).Run();
@@ -40,8 +39,7 @@ namespace UniRx.Operators
                 public void Dispose()
                 {
                     if (schedule != null)
-                    { schedule.Dispose(); }
-
+                        schedule.Dispose();
                     schedule = null;
 
                     if (node.List != null)
@@ -65,7 +63,9 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 isDisposed = false;
+
                 var sourceDisposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(sourceDisposable, Disposable.Create(() =>
                 {
                     lock (actions)
@@ -73,11 +73,11 @@ namespace UniRx.Operators
                         isDisposed = true;
 
                         while (actions.Count > 0)
-                        {
-                            // Dispose will both cancel the action (if not already running)
-                            // and remove it from 'actions'
+						{
+							// Dispose will both cancel the action (if not already running)
+							// and remove it from 'actions'
                             actions.First.Value.Dispose();
-                        }
+						}
                     }
                 }));
             }
@@ -100,10 +100,9 @@ namespace UniRx.Operators
             private void QueueAction(Notification<T> data)
             {
                 var action = new SchedulableAction { data = data };
-
                 lock (actions)
                 {
-                    if (isDisposed) { return; }
+                    if (isDisposed) return;
 
                     action.node = actions.AddLast(action);
                     ProcessNext();
@@ -115,12 +114,12 @@ namespace UniRx.Operators
                 lock (actions)
                 {
                     if (actions.Count == 0 || isDisposed)
-                    { return; }
+                        return;
 
                     var action = actions.First.Value;
 
                     if (action.IsScheduled)
-                    { return; }
+                        return;
 
                     action.schedule = parent.scheduler.Schedule(() =>
                     {
@@ -131,11 +130,9 @@ namespace UniRx.Operators
                                 case NotificationKind.OnNext:
                                     observer.OnNext(action.data.Value);
                                     break;
-
                                 case NotificationKind.OnError:
                                     observer.OnError(action.data.Exception);
                                     break;
-
                                 case NotificationKind.OnCompleted:
                                     observer.OnCompleted();
                                     break;
@@ -149,9 +146,9 @@ namespace UniRx.Operators
                             }
 
                             if (action.data.Kind == NotificationKind.OnNext)
-                            { ProcessNext(); }
+                                ProcessNext();
                             else
-                            { Dispose(); }
+                                Dispose();
                         }
                     });
                 }
@@ -186,14 +183,12 @@ namespace UniRx.Operators
 
             void OnError_(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             void OnCompleted_(Unit _)
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
 
             public override void OnNext(T value)

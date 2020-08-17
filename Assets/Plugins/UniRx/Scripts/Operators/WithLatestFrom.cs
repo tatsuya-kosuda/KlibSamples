@@ -42,6 +42,7 @@ namespace UniRx.Operators
                 var l = parent.left.Subscribe(new LeftObserver(this));
                 var rSubscription = new SingleAssignmentDisposable();
                 rSubscription.Disposable  = parent.right.Subscribe(new RightObserver(this, rSubscription));
+
                 return StableCompositeDisposable.Create(l, rSubscription);
             }
 
@@ -76,7 +77,6 @@ namespace UniRx.Operators
                     if (parent.hasLatest)
                     {
                         var result = default(TResult);
-
                         try
                         {
                             result = parent.parent.selector(value, parent.latestValue);
@@ -87,7 +87,6 @@ namespace UniRx.Operators
                             {
                                 parent.OnError(ex);
                             }
-
                             return;
                         }
 

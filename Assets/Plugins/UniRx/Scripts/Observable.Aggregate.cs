@@ -27,8 +27,7 @@ namespace UniRx
             return new AggregateObservable<TSource, TAccumulate>(source, seed, accumulator);
         }
 
-        public static IObservable<TResult> Aggregate<TSource, TAccumulate, TResult>(this IObservable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulator,
-                                                                                    Func<TAccumulate, TResult> resultSelector)
+        public static IObservable<TResult> Aggregate<TSource, TAccumulate, TResult>(this IObservable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulator, Func<TAccumulate, TResult> resultSelector)
         {
             return new AggregateObservable<TSource, TAccumulate, TResult>(source, seed, accumulator, resultSelector);
         }

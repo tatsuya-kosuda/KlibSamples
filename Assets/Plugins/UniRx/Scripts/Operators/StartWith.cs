@@ -39,7 +39,6 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 T t;
-
                 if (parent.valueFactory == null)
                 {
                     t = parent.value;
@@ -54,7 +53,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return Disposable.Empty;
                     }
                 }

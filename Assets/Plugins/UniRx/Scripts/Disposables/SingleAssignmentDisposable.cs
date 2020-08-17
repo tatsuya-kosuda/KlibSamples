@@ -26,16 +26,13 @@ namespace UniRx
             {
                 var old = default(IDisposable);
                 bool alreadyDisposed;
-
                 lock (gate)
                 {
                     alreadyDisposed = disposed;
                     old = current;
-
                     if (!alreadyDisposed)
                     {
-                        if (value == null) { return; }
-
+                        if (value == null) return;
                         current = value;
                     }
                 }
@@ -46,7 +43,7 @@ namespace UniRx
                     return;
                 }
 
-                if (old != null) { throw new InvalidOperationException("Disposable is already set"); }
+                if (old != null) throw new InvalidOperationException("Disposable is already set");
             }
         }
 
@@ -65,7 +62,7 @@ namespace UniRx
                 }
             }
 
-            if (old != null) { old.Dispose(); }
+            if (old != null) old.Dispose();
         }
     }
 }

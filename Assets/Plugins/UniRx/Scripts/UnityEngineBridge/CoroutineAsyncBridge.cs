@@ -1,8 +1,6 @@
-
 ﻿#if (NET_4_6 || NET_STANDARD_2_0)
 
-    using System;
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +42,7 @@ namespace UniRx
 
         public void GetResult()
         {
-            if (!IsCompleted) { throw new InvalidOperationException("coroutine not yet completed"); }
+            if (!IsCompleted) throw new InvalidOperationException("coroutine not yet completed");
         }
     }
 
@@ -81,8 +79,7 @@ namespace UniRx
 
         public T GetResult()
         {
-            if (!IsCompleted) { throw new InvalidOperationException("coroutine not yet completed"); }
-
+            if (!IsCompleted) throw new InvalidOperationException("coroutine not yet completed");
             return result;
         }
     }

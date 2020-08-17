@@ -32,10 +32,11 @@ namespace UniRx.Operators
             // xs = 6
             // xs.Take(5) = 5         | xs.Take(3) = 3
             // xs.Take(5).Take(3) = 3 | xs.Take(3).Take(5) = 3
+
             // use minimum one
             return (this.count <= count)
-                   ? this
-                   : new TakeObservable<T>(source, count);
+                ? this
+                : new TakeObservable<T>(source, count);
         }
 
         public IObservable<T> Combine(TimeSpan duration)
@@ -43,10 +44,11 @@ namespace UniRx.Operators
             // xs = 6s
             // xs.Take(5s) = 5s          | xs.Take(3s) = 3s
             // xs.Take(5s).Take(3s) = 3s | xs.Take(3s).Take(5s) = 3s
+
             // use minimum one
             return (this.duration <= duration)
-                   ? this
-                   : new TakeObservable<T>(source, duration, scheduler);
+                ? this
+                : new TakeObservable<T>(source, duration, scheduler);
         }
 
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
@@ -76,25 +78,21 @@ namespace UniRx.Operators
                 {
                     rest -= 1;
                     base.observer.OnNext(value);
-
                     if (rest == 0)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
             }
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -112,6 +110,7 @@ namespace UniRx.Operators
             {
                 var d1 = parent.scheduler.Schedule(parent.duration, Tick);
                 var d2 = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(d1, d2);
             }
 
@@ -119,8 +118,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); };
+                    try { observer.OnCompleted(); } finally { Dispose(); };
                 }
             }
 
@@ -136,8 +134,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
@@ -145,8 +142,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); };
+                    try { observer.OnCompleted(); } finally { Dispose(); };
                 }
             }
         }

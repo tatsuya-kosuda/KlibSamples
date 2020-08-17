@@ -29,6 +29,7 @@ namespace UniRx
         public override int GetHashCode()
         {
             var comparer = EqualityComparer<T>.Default;
+
             int h0;
             h0 = comparer.GetHashCode(previous);
             h0 = (h0 << 5) + h0 ^ comparer.GetHashCode(current);
@@ -37,7 +38,7 @@ namespace UniRx
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Pair<T>)) { return false; }
+            if (!(obj is Pair<T>)) return false;
 
             return Equals((Pair<T>)obj);
         }
@@ -45,8 +46,9 @@ namespace UniRx
         public bool Equals(Pair<T> other)
         {
             var comparer = EqualityComparer<T>.Default;
+
             return comparer.Equals(previous, other.Previous) &&
-                   comparer.Equals(current, other.Current);
+                comparer.Equals(current, other.Current);
         }
 
         public override string ToString()

@@ -41,10 +41,10 @@ namespace UniRx.Diagnostics
         {
             var plusEx = (Exception != null) ? (Environment.NewLine + Exception.ToString()) : "";
             return "[" + Timestamp.ToString() + "]"
-                   + "[" + LoggerName + "]"
-                   + "[" + LogType.ToString() + "]"
-                   + Message
-                   + plusEx;
+                + "[" + LoggerName + "]"
+                + "[" + LogType.ToString() + "]"
+                + Message
+                + plusEx;
         }
     }
 }

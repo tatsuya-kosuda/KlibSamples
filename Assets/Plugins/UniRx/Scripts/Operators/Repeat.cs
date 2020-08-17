@@ -9,7 +9,7 @@ namespace UniRx.Operators
         readonly IScheduler scheduler;
 
         public RepeatObservable(T value, int? repeatCount, IScheduler scheduler)
-        : base(scheduler == Scheduler.CurrentThread)
+            : base(scheduler == Scheduler.CurrentThread)
         {
             this.value = value;
             this.repeatCount = repeatCount;
@@ -33,12 +33,10 @@ namespace UniRx.Operators
                 if (scheduler == Scheduler.Immediate)
                 {
                     var count = this.repeatCount.Value;
-
                     for (int i = 0; i < count; i++)
                     {
                         observer.OnNext(value);
                     }
-
                     observer.OnCompleted();
                     return Disposable.Empty;
                 }

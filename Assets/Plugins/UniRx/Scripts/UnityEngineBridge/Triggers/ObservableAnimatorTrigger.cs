@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>Callback for setting up animation IK (inverse kinematics).</summary>
         void OnAnimatorIK(int layerIndex)
         {
-            if (onAnimatorIK != null) { onAnimatorIK.OnNext(layerIndex); }
+            if (onAnimatorIK != null) onAnimatorIK.OnNext(layerIndex);
         }
 
         /// <summary>Callback for setting up animation IK (inverse kinematics).</summary>
@@ -25,7 +25,7 @@ namespace UniRx.Triggers
         /// <summary>Callback for processing animation movements for modifying root motion.</summary>
         void OnAnimatorMove()
         {
-            if (onAnimatorMove != null) { onAnimatorMove.OnNext(Unit.Default); }
+            if (onAnimatorMove != null) onAnimatorMove.OnNext(Unit.Default);
         }
 
         /// <summary>Callback for processing animation movements for modifying root motion.</summary>
@@ -40,7 +40,6 @@ namespace UniRx.Triggers
             {
                 onAnimatorIK.OnCompleted();
             }
-
             if (onAnimatorMove != null)
             {
                 onAnimatorMove.OnCompleted();

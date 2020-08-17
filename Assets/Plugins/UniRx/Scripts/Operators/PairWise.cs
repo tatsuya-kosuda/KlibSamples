@@ -41,7 +41,6 @@ namespace UniRx.Operators
                 }
 
                 TR v;
-
                 try
                 {
                     v = parent.selector(prev, value);
@@ -49,9 +48,7 @@ namespace UniRx.Operators
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
 
@@ -60,14 +57,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -113,14 +108,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

@@ -39,7 +39,7 @@ namespace UniRx.Operators
         readonly IEqualityComparer<TKey> comparer;
 
         public GroupByObservable(IObservable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, int? capacity, IEqualityComparer<TKey> comparer)
-        : base(source.IsRequiredSubscribeOnCurrentThread())
+            : base(source.IsRequiredSubscribeOnCurrentThread())
         {
             this.source = source;
             this.keySelector = keySelector;
@@ -66,7 +66,6 @@ namespace UniRx.Operators
                 : base(observer, cancel)
             {
                 this.parent = parent;
-
                 if (parent.capacity.HasValue)
                 {
                     map = new Dictionary<TKey, ISubject<TElement>>(parent.capacity.Value, parent.comparer);
@@ -81,14 +80,15 @@ namespace UniRx.Operators
             {
                 groupDisposable = new CompositeDisposable();
                 refCountDisposable = new RefCountDisposable(groupDisposable);
+
                 groupDisposable.Add(parent.source.Subscribe(this));
+
                 return refCountDisposable;
             }
 
             public override void OnNext(TSource value)
             {
                 var key = default(TKey);
-
                 try
                 {
                     key = parent.keySelector(value);
@@ -101,7 +101,6 @@ namespace UniRx.Operators
 
                 var fireNewMapEntry = false;
                 var writer = default(ISubject<TElement>);
-
                 try
                 {
                     if (key == null)
@@ -137,7 +136,6 @@ namespace UniRx.Operators
                 }
 
                 var element = default(TElement);
-
                 try
                 {
                     element = parent.elementSelector(value);
@@ -160,7 +158,7 @@ namespace UniRx.Operators
             {
                 try
                 {
-                    if (nullKeySubject != null) { nullKeySubject.OnCompleted(); }
+                    if (nullKeySubject != null) nullKeySubject.OnCompleted();
 
                     foreach (var s in map.Values)
                     {
@@ -179,7 +177,7 @@ namespace UniRx.Operators
             {
                 try
                 {
-                    if (nullKeySubject != null) { nullKeySubject.OnError(exception); }
+                    if (nullKeySubject != null) nullKeySubject.OnError(exception);
 
                     foreach (var s in map.Values)
                     {

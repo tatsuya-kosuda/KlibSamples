@@ -1,9 +1,9 @@
 ﻿using System;
 
 #if UniRxLibrary
-    using UnityObservable = UniRx.ObservableUnity;
+using UnityObservable = UniRx.ObservableUnity;
 #else
-    using UnityObservable = UniRx.Observable;
+using UnityObservable = UniRx.Observable;
 #endif
 
 namespace UniRx.Operators
@@ -44,6 +44,7 @@ namespace UniRx.Operators
             {
                 tick = new ThrottleFirstFrameTick(this);
                 cancelable = new SerialDisposable();
+
                 var subscription = parent.source.Subscribe(this);
                 return StableCompositeDisposable.Create(cancelable, subscription);
             }
@@ -60,8 +61,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    if (!open) { return; }
-
+                    if (!open) return;
                     observer.OnNext(value);
                     open = false;
                 }
@@ -69,7 +69,7 @@ namespace UniRx.Operators
                 var d = new SingleAssignmentDisposable();
                 cancelable.Disposable = d;
                 d.Disposable = UnityObservable.TimerFrame(parent.frameCount, parent.frameCountType)
-                               .Subscribe(tick);
+                    .Subscribe(tick);
             }
 
             public override void OnError(Exception error)
@@ -78,8 +78,7 @@ namespace UniRx.Operators
 
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -89,8 +88,7 @@ namespace UniRx.Operators
 
                 lock (gate)
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 

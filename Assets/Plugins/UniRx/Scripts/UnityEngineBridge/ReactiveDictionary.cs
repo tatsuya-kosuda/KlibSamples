@@ -111,8 +111,7 @@ namespace UniRx
     }
 
     [Serializable]
-    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IEnumerable, ICollection<KeyValuePair<TKey, TValue>>,
-        IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, IDisposable
+    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IEnumerable, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, IDisposable
 #if !UNITY_METRO
         , ISerializable, IDeserializationCallback
 #endif
@@ -146,23 +145,20 @@ namespace UniRx
             {
                 return inner[key];
             }
+
             set
             {
                 TValue oldValue;
-
                 if (TryGetValue(key, out oldValue))
                 {
                     inner[key] = value;
-
-                    if (dictionaryReplace != null) { dictionaryReplace.OnNext(new DictionaryReplaceEvent<TKey, TValue>(key, oldValue, value)); }
+                    if (dictionaryReplace != null) dictionaryReplace.OnNext(new DictionaryReplaceEvent<TKey, TValue>(key, oldValue, value));
                 }
                 else
                 {
                     inner[key] = value;
-
-                    if (dictionaryAdd != null) { dictionaryAdd.OnNext(new DictionaryAddEvent<TKey, TValue>(key, value)); }
-
-                    if (countChanged != null) { countChanged.OnNext(Count); }
+                    if (dictionaryAdd != null) dictionaryAdd.OnNext(new DictionaryAddEvent<TKey, TValue>(key, value));
+                    if (countChanged != null) countChanged.OnNext(Count);
                 }
             }
         }
@@ -195,9 +191,8 @@ namespace UniRx
         {
             inner.Add(key, value);
 
-            if (dictionaryAdd != null) { dictionaryAdd.OnNext(new DictionaryAddEvent<TKey, TValue>(key, value)); }
-
-            if (countChanged != null) { countChanged.OnNext(Count); }
+            if (dictionaryAdd != null) dictionaryAdd.OnNext(new DictionaryAddEvent<TKey, TValue>(key, value));
+            if (countChanged != null) countChanged.OnNext(Count);
         }
 
         public void Clear()
@@ -205,29 +200,24 @@ namespace UniRx
             var beforeCount = Count;
             inner.Clear();
 
-            if (collectionReset != null) { collectionReset.OnNext(Unit.Default); }
-
+            if (collectionReset != null) collectionReset.OnNext(Unit.Default);
             if (beforeCount > 0)
             {
-                if (countChanged != null) { countChanged.OnNext(Count); }
+                if (countChanged != null) countChanged.OnNext(Count);
             }
         }
 
         public bool Remove(TKey key)
         {
             TValue oldValue;
-
             if (inner.TryGetValue(key, out oldValue))
             {
                 var isSuccessRemove = inner.Remove(key);
-
                 if (isSuccessRemove)
                 {
-                    if (dictionaryRemove != null) { dictionaryRemove.OnNext(new DictionaryRemoveEvent<TKey, TValue>(key, oldValue)); }
-
-                    if (countChanged != null) { countChanged.OnNext(Count); }
+                    if (dictionaryRemove != null) dictionaryRemove.OnNext(new DictionaryRemoveEvent<TKey, TValue>(key, oldValue));
+                    if (countChanged != null) countChanged.OnNext(Count);
                 }
-
                 return isSuccessRemove;
             }
             else
@@ -302,10 +292,9 @@ namespace UniRx
         Subject<int> countChanged = null;
         public IObservable<int> ObserveCountChanged(bool notifyCurrentCount = false)
         {
-            if (isDisposed) { return Observable.Empty<int>(); }
+            if (isDisposed) return Observable.Empty<int>();
 
             var subject = countChanged ?? (countChanged = new Subject<int>());
-
             if (notifyCurrentCount)
             {
                 return subject.StartWith(() => this.Count);
@@ -320,8 +309,7 @@ namespace UniRx
         Subject<Unit> collectionReset = null;
         public IObservable<Unit> ObserveReset()
         {
-            if (isDisposed) { return Observable.Empty<Unit>(); }
-
+            if (isDisposed) return Observable.Empty<Unit>();
             return collectionReset ?? (collectionReset = new Subject<Unit>());
         }
 
@@ -329,8 +317,7 @@ namespace UniRx
         Subject<DictionaryAddEvent<TKey, TValue>> dictionaryAdd = null;
         public IObservable<DictionaryAddEvent<TKey, TValue>> ObserveAdd()
         {
-            if (isDisposed) { return Observable.Empty<DictionaryAddEvent<TKey, TValue>>(); }
-
+            if (isDisposed) return Observable.Empty<DictionaryAddEvent<TKey, TValue>>();
             return dictionaryAdd ?? (dictionaryAdd = new Subject<DictionaryAddEvent<TKey, TValue>>());
         }
 
@@ -338,8 +325,7 @@ namespace UniRx
         Subject<DictionaryRemoveEvent<TKey, TValue>> dictionaryRemove = null;
         public IObservable<DictionaryRemoveEvent<TKey, TValue>> ObserveRemove()
         {
-            if (isDisposed) { return Observable.Empty<DictionaryRemoveEvent<TKey, TValue>>(); }
-
+            if (isDisposed) return Observable.Empty<DictionaryRemoveEvent<TKey, TValue>>();
             return dictionaryRemove ?? (dictionaryRemove = new Subject<DictionaryRemoveEvent<TKey, TValue>>());
         }
 
@@ -347,8 +333,7 @@ namespace UniRx
         Subject<DictionaryReplaceEvent<TKey, TValue>> dictionaryReplace = null;
         public IObservable<DictionaryReplaceEvent<TKey, TValue>> ObserveReplace()
         {
-            if (isDisposed) { return Observable.Empty<DictionaryReplaceEvent<TKey, TValue>>(); }
-
+            if (isDisposed) return Observable.Empty<DictionaryReplaceEvent<TKey, TValue>>();
             return dictionaryReplace ?? (dictionaryReplace = new Subject<DictionaryReplaceEvent<TKey, TValue>>());
         }
 
@@ -362,6 +347,7 @@ namespace UniRx
             {
                 return this[(TKey)key];
             }
+
             set
             {
                 this[(TKey)key] = (TValue)value;
@@ -504,7 +490,6 @@ namespace UniRx
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
             TValue v;
-
             if (TryGetValue(item.Key, out v))
             {
                 if (EqualityComparer<TValue>.Default.Equals(v, item.Value))

@@ -10,7 +10,7 @@ namespace UniRx.Operators
         readonly TimeSpan? startAfter;
 
         public StartObservable(Func<T> function, TimeSpan? startAfter, IScheduler scheduler)
-        : base(scheduler == Scheduler.CurrentThread)
+            : base(scheduler == Scheduler.CurrentThread)
         {
             this.function = function;
             this.startAfter = startAfter;
@@ -18,7 +18,7 @@ namespace UniRx.Operators
         }
 
         public StartObservable(Action action, TimeSpan? startAfter, IScheduler scheduler)
-        : base(scheduler == Scheduler.CurrentThread)
+            : base(scheduler == Scheduler.CurrentThread)
         {
             this.action = action;
             this.startAfter = startAfter;
@@ -49,7 +49,6 @@ namespace UniRx.Operators
             public void Run()
             {
                 var result = default(T);
-
                 try
                 {
                     if (parent.function != null)
@@ -65,12 +64,10 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(exception); }
                     finally { Dispose(); }
-
                     return;
                 }
 
                 OnNext(result);
-
                 try { observer.OnCompleted(); }
                 finally { Dispose(); }
             }

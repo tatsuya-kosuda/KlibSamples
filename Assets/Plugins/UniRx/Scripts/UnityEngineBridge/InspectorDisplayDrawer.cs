@@ -6,7 +6,7 @@ using System.Collections;
 using System.Linq;
 
 #if UNITY_EDITOR
-    using UnityEditor;
+using UnityEditor;
 #endif
 
 namespace UniRx
@@ -65,7 +65,7 @@ namespace UniRx
     // InspectorDisplay and for Specialized ReactiveProperty
     // If you want to customize other specialized ReactiveProperty
     // [UnityEditor.CustomPropertyDrawer(typeof(YourSpecializedReactiveProperty))]
-    // public class ExtendInspectorDisplayDrawer : InspectorDisplayDrawer { }
+    // public class ExtendInspectorDisplayDrawer : InspectorDisplayDrawer { } 
 
     [UnityEditor.CustomPropertyDrawer(typeof(InspectorDisplayAttribute))]
     [UnityEditor.CustomPropertyDrawer(typeof(IntReactiveProperty))]
@@ -99,18 +99,14 @@ namespace UniRx
             {
                 EditorGUI.BeginChangeCheck();
             }
-
             var targetSerializedProperty = property.FindPropertyRelative(fieldName);
-
             if (targetSerializedProperty == null)
             {
                 UnityEditor.EditorGUI.LabelField(position, label, new GUIContent() { text = "InspectorDisplay can't find target:" + fieldName });
-
                 if (notifyPropertyChanged)
                 {
                     EditorGUI.EndChangeCheck();
                 }
-
                 return;
             }
             else
@@ -123,18 +119,18 @@ namespace UniRx
                 if (EditorGUI.EndChangeCheck())
                 {
                     property.serializedObject.ApplyModifiedProperties(); // deserialize to field
+
                     var paths = property.propertyPath.Split('.'); // X.Y.Z...
                     var attachedComponent = property.serializedObject.targetObject;
+
                     var targetProp = (paths.Length == 1)
-                                     ? fieldInfo.GetValue(attachedComponent)
-                                     : GetValueRecursive(attachedComponent, 0, paths);
-
-                    if (targetProp == null) { return; }
-
+                        ? fieldInfo.GetValue(attachedComponent)
+                        : GetValueRecursive(attachedComponent, 0, paths);
+                    if (targetProp == null) return;
                     var propInfo = targetProp.GetType().GetProperty(fieldName, BindingFlags.IgnoreCase | BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                     var modifiedValue = propInfo.GetValue(targetProp, null); // retrieve new value
-                    var methodInfo = targetProp.GetType().GetMethod("SetValueAndForceNotify", BindingFlags.IgnoreCase | BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
+                    var methodInfo = targetProp.GetType().GetMethod("SetValueAndForceNotify", BindingFlags.IgnoreCase | BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                     if (methodInfo != null)
                     {
                         methodInfo.Invoke(targetProp, new object[] { modifiedValue });
@@ -150,17 +146,17 @@ namespace UniRx
         object GetValueRecursive(object obj, int index, string[] paths)
         {
             var path = paths[index];
+
             FieldInfo fldInfo = null;
             var type = obj.GetType();
-
             while (fldInfo == null)
             {
                 // attempt to get information about the field
                 fldInfo = type.GetField(path, BindingFlags.IgnoreCase | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                 if (fldInfo != null ||
-                    type.BaseType == null ||
-                    type.BaseType.IsSubclassOf(typeof(ReactiveProperty<>))) { break; }
+                    type.BaseType == null || 
+                    type.BaseType.IsSubclassOf(typeof(ReactiveProperty<>))) break;
 
                 // if the field information is missing, it may be in the base class
                 type = type.BaseType;
@@ -175,7 +171,6 @@ namespace UniRx
                     var m = Regex.Match(path, @"(.+)\[([0-9]+)*\]");
                     var arrayIndex = int.Parse(m.Groups[2].Value);
                     var arrayValue = (obj as System.Collections.IList)[arrayIndex];
-
                     if (index < paths.Length - 1)
                     {
                         return GetValueRecursive(arrayValue, ++index, paths);
@@ -197,7 +192,6 @@ namespace UniRx
             }
 
             var v = fldInfo.GetValue(obj);
-
             if (index < paths.Length - 1)
             {
                 return GetValueRecursive(v, ++index, paths);
@@ -210,9 +204,9 @@ namespace UniRx
         {
             var attr = this.attribute as InspectorDisplayAttribute;
             var fieldName = (attr == null) ? "value" : attr.FieldName;
+
             var height = base.GetPropertyHeight(property, label);
             var valueProperty = property.FindPropertyRelative(fieldName);
-
             if (valueProperty == null)
             {
                 return height;
@@ -222,16 +216,13 @@ namespace UniRx
             {
                 return height * 2;
             }
-
             if (valueProperty.propertyType == SerializedPropertyType.Bounds)
             {
                 return height * 3;
             }
-
             if (valueProperty.propertyType == SerializedPropertyType.String)
             {
                 var multilineAttr = GetMultilineAttribute();
-
                 if (multilineAttr != null)
                 {
                     return ((!EditorGUIUtility.wideMode) ? 16f : 0f) + 16f + (float)((multilineAttr.Lines - 1) * 13);
@@ -242,9 +233,7 @@ namespace UniRx
             {
                 var count = 0;
                 var e = valueProperty.GetEnumerator();
-
-                while (e.MoveNext()) { count++; }
-
+                while (e.MoveNext()) count++;
                 return ((height + 4) * count) + 6; // (Line = 20 + Padding) ?
             }
 
@@ -254,11 +243,9 @@ namespace UniRx
         protected virtual void EmitPropertyField(Rect position, UnityEditor.SerializedProperty targetSerializedProperty, GUIContent label)
         {
             var multiline = GetMultilineAttribute();
-
             if (multiline == null)
             {
                 var range = GetRangeAttribute();
-
                 if (range == null)
                 {
                     UnityEditor.EditorGUI.PropertyField(position, targetSerializedProperty, label, includeChildren: true);
@@ -282,20 +269,20 @@ namespace UniRx
             else
             {
                 var property = targetSerializedProperty;
+
                 label = EditorGUI.BeginProperty(position, label, property);
                 var method = typeof(EditorGUI).GetMethod("MultiFieldPrefixLabel", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.NonPublic);
                 position = (Rect)method.Invoke(null, new object[] { position, 0, label, 1 });
+
                 EditorGUI.BeginChangeCheck();
                 int indentLevel = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 0;
                 var stringValue = EditorGUI.TextArea(position, property.stringValue);
                 EditorGUI.indentLevel = indentLevel;
-
                 if (EditorGUI.EndChangeCheck())
                 {
                     property.stringValue = stringValue;
                 }
-
                 EditorGUI.EndProperty();
             }
         }
@@ -303,18 +290,14 @@ namespace UniRx
         MultilineReactivePropertyAttribute GetMultilineAttribute()
         {
             var fi = this.fieldInfo;
-
-            if (fi == null) { return null; }
-
+            if (fi == null) return null;
             return fi.GetCustomAttributes(false).OfType<MultilineReactivePropertyAttribute>().FirstOrDefault();
         }
 
         RangeReactivePropertyAttribute GetRangeAttribute()
         {
             var fi = this.fieldInfo;
-
-            if (fi == null) { return null; }
-
+            if (fi == null) return null;
             return fi.GetCustomAttributes(false).OfType<RangeReactivePropertyAttribute>().FirstOrDefault();
         }
     }

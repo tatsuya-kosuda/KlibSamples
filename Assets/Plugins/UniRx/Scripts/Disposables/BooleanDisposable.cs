@@ -9,6 +9,7 @@ namespace UniRx
 
         public BooleanDisposable()
         {
+
         }
 
         internal BooleanDisposable(bool isDisposed)
@@ -18,7 +19,7 @@ namespace UniRx
 
         public void Dispose()
         {
-            if (!IsDisposed) { IsDisposed = true; }
+            if (!IsDisposed) IsDisposed = true;
         }
     }
 }

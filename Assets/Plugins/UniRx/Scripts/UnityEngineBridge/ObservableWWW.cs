@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine;
 
 #if !UniRxLibrary
-    using ObservableUnity = UniRx.Observable;
+using ObservableUnity = UniRx.Observable;
 #endif
 
 #if UNITY_2018_3_OR_NEWER
-    #pragma warning disable CS0618
+#pragma warning disable CS0618
 #endif
 
 namespace UniRx
@@ -16,10 +16,10 @@ namespace UniRx
 #if !(UNITY_METRO || UNITY_WP8) && (UNITY_4_4 || UNITY_4_3 || UNITY_4_2 || UNITY_4_1 || UNITY_4_0_1 || UNITY_4_0 || UNITY_3_5 || UNITY_3_4 || UNITY_3_3 || UNITY_3_2 || UNITY_3_1 || UNITY_3_0_0 || UNITY_3_0 || UNITY_2_6_1 || UNITY_2_6)
     // Fallback for Unity versions below 4.5
     using Hash = System.Collections.Hashtable;
-    using HashEntry = System.Collections.DictionaryEntry;
+    using HashEntry = System.Collections.DictionaryEntry;    
 #else
-    // Unity 4.5 release notes:
-    // WWW: deprecated 'WWW(string url, byte[] postData, Hashtable headers)',
+    // Unity 4.5 release notes: 
+    // WWW: deprecated 'WWW(string url, byte[] postData, Hashtable headers)', 
     // use 'public WWW(string url, byte[] postData, Dictionary<string, string> headers)' instead.
     using Hash = System.Collections.Generic.Dictionary<string, string>;
     using HashEntry = System.Collections.Generic.KeyValuePair<string, string>;
@@ -138,17 +138,14 @@ namespace UniRx
         static Hash MergeHash(Hashtable wwwFormHeaders, Hash externalHeaders)
         {
             var newHeaders = new Hash();
-
             foreach (DictionaryEntry item in wwwFormHeaders)
             {
                 newHeaders[item.Key.ToString()] = item.Value.ToString();
             }
-
             foreach (HashEntry item in externalHeaders)
             {
                 newHeaders[item.Key] =  item.Value;
             }
-
             return newHeaders;
         }
 #else
@@ -158,7 +155,6 @@ namespace UniRx
             {
                 wwwFormHeaders[item.Key] = item.Value;
             }
-
             return wwwFormHeaders;
         }
 #endif
@@ -180,7 +176,6 @@ namespace UniRx
                             observer.OnError(ex);
                             yield break;
                         }
-
                         yield return null;
                     }
                 }
@@ -239,7 +234,6 @@ namespace UniRx
                             observer.OnError(ex);
                             yield break;
                         }
-
                         yield return null;
                     }
                 }
@@ -298,7 +292,6 @@ namespace UniRx
                             observer.OnError(ex);
                             yield break;
                         }
-
                         yield return null;
                     }
                 }
@@ -357,7 +350,6 @@ namespace UniRx
                             observer.OnError(ex);
                             yield break;
                         }
-
                         yield return null;
                     }
                 }
@@ -416,13 +408,12 @@ namespace UniRx
             this.RawErrorMessage = www.error;
             this.ResponseHeaders = www.responseHeaders;
             this.HasResponse = false;
-            this.Text = text;
-            var splitted = RawErrorMessage.Split(' ', ':');
+            this.Text = text; 
 
+            var splitted = RawErrorMessage.Split(' ', ':');
             if (splitted.Length != 0)
             {
                 int statusCode;
-
                 if (int.TryParse(splitted[0], out statusCode))
                 {
                     this.HasResponse = true;
@@ -434,7 +425,6 @@ namespace UniRx
         public override string ToString()
         {
             var text = this.Text;
-
             if (string.IsNullOrEmpty(text))
             {
                 return RawErrorMessage;
@@ -448,5 +438,5 @@ namespace UniRx
 }
 
 #if UNITY_2018_3_OR_NEWER
-    #pragma warning restore CS0618
+#pragma warning restore CS0618
 #endif

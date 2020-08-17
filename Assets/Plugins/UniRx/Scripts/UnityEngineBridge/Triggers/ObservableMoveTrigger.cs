@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IMoveHandler.OnMove(AxisEventData eventData)
         {
-            if (onMove != null) { onMove.OnNext(eventData); }
+            if (onMove != null) onMove.OnNext(eventData);
         }
 
         public IObservable<AxisEventData> OnMoveAsObservable()

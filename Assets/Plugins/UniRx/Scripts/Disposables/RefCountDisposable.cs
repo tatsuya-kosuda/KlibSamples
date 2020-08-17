@@ -27,7 +27,7 @@ namespace UniRx
         public RefCountDisposable(IDisposable disposable)
         {
             if (disposable == null)
-            { throw new ArgumentNullException("disposable"); }
+                throw new ArgumentNullException("disposable");
 
             _disposable = disposable;
             _isPrimaryDisposed = false;
@@ -69,7 +69,6 @@ namespace UniRx
         public void Dispose()
         {
             var disposable = default(IDisposable);
-
             lock (_gate)
             {
                 if (_disposable != null)
@@ -88,13 +87,12 @@ namespace UniRx
             }
 
             if (disposable != null)
-            { disposable.Dispose(); }
+                disposable.Dispose();
         }
 
         private void Release()
         {
             var disposable = default(IDisposable);
-
             lock (_gate)
             {
                 if (_disposable != null)
@@ -113,7 +111,7 @@ namespace UniRx
             }
 
             if (disposable != null)
-            { disposable.Dispose(); }
+                disposable.Dispose();
         }
 
         sealed class InnerDisposable : IDisposable
@@ -129,15 +127,13 @@ namespace UniRx
             public void Dispose()
             {
                 RefCountDisposable parent;
-
                 lock (parentLock)
                 {
                     parent = _parent;
                     _parent = null;
                 }
-
                 if (parent != null)
-                { parent.Release(); }
+                    parent.Release();
             }
         }
     }
@@ -147,10 +143,10 @@ namespace UniRx
         static IObservable<T> AddRef<T>(IObservable<T> xs, RefCountDisposable r)
         {
             return Observable.Create<T>((IObserver<T> observer) => new CompositeDisposable(new IDisposable[]
-            {
-                r.GetDisposable(),
-                xs.Subscribe(observer)
-            }));
+	        {
+		        r.GetDisposable(),
+		        xs.Subscribe(observer)
+	        }));
         }
     }
 }

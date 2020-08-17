@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            if (onPointerEnter != null) { onPointerEnter.OnNext(eventData); }
+            if (onPointerEnter != null) onPointerEnter.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerEnterAsObservable()

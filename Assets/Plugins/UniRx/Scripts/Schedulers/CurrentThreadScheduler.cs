@@ -46,7 +46,7 @@ namespace UniRx
                 get
                 {
                     if (s_clock == null)
-                    { s_clock = Stopwatch.StartNew(); }
+                        s_clock = Stopwatch.StartNew();
 
                     return s_clock.Elapsed;
                 }
@@ -72,18 +72,20 @@ namespace UniRx
             public IDisposable Schedule(TimeSpan dueTime, Action action)
             {
                 if (action == null)
-                { throw new ArgumentNullException("action"); }
+                    throw new ArgumentNullException("action");
 
                 var dt = Time + Scheduler.Normalize(dueTime);
+
                 var si = new ScheduledItem(action, dt);
+
                 var queue = GetQueue();
 
                 if (queue == null)
                 {
                     queue = new SchedulerQueue(4);
                     queue.Enqueue(si);
-                    CurrentThreadScheduler.SetQueue(queue);
 
+                    CurrentThreadScheduler.SetQueue(queue);
                     try
                     {
                         Trampoline.Run(queue);
@@ -108,18 +110,16 @@ namespace UniRx
                     while (queue.Count > 0)
                     {
                         var item = queue.Dequeue();
-
                         if (!item.IsCanceled)
                         {
                             var wait = item.DueTime - CurrentThreadScheduler.Time;
-
                             if (wait.Ticks > 0)
                             {
                                 Thread.Sleep(wait);
                             }
 
                             if (!item.IsCanceled)
-                            { item.Invoke(); }
+                                item.Invoke();
                         }
                     }
                 }

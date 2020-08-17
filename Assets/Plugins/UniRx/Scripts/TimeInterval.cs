@@ -88,7 +88,7 @@ namespace UniRx
         public override bool Equals(object obj)
         {
             if (!(obj is TimeInterval<T>))
-            { return false; }
+                return false;
 
             var other = (TimeInterval<T>)obj;
             return this.Equals(other);
@@ -101,6 +101,7 @@ namespace UniRx
         public override int GetHashCode()
         {
             var valueHashCode = Value == null ? 1963 : Value.GetHashCode();
+
             return Interval.GetHashCode() ^ valueHashCode;
         }
 

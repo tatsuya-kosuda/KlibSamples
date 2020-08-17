@@ -32,6 +32,7 @@ namespace UniRx.Operators
                 var now = UnityEngine.Time.frameCount;
                 var span = now - lastFrame;
                 lastFrame = now;
+
                 base.observer.OnNext(new UniRx.FrameInterval<T>(value, span));
             }
 

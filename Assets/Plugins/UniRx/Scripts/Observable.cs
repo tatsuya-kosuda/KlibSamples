@@ -20,14 +20,15 @@ namespace UniRx
         public static IObservable<TR> Select<T, TR>(this IObservable<T> source, Func<T, TR> selector)
         {
             // sometimes cause "which no ahead of time (AOT) code was generated." on IL2CPP...
+
             //var select = source as ISelect<T>;
             //if (select != null)
             //{
             //    return select.CombineSelector(selector);
             //}
+
             // optimized path
             var whereObservable = source as UniRx.Operators.WhereObservable<T>;
-
             if (whereObservable != null)
             {
                 return whereObservable.CombineSelector<TR>(selector);
@@ -45,14 +46,12 @@ namespace UniRx
         {
             // optimized path
             var whereObservable = source as UniRx.Operators.WhereObservable<T>;
-
             if (whereObservable != null)
             {
                 return whereObservable.CombinePredicate(predicate);
             }
 
             var selectObservable = source as UniRx.Operators.ISelect<T>;
-
             if (selectObservable != null)
             {
                 return selectObservable.CombinePredicate(predicate);
@@ -102,8 +101,7 @@ namespace UniRx
             return new SelectManyObservable<T, TC, TR>(source, collectionSelector, resultSelector);
         }
 
-        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, int, IObservable<TCollection>> collectionSelector,
-                                                                                     Func<TSource, int, TCollection, int, TResult> resultSelector)
+        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, int, IObservable<TCollection>> collectionSelector, Func<TSource, int, TCollection, int, TResult> resultSelector)
         {
             return new SelectManyObservable<TSource, TCollection, TResult>(source, collectionSelector, resultSelector);
         }
@@ -118,14 +116,12 @@ namespace UniRx
             return new SelectManyObservable<TSource, TResult>(source, selector);
         }
 
-        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, IEnumerable<TCollection>> collectionSelector,
-                                                                                     Func<TSource, TCollection, TResult> resultSelector)
+        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
         {
             return new SelectManyObservable<TSource, TCollection, TResult>(source, collectionSelector, resultSelector);
         }
 
-        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, int, IEnumerable<TCollection>> collectionSelector,
-                                                                                     Func<TSource, int, TCollection, int, TResult> resultSelector)
+        public static IObservable<TResult> SelectMany<TSource, TCollection, TResult>(this IObservable<TSource> source, Func<TSource, int, IEnumerable<TCollection>> collectionSelector, Func<TSource, int, TCollection, int, TResult> resultSelector)
         {
             return new SelectManyObservable<TSource, TCollection, TResult>(source, collectionSelector, resultSelector);
         }
@@ -217,6 +213,7 @@ namespace UniRx
 #else
             var comparer = EqualityComparer<TSource>.Default;
 #endif
+
             return new DistinctObservable<TSource>(source, comparer);
         }
 
@@ -232,6 +229,7 @@ namespace UniRx
 #else
             var comparer = EqualityComparer<TKey>.Default;
 #endif
+
             return new DistinctObservable<TSource, TKey>(source, keySelector, comparer);
         }
 
@@ -247,12 +245,13 @@ namespace UniRx
 #else
             var comparer = EqualityComparer<T>.Default;
 #endif
+
             return new DistinctUntilChangedObservable<T>(source, comparer);
         }
 
         public static IObservable<T> DistinctUntilChanged<T>(this IObservable<T> source, IEqualityComparer<T> comparer)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return new DistinctUntilChangedObservable<T>(source, comparer);
         }
@@ -264,12 +263,13 @@ namespace UniRx
 #else
             var comparer = EqualityComparer<TKey>.Default;
 #endif
+
             return new DistinctUntilChangedObservable<T, TKey>(source, keySelector, comparer);
         }
 
         public static IObservable<T> DistinctUntilChanged<T, TKey>(this IObservable<T> source, Func<T, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return new DistinctUntilChangedObservable<T, TKey>(source, keySelector, comparer);
         }

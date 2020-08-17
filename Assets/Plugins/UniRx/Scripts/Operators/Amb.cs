@@ -44,14 +44,18 @@ namespace UniRx.Operators
                 leftSubscription = new SingleAssignmentDisposable();
                 rightSubscription = new SingleAssignmentDisposable();
                 var d = StableCompositeDisposable.Create(leftSubscription, rightSubscription);
+
                 var left = new Amb();
                 left.targetDisposable = d;
                 left.targetObserver = new AmbDecisionObserver(this, AmbState.Left, rightSubscription, left);
+
                 var right = new Amb();
                 right.targetDisposable = d;
                 right.targetObserver = new AmbDecisionObserver(this, AmbState.Right, leftSubscription, right);
+
                 leftSubscription.Disposable = parent.source.Subscribe(left);
                 rightSubscription.Disposable = parent.second.Subscribe(right);
+
                 return d;
             }
 
@@ -133,7 +137,7 @@ namespace UniRx.Operators
                             self.targetObserver = parent.observer;
                         }
 
-                        if (parent.choice == me) { self.targetObserver.OnNext(value); }
+                        if (parent.choice == me) self.targetObserver.OnNext(value);
                     }
                 }
 

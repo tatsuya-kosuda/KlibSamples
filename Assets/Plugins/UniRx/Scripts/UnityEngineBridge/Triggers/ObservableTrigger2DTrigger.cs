@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>Sent when another object enters a trigger collider attached to this object (2D physics only).</summary>
         void OnTriggerEnter2D(Collider2D other)
         {
-            if (onTriggerEnter2D != null) { onTriggerEnter2D.OnNext(other); }
+            if (onTriggerEnter2D != null) onTriggerEnter2D.OnNext(other);
         }
 
         /// <summary>Sent when another object enters a trigger collider attached to this object (2D physics only).</summary>
@@ -25,7 +25,7 @@ namespace UniRx.Triggers
         /// <summary>Sent when another object leaves a trigger collider attached to this object (2D physics only).</summary>
         void OnTriggerExit2D(Collider2D other)
         {
-            if (onTriggerExit2D != null) { onTriggerExit2D.OnNext(other); }
+            if (onTriggerExit2D != null) onTriggerExit2D.OnNext(other);
         }
 
         /// <summary>Sent when another object leaves a trigger collider attached to this object (2D physics only).</summary>
@@ -39,7 +39,7 @@ namespace UniRx.Triggers
         /// <summary>Sent each frame where another object is within a trigger collider attached to this object (2D physics only).</summary>
         void OnTriggerStay2D(Collider2D other)
         {
-            if (onTriggerStay2D != null) { onTriggerStay2D.OnNext(other); }
+            if (onTriggerStay2D != null) onTriggerStay2D.OnNext(other);
         }
 
         /// <summary>Sent each frame where another object is within a trigger collider attached to this object (2D physics only).</summary>
@@ -54,12 +54,10 @@ namespace UniRx.Triggers
             {
                 onTriggerEnter2D.OnCompleted();
             }
-
             if (onTriggerExit2D != null)
             {
                 onTriggerExit2D.OnCompleted();
             }
-
             if (onTriggerStay2D != null)
             {
                 onTriggerStay2D.OnCompleted();

@@ -27,28 +27,32 @@ namespace UniRx.Examples
         {
             // convert to IO<EventPattern> as (sender, eventArgs)
             Observable.FromEventPattern<EventHandler<MyEventArgs>, MyEventArgs>(
-                h => h.Invoke, h => FooBar += h, h => FooBar -= h)
-            .Subscribe()
-            .AddTo(disposables); // IDisposable can add to collection easily by AddTo
+                    h => h.Invoke, h => FooBar += h, h => FooBar -= h)
+                .Subscribe()
+                .AddTo(disposables); // IDisposable can add to collection easily by AddTo
+
             // convert to IO<EventArgs>, many situation this is useful than FromEventPattern
             Observable.FromEvent<EventHandler<MyEventArgs>, MyEventArgs>(
-                h => (sender, e) => h(e), h => FooBar += h, h => FooBar -= h)
-            .Subscribe()
-            .AddTo(disposables);
+                    h => (sender, e) => h(e), h => FooBar += h, h => FooBar -= h)
+                .Subscribe()
+                .AddTo(disposables);
+
             // You can convert Action like event.
             Observable.FromEvent<int>(
-                h => FooFoo += h, h => FooFoo -= h)
-            .Subscribe()
-            .AddTo(disposables);
+                    h => FooFoo += h, h => FooFoo -= h)
+                .Subscribe()
+                .AddTo(disposables);
+
             // AOT Safe EventHandling, use dummy capture, see:https://github.com/neuecc/UniRx/wiki/AOT-Exception-Patterns-and-Hacks
             var capture = 0;
             Observable.FromEventPattern<EventHandler<MyEventArgs>, MyEventArgs>(h =>
-            {
-                capture.GetHashCode(); // dummy for AOT
-                return new EventHandler<MyEventArgs>(h);
-            }, h => FooBar += h, h => FooBar -= h)
-            .Subscribe()
-            .AddTo(disposables);
+                {
+                    capture.GetHashCode(); // dummy for AOT
+                    return new EventHandler<MyEventArgs>(h);
+                }, h => FooBar += h, h => FooBar -= h)
+                .Subscribe()
+                .AddTo(disposables);
+
             // Subject as like event.
             OnBarBar.Subscribe().AddTo(disposables);
             onBarBar.OnNext(1); // fire event

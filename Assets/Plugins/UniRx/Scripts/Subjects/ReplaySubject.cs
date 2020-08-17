@@ -53,11 +53,9 @@ namespace UniRx
         // full constructor
         public ReplaySubject(int bufferSize, TimeSpan window, IScheduler scheduler)
         {
-            if (bufferSize < 0) { throw new ArgumentOutOfRangeException("bufferSize"); }
-
-            if (window < TimeSpan.Zero) { throw new ArgumentOutOfRangeException("window"); }
-
-            if (scheduler == null) { throw new ArgumentNullException("scheduler"); }
+            if (bufferSize < 0) throw new ArgumentOutOfRangeException("bufferSize");
+            if (window < TimeSpan.Zero) throw new ArgumentOutOfRangeException("window");
+            if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             this.bufferSize = bufferSize;
             this.window = window;
@@ -73,7 +71,6 @@ namespace UniRx
             {
                 queue.Dequeue();
             }
-
             while (queue.Count > 0 && elapsedTime.Subtract(queue.Peek().Interval).CompareTo(window) > 0)
             {
                 queue.Dequeue();
@@ -83,12 +80,10 @@ namespace UniRx
         public void OnCompleted()
         {
             IObserver<T> old;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -101,15 +96,13 @@ namespace UniRx
 
         public void OnError(Exception error)
         {
-            if (error == null) { throw new ArgumentNullException("error"); }
+            if (error == null) throw new ArgumentNullException("error");
 
             IObserver<T> old;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -124,16 +117,15 @@ namespace UniRx
         public void OnNext(T value)
         {
             IObserver<T> current;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 // enQ
                 queue.Enqueue(new TimeInterval<T>(value, scheduler.Now - startTime));
                 Trim();
+
                 current = outObserver;
             }
 
@@ -142,7 +134,7 @@ namespace UniRx
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer == null) { throw new ArgumentNullException("observer"); }
+            if (observer == null) throw new ArgumentNullException("observer");
 
             var ex = default(Exception);
             var subscription = default(Subscription);
@@ -150,11 +142,9 @@ namespace UniRx
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
                 if (!isStopped)
                 {
                     var listObserver = outObserver as ListObserver<T>;
-
                     if (listObserver != null)
                     {
                         outObserver = listObserver.Add(observer);
@@ -162,7 +152,6 @@ namespace UniRx
                     else
                     {
                         var current = outObserver;
-
                         if (current is EmptyObserver<T>)
                         {
                             outObserver = observer;
@@ -178,7 +167,6 @@ namespace UniRx
 
                 ex = lastError;
                 Trim();
-
                 foreach (var item in queue)
                 {
                     observer.OnNext(item.Value);
@@ -214,7 +202,7 @@ namespace UniRx
 
         void ThrowIfDisposed()
         {
-            if (isDisposed) { throw new ObjectDisposedException(""); }
+            if (isDisposed) throw new ObjectDisposedException("");
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -243,7 +231,6 @@ namespace UniRx
                         lock (parent.observerLock)
                         {
                             var listObserver = parent.outObserver as ListObserver<T>;
-
                             if (listObserver != null)
                             {
                                 parent.outObserver = listObserver.Remove(unsubscribeTarget);

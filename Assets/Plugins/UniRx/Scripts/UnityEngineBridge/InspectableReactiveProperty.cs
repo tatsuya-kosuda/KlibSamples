@@ -14,11 +14,13 @@ namespace UniRx
         public IntReactiveProperty()
             : base()
         {
+
         }
 
         public IntReactiveProperty(int initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -31,11 +33,13 @@ namespace UniRx
         public LongReactiveProperty()
             : base()
         {
+
         }
 
         public LongReactiveProperty(long initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -49,11 +53,13 @@ namespace UniRx
         public ByteReactiveProperty()
             : base()
         {
+
         }
 
         public ByteReactiveProperty(byte initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -66,11 +72,13 @@ namespace UniRx
         public FloatReactiveProperty()
             : base()
         {
+
         }
 
         public FloatReactiveProperty(float initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -83,11 +91,13 @@ namespace UniRx
         public DoubleReactiveProperty()
             : base()
         {
+
         }
 
         public DoubleReactiveProperty(double initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -100,11 +110,13 @@ namespace UniRx
         public StringReactiveProperty()
             : base()
         {
+
         }
 
         public StringReactiveProperty(string initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -117,11 +129,13 @@ namespace UniRx
         public BoolReactiveProperty()
             : base()
         {
+
         }
 
         public BoolReactiveProperty(bool initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -131,11 +145,13 @@ namespace UniRx
     {
         public Vector2ReactiveProperty()
         {
+
         }
 
         public Vector2ReactiveProperty(Vector2 initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Vector2> EqualityComparer
@@ -153,11 +169,13 @@ namespace UniRx
     {
         public Vector3ReactiveProperty()
         {
+
         }
 
         public Vector3ReactiveProperty(Vector3 initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Vector3> EqualityComparer
@@ -175,11 +193,13 @@ namespace UniRx
     {
         public Vector4ReactiveProperty()
         {
+
         }
 
         public Vector4ReactiveProperty(Vector4 initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Vector4> EqualityComparer
@@ -197,11 +217,13 @@ namespace UniRx
     {
         public ColorReactiveProperty()
         {
+
         }
 
         public ColorReactiveProperty(Color initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Color> EqualityComparer
@@ -219,11 +241,13 @@ namespace UniRx
     {
         public RectReactiveProperty()
         {
+
         }
 
         public RectReactiveProperty(Rect initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Rect> EqualityComparer
@@ -241,11 +265,13 @@ namespace UniRx
     {
         public AnimationCurveReactiveProperty()
         {
+
         }
 
         public AnimationCurveReactiveProperty(AnimationCurve initialValue)
             : base(initialValue)
         {
+
         }
     }
 
@@ -255,11 +281,13 @@ namespace UniRx
     {
         public BoundsReactiveProperty()
         {
+
         }
 
         public BoundsReactiveProperty(Bounds initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Bounds> EqualityComparer
@@ -277,11 +305,13 @@ namespace UniRx
     {
         public QuaternionReactiveProperty()
         {
+
         }
 
         public QuaternionReactiveProperty(Quaternion initialValue)
             : base(initialValue)
         {
+
         }
 
         protected override IEqualityComparer<Quaternion> EqualityComparer

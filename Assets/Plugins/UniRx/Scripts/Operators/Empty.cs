@@ -66,6 +66,7 @@ namespace UniRx.Operators
 
         ImmutableEmptyObservable()
         {
+
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()

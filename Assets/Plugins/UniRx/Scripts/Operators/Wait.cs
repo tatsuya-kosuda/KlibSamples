@@ -25,12 +25,11 @@ namespace UniRx.Operators
         public T Run()
         {
             semaphore = new System.Threading.ManualResetEvent(false);
-
             using (source.Subscribe(this))
             {
                 var waitComplete = (timeout == InfiniteTimeSpan)
-                                   ? semaphore.WaitOne()
-                                   : semaphore.WaitOne(timeout);
+                    ? semaphore.WaitOne()
+                    : semaphore.WaitOne(timeout);
 
                 if (!waitComplete)
                 {
@@ -38,9 +37,8 @@ namespace UniRx.Operators
                 }
             }
 
-            if (ex != null) { ex.Throw(); }
-
-            if (!seenValue) { throw new InvalidOperationException("No Elements."); }
+            if (ex != null) ex.Throw();
+            if (!seenValue) throw new InvalidOperationException("No Elements.");
 
             return value;
         }

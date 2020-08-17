@@ -8,9 +8,7 @@ using UnityEngine.EventSystems;
 namespace UniRx.Triggers
 {
     [DisallowMultipleComponent]
-    public class ObservableEventTrigger : ObservableTriggerBase, IEventSystemHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler,
-        IBeginDragHandler, IInitializePotentialDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IScrollHandler, IUpdateSelectedHandler, ISelectHandler, IDeselectHandler, IMoveHandler, ISubmitHandler,
-        ICancelHandler
+    public class ObservableEventTrigger : ObservableTriggerBase, IEventSystemHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler, IBeginDragHandler, IInitializePotentialDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IScrollHandler, IUpdateSelectedHandler, ISelectHandler, IDeselectHandler, IMoveHandler, ISubmitHandler, ICancelHandler
     {
         #region IDeselectHandler
 
@@ -18,7 +16,7 @@ namespace UniRx.Triggers
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
-            if (onDeselect != null) { onDeselect.OnNext(eventData); }
+            if (onDeselect != null) onDeselect.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnDeselectAsObservable()
@@ -34,7 +32,7 @@ namespace UniRx.Triggers
 
         void IMoveHandler.OnMove(AxisEventData eventData)
         {
-            if (onMove != null) { onMove.OnNext(eventData); }
+            if (onMove != null) onMove.OnNext(eventData);
         }
 
         public IObservable<AxisEventData> OnMoveAsObservable()
@@ -50,7 +48,7 @@ namespace UniRx.Triggers
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (onPointerDown != null) { onPointerDown.OnNext(eventData); }
+            if (onPointerDown != null) onPointerDown.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerDownAsObservable()
@@ -66,7 +64,7 @@ namespace UniRx.Triggers
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            if (onPointerEnter != null) { onPointerEnter.OnNext(eventData); }
+            if (onPointerEnter != null) onPointerEnter.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerEnterAsObservable()
@@ -82,7 +80,7 @@ namespace UniRx.Triggers
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            if (onPointerExit != null) { onPointerExit.OnNext(eventData); }
+            if (onPointerExit != null) onPointerExit.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerExitAsObservable()
@@ -98,7 +96,7 @@ namespace UniRx.Triggers
 
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (onPointerUp != null) { onPointerUp.OnNext(eventData); }
+            if (onPointerUp != null) onPointerUp.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerUpAsObservable()
@@ -114,7 +112,7 @@ namespace UniRx.Triggers
 
         void ISelectHandler.OnSelect(BaseEventData eventData)
         {
-            if (onSelect != null) { onSelect.OnNext(eventData); }
+            if (onSelect != null) onSelect.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnSelectAsObservable()
@@ -130,7 +128,7 @@ namespace UniRx.Triggers
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            if (onPointerClick != null) { onPointerClick.OnNext(eventData); }
+            if (onPointerClick != null) onPointerClick.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerClickAsObservable()
@@ -146,7 +144,7 @@ namespace UniRx.Triggers
 
         void ISubmitHandler.OnSubmit(BaseEventData eventData)
         {
-            if (onSubmit != null) { onSubmit.OnNext(eventData); }
+            if (onSubmit != null) onSubmit.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnSubmitAsObservable()
@@ -162,7 +160,7 @@ namespace UniRx.Triggers
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            if (onDrag != null) { onDrag.OnNext(eventData); }
+            if (onDrag != null) onDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnDragAsObservable()
@@ -178,7 +176,7 @@ namespace UniRx.Triggers
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            if (onBeginDrag != null) { onBeginDrag.OnNext(eventData); }
+            if (onBeginDrag != null) onBeginDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnBeginDragAsObservable()
@@ -194,7 +192,7 @@ namespace UniRx.Triggers
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            if (onEndDrag != null) { onEndDrag.OnNext(eventData); }
+            if (onEndDrag != null) onEndDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnEndDragAsObservable()
@@ -210,7 +208,7 @@ namespace UniRx.Triggers
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
-            if (onDrop != null) { onDrop.OnNext(eventData); }
+            if (onDrop != null) onDrop.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnDropAsObservable()
@@ -226,7 +224,7 @@ namespace UniRx.Triggers
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            if (onUpdateSelected != null) { onUpdateSelected.OnNext(eventData); }
+            if (onUpdateSelected != null) onUpdateSelected.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnUpdateSelectedAsObservable()
@@ -242,7 +240,7 @@ namespace UniRx.Triggers
 
         void IInitializePotentialDragHandler.OnInitializePotentialDrag(PointerEventData eventData)
         {
-            if (onInitializePotentialDrag != null) { onInitializePotentialDrag.OnNext(eventData); }
+            if (onInitializePotentialDrag != null) onInitializePotentialDrag.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnInitializePotentialDragAsObservable()
@@ -258,7 +256,7 @@ namespace UniRx.Triggers
 
         void ICancelHandler.OnCancel(BaseEventData eventData)
         {
-            if (onCancel != null) { onCancel.OnNext(eventData); }
+            if (onCancel != null) onCancel.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnCancelAsObservable()
@@ -274,7 +272,7 @@ namespace UniRx.Triggers
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
-            if (onScroll != null) { onScroll.OnNext(eventData); }
+            if (onScroll != null) onScroll.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnScrollAsObservable()
@@ -290,82 +288,66 @@ namespace UniRx.Triggers
             {
                 onDeselect.OnCompleted();
             }
-
             if (onMove != null)
             {
                 onMove.OnCompleted();
             }
-
             if (onPointerDown != null)
             {
                 onPointerDown.OnCompleted();
             }
-
             if (onPointerEnter != null)
             {
                 onPointerEnter.OnCompleted();
             }
-
             if (onPointerExit != null)
             {
                 onPointerExit.OnCompleted();
             }
-
             if (onPointerUp != null)
             {
                 onPointerUp.OnCompleted();
             }
-
             if (onSelect != null)
             {
                 onSelect.OnCompleted();
             }
-
             if (onPointerClick != null)
             {
                 onPointerClick.OnCompleted();
             }
-
             if (onSubmit != null)
             {
                 onSubmit.OnCompleted();
             }
-
             if (onDrag != null)
             {
                 onDrag.OnCompleted();
             }
-
             if (onBeginDrag != null)
             {
                 onBeginDrag.OnCompleted();
             }
-
             if (onEndDrag != null)
             {
                 onEndDrag.OnCompleted();
             }
-
             if (onDrop != null)
             {
                 onDrop.OnCompleted();
             }
-
             if (onUpdateSelected != null)
             {
                 onUpdateSelected.OnCompleted();
             }
-
             if (onInitializePotentialDrag != null)
             {
                 onInitializePotentialDrag.OnCompleted();
             }
-
             if (onCancel != null)
             {
                 onCancel.OnCompleted();
             }
-
             if (onScroll != null)
             {
                 onScroll.OnCompleted();

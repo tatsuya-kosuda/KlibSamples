@@ -24,10 +24,9 @@ namespace UniRx.InternalUtil
         public void Wait(Action action)
         {
             if (action == null)
-            { throw new ArgumentNullException("action"); }
+                throw new ArgumentNullException("action");
 
             var isOwner = false;
-
             lock (queue)
             {
                 if (!hasFaulted)
@@ -43,11 +42,10 @@ namespace UniRx.InternalUtil
                 while (true)
                 {
                     var work = default(Action);
-
                     lock (queue)
                     {
                         if (queue.Count > 0)
-                        { work = queue.Dequeue(); }
+                            work = queue.Dequeue();
                         else
                         {
                             isAcquired = false;
@@ -66,7 +64,6 @@ namespace UniRx.InternalUtil
                             queue.Clear();
                             hasFaulted = true;
                         }
-
                         throw;
                     }
                 }

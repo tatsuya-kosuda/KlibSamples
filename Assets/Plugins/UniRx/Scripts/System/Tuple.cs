@@ -32,85 +32,85 @@ namespace UniRx
     public static class Tuple
     {
         public static Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8>> Create<T1, T2, T3, T4, T5, T6, T7, T8>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3,
-            T4 item4,
-            T5 item5,
-            T6 item6,
-            T7 item7,
-            T8 item8)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3,
+             T4 item4,
+             T5 item5,
+             T6 item6,
+             T7 item7,
+             T8 item8)
         {
             return new Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8>>(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8>(item8));
         }
 
         public static Tuple<T1, T2, T3, T4, T5, T6, T7> Create<T1, T2, T3, T4, T5, T6, T7>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3,
-            T4 item4,
-            T5 item5,
-            T6 item6,
-            T7 item7)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3,
+             T4 item4,
+             T5 item5,
+             T6 item6,
+             T7 item7)
         {
             return new Tuple<T1, T2, T3, T4, T5, T6, T7>(item1, item2, item3, item4, item5, item6, item7);
         }
 
         public static Tuple<T1, T2, T3, T4, T5, T6> Create<T1, T2, T3, T4, T5, T6>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3,
-            T4 item4,
-            T5 item5,
-            T6 item6)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3,
+             T4 item4,
+             T5 item5,
+             T6 item6)
         {
             return new Tuple<T1, T2, T3, T4, T5, T6>(item1, item2, item3, item4, item5, item6);
         }
 
         public static Tuple<T1, T2, T3, T4, T5> Create<T1, T2, T3, T4, T5>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3,
-            T4 item4,
-            T5 item5)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3,
+             T4 item4,
+             T5 item5)
         {
             return new Tuple<T1, T2, T3, T4, T5>(item1, item2, item3, item4, item5);
         }
 
         public static Tuple<T1, T2, T3, T4> Create<T1, T2, T3, T4>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3,
-            T4 item4)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3,
+             T4 item4)
         {
             return new Tuple<T1, T2, T3, T4>(item1, item2, item3, item4);
         }
 
         public static Tuple<T1, T2, T3> Create<T1, T2, T3>
-        (
-            T1 item1,
-            T2 item2,
-            T3 item3)
+            (
+             T1 item1,
+             T2 item2,
+             T3 item3)
         {
             return new Tuple<T1, T2, T3>(item1, item2, item3);
         }
 
         public static Tuple<T1, T2> Create<T1, T2>
-        (
-            T1 item1,
-            T2 item2)
+            (
+             T1 item1,
+             T2 item2)
         {
             return new Tuple<T1, T2>(item1, item2);
         }
 
         public static Tuple<T1> Create<T1>
-        (
-            T1 item1)
+            (
+             T1 item1)
         {
             return new Tuple<T1>(item1);
         }
@@ -130,7 +130,7 @@ namespace UniRx
             this.rest = rest;
 
             if (!(rest is ITuple))
-            { throw new ArgumentException("rest", "The last element of an eight element tuple must be a Tuple."); }
+                throw new ArgumentException("rest", "The last element of an eight element tuple must be a Tuple.");
         }
     }
 
@@ -156,13 +156,11 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1>)other;
             return comparer.Compare(item1, t.item1);
         }
@@ -175,7 +173,7 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1>))
-            { return false; }
+                return false;
 
             var t = (Tuple<T1>)other;
             return comparer.Equals(item1, t.item1);
@@ -236,18 +234,15 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item2, t.item2);
         }
 
@@ -259,17 +254,18 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2>))
-            { return false; }
+                return false;
 
             var t = (Tuple<T1, T2>)other;
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2);
+                comparer.Equals(item2, t.item2);
         }
 
         public override int GetHashCode()
         {
             var comparer1 = EqualityComparer<T1>.Default;
             var comparer2 = EqualityComparer<T2>.Default;
+
             int h0;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -298,8 +294,9 @@ namespace UniRx
         {
             var comparer1 = EqualityComparer<T1>.Default;
             var comparer2 = EqualityComparer<T2>.Default;
+
             return comparer1.Equals(item1, other.item1) &&
-                   comparer2.Equals(item2, other.item2);
+                comparer2.Equals(item2, other.item2);
         }
     }
 
@@ -339,22 +336,17 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item3, t.item3);
         }
 
@@ -366,12 +358,12 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3>))
-            { return false; }
+                return false;
 
             var t = (Tuple<T1, T2, T3>)other;
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3);
         }
 
         public override int GetHashCode()
@@ -379,6 +371,7 @@ namespace UniRx
             var comparer1 = EqualityComparer<T1>.Default;
             var comparer2 = EqualityComparer<T2>.Default;
             var comparer3 = EqualityComparer<T3>.Default;
+
             int h0;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -410,9 +403,10 @@ namespace UniRx
             var comparer1 = EqualityComparer<T1>.Default;
             var comparer2 = EqualityComparer<T2>.Default;
             var comparer3 = EqualityComparer<T3>.Default;
+
             return comparer1.Equals(item1, other.item1) &&
-                   comparer2.Equals(item2, other.item2) &&
-                   comparer3.Equals(item3, other.item3);
+                comparer2.Equals(item2, other.item2) &&
+                comparer3.Equals(item3, other.item3);
         }
     }
 
@@ -459,26 +453,19 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3, T4>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3, T4>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item3, t.item3);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item4, t.item4);
         }
 
@@ -490,13 +477,13 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3, T4>))
-            { return false; }
-
+                return false;
             var t = (Tuple<T1, T2, T3, T4>)other;
+
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3) &&
-                   comparer.Equals(item4, t.item4);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3) &&
+                comparer.Equals(item4, t.item4);
         }
 
         public override int GetHashCode()
@@ -505,6 +492,7 @@ namespace UniRx
             var comparer2 = EqualityComparer<T2>.Default;
             var comparer3 = EqualityComparer<T3>.Default;
             var comparer4 = EqualityComparer<T4>.Default;
+
             int h0, h1;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -541,10 +529,11 @@ namespace UniRx
             var comparer2 = EqualityComparer<T2>.Default;
             var comparer3 = EqualityComparer<T3>.Default;
             var comparer4 = EqualityComparer<T4>.Default;
+
             return comparer1.Equals(item1, other.item1) &&
-                   comparer2.Equals(item2, other.item2) &&
-                   comparer3.Equals(item3, other.item3) &&
-                   comparer4.Equals(item4, other.item4);
+                comparer2.Equals(item2, other.item2) &&
+                comparer3.Equals(item3, other.item3) &&
+                comparer4.Equals(item4, other.item4);
         }
     }
 
@@ -598,30 +587,21 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3, T4, T5>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3, T4, T5>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item3, t.item3);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item4, t.item4);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item5, t.item5);
         }
 
@@ -633,14 +613,14 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3, T4, T5>))
-            { return false; }
-
+                return false;
             var t = (Tuple<T1, T2, T3, T4, T5>)other;
+
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3) &&
-                   comparer.Equals(item4, t.item4) &&
-                   comparer.Equals(item5, t.item5);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3) &&
+                comparer.Equals(item4, t.item4) &&
+                comparer.Equals(item5, t.item5);
         }
 
         public override int GetHashCode()
@@ -650,6 +630,7 @@ namespace UniRx
             var comparer3 = EqualityComparer<T3>.Default;
             var comparer4 = EqualityComparer<T4>.Default;
             var comparer5 = EqualityComparer<T5>.Default;
+
             int h0, h1;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -689,11 +670,12 @@ namespace UniRx
             var comparer3 = EqualityComparer<T3>.Default;
             var comparer4 = EqualityComparer<T4>.Default;
             var comparer5 = EqualityComparer<T5>.Default;
+
             return comparer1.Equals(item1, other.Item1) &&
-                   comparer2.Equals(item2, other.Item2) &&
-                   comparer3.Equals(item3, other.Item3) &&
-                   comparer4.Equals(item4, other.Item4) &&
-                   comparer5.Equals(item5, other.Item5);
+                comparer2.Equals(item2, other.Item2) &&
+                comparer3.Equals(item3, other.Item3) &&
+                comparer4.Equals(item4, other.Item4) &&
+                comparer5.Equals(item5, other.Item5);
         }
     }
 
@@ -754,34 +736,23 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3, T4, T5, T6>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item3, t.item3);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item4, t.item4);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item5, t.item5);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item6, t.item6);
         }
 
@@ -793,15 +764,15 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6>))
-            { return false; }
-
+                return false;
             var t = (Tuple<T1, T2, T3, T4, T5, T6>)other;
+
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3) &&
-                   comparer.Equals(item4, t.item4) &&
-                   comparer.Equals(item5, t.item5) &&
-                   comparer.Equals(item6, t.item6);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3) &&
+                comparer.Equals(item4, t.item4) &&
+                comparer.Equals(item5, t.item5) &&
+                comparer.Equals(item6, t.item6);
         }
 
         public override int GetHashCode()
@@ -812,6 +783,7 @@ namespace UniRx
             var comparer4 = EqualityComparer<T4>.Default;
             var comparer5 = EqualityComparer<T5>.Default;
             var comparer6 = EqualityComparer<T6>.Default;
+
             int h0, h1;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -856,12 +828,13 @@ namespace UniRx
             var comparer4 = EqualityComparer<T4>.Default;
             var comparer5 = EqualityComparer<T5>.Default;
             var comparer6 = EqualityComparer<T6>.Default;
+
             return comparer1.Equals(item1, other.Item1) &&
-                   comparer2.Equals(item2, other.Item2) &&
-                   comparer3.Equals(item3, other.Item3) &&
-                   comparer4.Equals(item4, other.Item4) &&
-                   comparer5.Equals(item5, other.Item5) &&
-                   comparer6.Equals(item6, other.Item6);
+                comparer2.Equals(item2, other.Item2) &&
+                comparer3.Equals(item3, other.Item3) &&
+                comparer4.Equals(item4, other.Item4) &&
+                comparer5.Equals(item5, other.Item5) &&
+                comparer6.Equals(item6, other.Item6);
         }
     }
 
@@ -929,38 +902,25 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6, T7>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3, T4, T5, T6, T7>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item3, t.item3);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item4, t.item4);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item5, t.item5);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item6, t.item6);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(item7, t.item7);
         }
 
@@ -972,16 +932,16 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6, T7>))
-            { return false; }
-
+                return false;
             var t = (Tuple<T1, T2, T3, T4, T5, T6, T7>)other;
+
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3) &&
-                   comparer.Equals(item4, t.item4) &&
-                   comparer.Equals(item5, t.item5) &&
-                   comparer.Equals(item6, t.item6) &&
-                   comparer.Equals(item7, t.item7);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3) &&
+                comparer.Equals(item4, t.item4) &&
+                comparer.Equals(item5, t.item5) &&
+                comparer.Equals(item6, t.item6) &&
+                comparer.Equals(item7, t.item7);
         }
 
         public override int GetHashCode()
@@ -993,6 +953,7 @@ namespace UniRx
             var comparer5 = EqualityComparer<T5>.Default;
             var comparer6 = EqualityComparer<T6>.Default;
             var comparer7 = EqualityComparer<T7>.Default;
+
             int h0, h1;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -1040,13 +1001,14 @@ namespace UniRx
             var comparer5 = EqualityComparer<T5>.Default;
             var comparer6 = EqualityComparer<T6>.Default;
             var comparer7 = EqualityComparer<T7>.Default;
+
             return comparer1.Equals(item1, other.Item1) &&
-                   comparer2.Equals(item2, other.Item2) &&
-                   comparer3.Equals(item3, other.Item3) &&
-                   comparer4.Equals(item4, other.Item4) &&
-                   comparer5.Equals(item5, other.Item5) &&
-                   comparer6.Equals(item6, other.Item6) &&
-                   comparer7.Equals(item7, other.Item7);
+                comparer2.Equals(item2, other.Item2) &&
+                comparer3.Equals(item3, other.Item3) &&
+                comparer4.Equals(item4, other.Item4) &&
+                comparer5.Equals(item5, other.Item5) &&
+                comparer6.Equals(item6, other.Item6) &&
+                comparer7.Equals(item7, other.Item7);
         }
     }
 
@@ -1109,42 +1071,27 @@ namespace UniRx
 
         int IStructuralComparable.CompareTo(object other, IComparer comparer)
         {
-            if (other == null) { return 1; }
-
+            if (other == null) return 1;
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>))
             {
                 throw new ArgumentException("other");
             }
-
             var t = (Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>)other;
+
             int res = comparer.Compare(item1, t.item1);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item2, t.item2);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item3, t.item3);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item4, t.item4);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item5, t.item5);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item6, t.item6);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             res = comparer.Compare(item7, t.item7);
-
-            if (res != 0) { return res; }
-
+            if (res != 0) return res;
             return comparer.Compare(rest, t.rest);
         }
 
@@ -1156,17 +1103,17 @@ namespace UniRx
         bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
         {
             if (!(other is Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>))
-            { return false; }
-
+                return false;
             var t = (Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>)other;
+
             return comparer.Equals(item1, t.item1) &&
-                   comparer.Equals(item2, t.item2) &&
-                   comparer.Equals(item3, t.item3) &&
-                   comparer.Equals(item4, t.item4) &&
-                   comparer.Equals(item5, t.item5) &&
-                   comparer.Equals(item6, t.item6) &&
-                   comparer.Equals(item7, t.item7) &&
-                   comparer.Equals(rest, t.rest);
+                comparer.Equals(item2, t.item2) &&
+                comparer.Equals(item3, t.item3) &&
+                comparer.Equals(item4, t.item4) &&
+                comparer.Equals(item5, t.item5) &&
+                comparer.Equals(item6, t.item6) &&
+                comparer.Equals(item7, t.item7) &&
+                comparer.Equals(rest, t.rest);
         }
 
         public override int GetHashCode()
@@ -1179,6 +1126,7 @@ namespace UniRx
             var comparer6 = EqualityComparer<T6>.Default;
             var comparer7 = EqualityComparer<T7>.Default;
             var comparer8 = EqualityComparer<TRest>.Default;
+
             int h0, h1, h2;
             h0 = comparer1.GetHashCode(item1);
             h0 = (h0 << 5) + h0 ^ comparer2.GetHashCode(item2);
@@ -1231,14 +1179,15 @@ namespace UniRx
             var comparer6 = EqualityComparer<T6>.Default;
             var comparer7 = EqualityComparer<T7>.Default;
             var comparer8 = EqualityComparer<TRest>.Default;
+
             return comparer1.Equals(item1, other.Item1) &&
-                   comparer2.Equals(item2, other.Item2) &&
-                   comparer3.Equals(item3, other.Item3) &&
-                   comparer4.Equals(item4, other.Item4) &&
-                   comparer5.Equals(item5, other.Item5) &&
-                   comparer6.Equals(item6, other.Item6) &&
-                   comparer7.Equals(item7, other.Item7) &&
-                   comparer8.Equals(rest, other.rest);
+                comparer2.Equals(item2, other.Item2) &&
+                comparer3.Equals(item3, other.Item3) &&
+                comparer4.Equals(item4, other.Item4) &&
+                comparer5.Equals(item5, other.Item5) &&
+                comparer6.Equals(item6, other.Item6) &&
+                comparer7.Equals(item7, other.Item7) &&
+                comparer8.Equals(rest, other.rest);
         }
     }
 }

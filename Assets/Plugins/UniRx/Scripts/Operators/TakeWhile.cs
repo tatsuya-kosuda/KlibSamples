@@ -51,16 +51,13 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 bool isPassed;
-
                 try
                 {
                     isPassed = parent.predicate(value);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
 
@@ -70,21 +67,18 @@ namespace UniRx.Operators
                 }
                 else
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -106,16 +100,13 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 bool isPassed;
-
                 try
                 {
                     isPassed = parent.predicateWithIndex(value, index++);
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); }
-
+                    try { observer.OnError(ex); } finally { Dispose(); }
                     return;
                 }
 
@@ -125,21 +116,18 @@ namespace UniRx.Operators
                 }
                 else
                 {
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

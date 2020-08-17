@@ -14,7 +14,7 @@ namespace UniRx.Triggers
         /// <summary>OnParticleCollision is called when a particle hits a collider.</summary>
         void OnParticleCollision(GameObject other)
         {
-            if (onParticleCollision != null) { onParticleCollision.OnNext(other); }
+            if (onParticleCollision != null) onParticleCollision.OnNext(other);
         }
 
         /// <summary>OnParticleCollision is called when a particle hits a collider.</summary>
@@ -28,7 +28,7 @@ namespace UniRx.Triggers
         /// <summary>OnParticleTrigger is called when any particles in a particle system meet the conditions in the trigger module.</summary>
         void OnParticleTrigger()
         {
-            if (onParticleTrigger != null) { onParticleTrigger.OnNext(Unit.Default); }
+            if (onParticleTrigger != null) onParticleTrigger.OnNext(Unit.Default);
         }
 
         /// <summary>OnParticleTrigger is called when any particles in a particle system meet the conditions in the trigger module.</summary>
@@ -45,14 +45,11 @@ namespace UniRx.Triggers
             {
                 onParticleCollision.OnCompleted();
             }
-
 #if UNITY_5_4_OR_NEWER
-
             if (onParticleTrigger != null)
             {
                 onParticleTrigger.OnCompleted();
             }
-
 #endif
         }
     }

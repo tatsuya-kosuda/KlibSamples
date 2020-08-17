@@ -33,6 +33,7 @@ namespace UniRx.Operators
             // xs = 6
             // xs.Skip(2) = 4
             // xs.Skip(2).Skip(3) = 1
+
             return new SkipObservable<T>(source, this.count + count);
         }
 
@@ -42,9 +43,10 @@ namespace UniRx.Operators
             // xs = 6s
             // xs.Skip(2s) = 2s
             // xs.Skip(2s).Skip(3s) = 3s
+
             return (duration <= this.duration)
-                   ? this
-                   : new SkipObservable<T>(source, duration, scheduler);
+                ? this
+                : new SkipObservable<T>(source, duration, scheduler);
         }
 
         protected override IDisposable SubscribeCore(IObserver<T> observer, IDisposable cancel)
@@ -82,14 +84,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -107,6 +107,7 @@ namespace UniRx.Operators
             {
                 var d1 = parent.scheduler.Schedule(parent.duration, Tick);
                 var d2 = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(d1, d2);
             }
 
@@ -125,14 +126,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }

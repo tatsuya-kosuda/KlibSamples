@@ -32,7 +32,7 @@ namespace UniRx
 
             public void OnError(Exception error)
             {
-                if (error == null) { throw new ArgumentNullException("error"); }
+                if (error == null) throw new ArgumentNullException("error");
 
                 observer.OnError(error);
             }
@@ -44,7 +44,7 @@ namespace UniRx
 
             public IDisposable Subscribe(IObserver<U> observer)
             {
-                if (observer == null) { throw new ArgumentNullException("observer"); }
+                if (observer == null) throw new ArgumentNullException("observer");
 
                 return observable.Subscribe(observer);
             }

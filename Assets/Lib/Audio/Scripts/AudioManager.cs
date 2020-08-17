@@ -101,23 +101,6 @@ namespace klib
             audioData.Play(clip, pitch, duration, maxDistance, vol);
         }
 
-        public void Play3DSE(string clipName, Transform followTargetTR, float pitch = 1, float duration = 0, float maxDistance = 210, float vol = 1)
-        {
-            var clip = _seClips.Where(x => x.name == clipName).FirstOrDefault();
-
-            if (clip == null)
-            {
-                Debug.LogError("clip is null : clipName = " + clipName);
-                return;
-            }
-
-            var audioData = Get3DAudioData();
-            audioData.Setup(_mixer.FindMatchingGroups("SE")[0], duration > 0f);
-            var followTarget = audioData.gameObject.GetOrAddComponent<FollowTarget>();
-            followTarget.Setup(followTargetTR);
-            audioData.Play(clip, pitch, duration, maxDistance, vol);
-        }
-
         public void PlayBGM(string clipName, bool withFade = false, bool loop = true)
         {
             if (IsPlayingBGM(clipName))

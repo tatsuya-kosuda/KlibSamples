@@ -16,21 +16,20 @@ namespace UniRx
             {
                 var isCompleted = -1;
                 var subscription = Observable.FromAsyncPattern<TResult>(begin,
-                                                                        ar =>
-                {
-                    try
+                    ar =>
                     {
-                        Interlocked.Increment(ref isCompleted);
-                        return end(ar);
-                    }
-                    catch (WebException ex)
-                    {
-                        if (ex.Status == WebExceptionStatus.RequestCanceled) { return default(TResult); }
-
-                        throw;
-                    }
-                })()
-                .Subscribe(observer);
+                        try
+                        {
+                            Interlocked.Increment(ref isCompleted);
+                            return end(ar);
+                        }
+                        catch (WebException ex)
+                        {
+                            if (ex.Status == WebExceptionStatus.RequestCanceled) return default(TResult);
+                            throw;
+                        }
+                    })()
+                    .Subscribe(observer);
                 return Disposable.Create(() =>
                 {
                     if (Interlocked.Increment(ref isCompleted) == 0)
@@ -40,6 +39,7 @@ namespace UniRx
                     }
                 });
             });
+
             return result;
         }
 

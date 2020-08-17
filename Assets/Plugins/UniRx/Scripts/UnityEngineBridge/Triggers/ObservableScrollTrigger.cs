@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
-            if (onScroll != null) { onScroll.OnNext(eventData); }
+            if (onScroll != null) onScroll.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnScrollAsObservable()

@@ -55,9 +55,9 @@ namespace UniRx.InternalUtil
         /// <remarks>The inequality operators are overloaded to provide results consistent with the IComparable implementation. Equality operators implement traditional reference equality semantics.</remarks>
         public int CompareTo(ScheduledItem other)
         {
-            // MSDN: By definition, any object compares greater than null, and two null references compare equal to each other.
+            // MSDN: By definition, any object compares greater than null, and two null references compare equal to each other. 
             if (object.ReferenceEquals(other, null))
-            { return 1; }
+                return 1;
 
             return DueTime.CompareTo(other.DueTime);
         }
@@ -201,7 +201,7 @@ namespace UniRx.InternalUtil
         public SchedulerQueue(int capacity)
         {
             if (capacity < 0)
-            { throw new ArgumentOutOfRangeException("capacity"); }
+                throw new ArgumentOutOfRangeException("capacity");
 
             _queue = new PriorityQueue<ScheduledItem>(capacity);
         }

@@ -95,7 +95,6 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 list.Add(value);
-
                 if (list.Count == parent.count)
                 {
                     observer.OnNext(list);
@@ -105,8 +104,7 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
@@ -115,9 +113,7 @@ namespace UniRx.Operators
                 {
                     observer.OnNext(list);
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -150,12 +146,10 @@ namespace UniRx.Operators
                 }
 
                 var len = q.Count;
-
                 for (int i = 0; i < len; i++)
                 {
                     var list = q.Dequeue();
                     list.Add(value);
-
                     if (list.Count == parent.count)
                     {
                         observer.OnNext(list);
@@ -169,8 +163,7 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
@@ -179,9 +172,7 @@ namespace UniRx.Operators
                 {
                     observer.OnNext(list);
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
 
@@ -203,9 +194,12 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 list = new List<T>();
+
                 var timerSubscription = Observable.Interval(parent.timeSpan, parent.scheduler)
-                                        .Subscribe(new Buffer(this));
+                    .Subscribe(new Buffer(this));
+
                 var sourceSubscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(timerSubscription, sourceSubscription);
             }
 
@@ -219,23 +213,18 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 List<T> currentList;
-
                 lock (gate)
                 {
                     currentList = list;
                 }
-
                 observer.OnNext(currentList);
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class Buffer : IObserver<long>
@@ -251,11 +240,9 @@ namespace UniRx.Operators
                 {
                     var isZero = false;
                     List<T> currentList;
-
                     lock (parent.gate)
                     {
                         currentList = parent.list;
-
                         if (currentList.Count != 0)
                         {
                             parent.list = new List<T>();
@@ -301,11 +288,15 @@ namespace UniRx.Operators
                 totalTime = TimeSpan.Zero;
                 nextShift = parent.timeShift;
                 nextSpan = parent.timeSpan;
+
                 q = new Queue<IList<T>>();
+
                 timerD = new SerialDisposable();
                 q.Enqueue(new List<T>());
                 CreateTimer();
+
                 var subscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(subscription, timerD);
             }
 
@@ -313,28 +304,27 @@ namespace UniRx.Operators
             {
                 var m = new SingleAssignmentDisposable();
                 timerD.Disposable = m;
+
                 var isSpan = false;
                 var isShift = false;
-
                 if (nextSpan == nextShift)
                 {
                     isSpan = true;
                     isShift = true;
                 }
                 else if (nextSpan < nextShift)
-                { isSpan = true; }
+                    isSpan = true;
                 else
-                { isShift = true; }
+                    isShift = true;
 
                 var newTotalTime = isSpan ? nextSpan : nextShift;
                 var ts = newTotalTime - totalTime;
                 totalTime = newTotalTime;
 
                 if (isSpan)
-                { nextSpan += parent.timeShift; }
-
+                    nextSpan += parent.timeShift;
                 if (isShift)
-                { nextShift += parent.timeShift; }
+                    nextShift += parent.timeShift;
 
                 m.Disposable = parent.scheduler.Schedule(ts, () =>
                 {
@@ -345,7 +335,6 @@ namespace UniRx.Operators
                             var s = new List<T>();
                             q.Enqueue(s);
                         }
-
                         if (isSpan)
                         {
                             var s = q.Dequeue();
@@ -370,8 +359,7 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
@@ -383,8 +371,7 @@ namespace UniRx.Operators
                         observer.OnNext(list);
                     }
 
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
         }
@@ -411,8 +398,10 @@ namespace UniRx.Operators
                 list = new List<T>();
                 timerId = 0L;
                 timerD = new SerialDisposable();
+
                 CreateTimer();
                 var subscription = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(subscription, timerD);
             }
 
@@ -421,8 +410,9 @@ namespace UniRx.Operators
                 var currentTimerId = timerId;
                 var timerS = new SingleAssignmentDisposable();
                 timerD.Disposable = timerS; // restart timer(dispose before)
-                var periodicScheduler = parent.scheduler as ISchedulerPeriodic;
 
+
+                var periodicScheduler = parent.scheduler as ISchedulerPeriodic;
                 if (periodicScheduler != null)
                 {
                     timerS.Disposable = periodicScheduler.SchedulePeriodic(parent.timeSpan, () => OnNextTick(currentTimerId));
@@ -437,13 +427,11 @@ namespace UniRx.Operators
             {
                 var isZero = false;
                 List<T> currentList;
-
                 lock (gate)
                 {
-                    if (currentTimerId != timerId) { return; }
+                    if (currentTimerId != timerId) return;
 
                     currentList = list;
-
                     if (currentList.Count != 0)
                     {
                         list = new List<T>();
@@ -461,13 +449,11 @@ namespace UniRx.Operators
             {
                 var isZero = false;
                 List<T> currentList;
-
                 lock (gate)
                 {
-                    if (currentTimerId != timerId) { return; }
+                    if (currentTimerId != timerId) return;
 
                     currentList = list;
-
                     if (currentList.Count != 0)
                     {
                         list = new List<T>();
@@ -485,11 +471,9 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 List<T> currentList = null;
-
                 lock (gate)
                 {
                     list.Add(value);
-
                     if (list.Count == parent.count)
                     {
                         currentList = list;
@@ -498,7 +482,6 @@ namespace UniRx.Operators
                         CreateTimer();
                     }
                 }
-
                 if (currentList != null)
                 {
                     observer.OnNext(currentList);
@@ -507,24 +490,19 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 List<T> currentList;
-
                 lock (gate)
                 {
                     timerId++;
                     currentList = list;
                 }
-
                 observer.OnNext(currentList);
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -562,8 +540,10 @@ namespace UniRx.Operators
             public IDisposable Run()
             {
                 list = new List<TSource>();
+
                 var sourceSubscription = parent.source.Subscribe(this);
                 var windowSubscription = parent.windowBoundaries.Subscribe(new Buffer_(this));
+
                 return StableCompositeDisposable.Create(sourceSubscription, windowSubscription);
             }
 
@@ -579,8 +559,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); }
+                    try { observer.OnError(error); } finally { Dispose(); }
                 }
             }
 
@@ -591,9 +570,7 @@ namespace UniRx.Operators
                     var currentList = list;
                     list = new List<TSource>(); // safe
                     observer.OnNext(currentList);
-
-                    try { observer.OnCompleted(); }
-                    finally { Dispose(); }
+                    try { observer.OnCompleted(); } finally { Dispose(); }
                 }
             }
 
@@ -610,11 +587,9 @@ namespace UniRx.Operators
                 {
                     var isZero = false;
                     List<TSource> currentList;
-
                     lock (parent.gate)
                     {
                         currentList = parent.list;
-
                         if (currentList.Count != 0)
                         {
                             parent.list = new List<TSource>();
@@ -624,7 +599,6 @@ namespace UniRx.Operators
                             isZero = true;
                         }
                     }
-
                     if (isZero)
                     {
                         parent.observer.OnNext(EmptyArray);

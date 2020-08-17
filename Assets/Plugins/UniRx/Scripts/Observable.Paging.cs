@@ -11,15 +11,13 @@ namespace UniRx
     {
         public static IObservable<T> Take<T>(this IObservable<T> source, int count)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count < 0) throw new ArgumentOutOfRangeException("count");
 
-            if (count < 0) { throw new ArgumentOutOfRangeException("count"); }
-
-            if (count == 0) { return Empty<T>(); }
+            if (count == 0) return Empty<T>();
 
             // optimize .Take(count).Take(count)
             var take = source as TakeObservable<T>;
-
             if (take != null && take.scheduler == null)
             {
                 return take.Combine(count);
@@ -35,13 +33,11 @@ namespace UniRx
 
         public static IObservable<T> Take<T>(this IObservable<T> source, TimeSpan duration, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (scheduler == null) { throw new ArgumentNullException("scheduler"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             // optimize .Take(duration).Take(duration)
             var take = source as TakeObservable<T>;
-
             if (take != null && take.scheduler == scheduler)
             {
                 return take.Combine(duration);
@@ -57,27 +53,24 @@ namespace UniRx
 
         public static IObservable<T> TakeWhile<T>(this IObservable<T> source, Func<T, int, bool> predicate)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (predicate == null) { throw new ArgumentNullException("predicate"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (predicate == null) throw new ArgumentNullException("predicate");
 
             return new TakeWhileObservable<T>(source, predicate);
         }
 
         public static IObservable<T> TakeUntil<T, TOther>(this IObservable<T> source, IObservable<TOther> other)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (other == null) { throw new ArgumentNullException("other"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (other == null) throw new ArgumentNullException("other");
 
             return new TakeUntilObservable<T, TOther>(source, other);
         }
 
         public static IObservable<T> TakeLast<T>(this IObservable<T> source, int count)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (count < 0) { throw new ArgumentOutOfRangeException("count"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count < 0) throw new ArgumentOutOfRangeException("count");
 
             return new TakeLastObservable<T>(source, count);
         }
@@ -89,20 +82,18 @@ namespace UniRx
 
         public static IObservable<T> TakeLast<T>(this IObservable<T> source, TimeSpan duration, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return new TakeLastObservable<T>(source, duration, scheduler);
         }
 
         public static IObservable<T> Skip<T>(this IObservable<T> source, int count)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (count < 0) { throw new ArgumentOutOfRangeException("count"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count < 0) throw new ArgumentOutOfRangeException("count");
 
             // optimize .Skip(count).Skip(count)
             var skip = source as SkipObservable<T>;
-
             if (skip != null && skip.scheduler == null)
             {
                 return skip.Combine(count);
@@ -118,13 +109,11 @@ namespace UniRx
 
         public static IObservable<T> Skip<T>(this IObservable<T> source, TimeSpan duration, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (scheduler == null) { throw new ArgumentNullException("scheduler"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (scheduler == null) throw new ArgumentNullException("scheduler");
 
             // optimize .Skip(duration).Skip(duration)
             var skip = source as SkipObservable<T>;
-
             if (skip != null && skip.scheduler == scheduler)
             {
                 return skip.Combine(duration);
@@ -140,9 +129,8 @@ namespace UniRx
 
         public static IObservable<T> SkipWhile<T>(this IObservable<T> source, Func<T, int, bool> predicate)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (predicate == null) { throw new ArgumentNullException("predicate"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (predicate == null) throw new ArgumentNullException("predicate");
 
             return new SkipWhileObservable<T>(source, predicate);
         }
@@ -154,20 +142,17 @@ namespace UniRx
 
         public static IObservable<IList<T>> Buffer<T>(this IObservable<T> source, int count)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (count <= 0) { throw new ArgumentOutOfRangeException("count <= 0"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count <= 0) throw new ArgumentOutOfRangeException("count <= 0");
 
             return new BufferObservable<T>(source, count, 0);
         }
 
         public static IObservable<IList<T>> Buffer<T>(this IObservable<T> source, int count, int skip)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (count <= 0) { throw new ArgumentOutOfRangeException("count <= 0"); }
-
-            if (skip <= 0) { throw new ArgumentOutOfRangeException("skip <= 0"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count <= 0) throw new ArgumentOutOfRangeException("count <= 0");
+            if (skip <= 0) throw new ArgumentOutOfRangeException("skip <= 0");
 
             return new BufferObservable<T>(source, count, skip);
         }
@@ -179,7 +164,7 @@ namespace UniRx
 
         public static IObservable<IList<T>> Buffer<T>(this IObservable<T> source, TimeSpan timeSpan, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return new BufferObservable<T>(source, timeSpan, timeSpan, scheduler);
         }
@@ -191,9 +176,8 @@ namespace UniRx
 
         public static IObservable<IList<T>> Buffer<T>(this IObservable<T> source, TimeSpan timeSpan, int count, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-
-            if (count <= 0) { throw new ArgumentOutOfRangeException("count <= 0"); }
+            if (source == null) throw new ArgumentNullException("source");
+            if (count <= 0) throw new ArgumentOutOfRangeException("count <= 0");
 
             return new BufferObservable<T>(source, timeSpan, count, scheduler);
         }
@@ -205,7 +189,7 @@ namespace UniRx
 
         public static IObservable<IList<T>> Buffer<T>(this IObservable<T> source, TimeSpan timeSpan, TimeSpan timeShift, IScheduler scheduler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
+            if (source == null) throw new ArgumentNullException("source");
 
             return new BufferObservable<T>(source, timeSpan, timeShift, scheduler);
         }
@@ -298,19 +282,18 @@ namespace UniRx
             return GroupBy(source, keySelector, Stubs<TSource>.Identity, comparer);
         }
 
-        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector,
-                                                                                                       Func<TSource, TElement> elementSelector)
+        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
 #if !UniRxLibrary
             var comparer = UnityEqualityComparer.GetDefault<TKey>();
 #else
             var comparer = EqualityComparer<TKey>.Default;
 #endif
+
             return GroupBy(source, keySelector, elementSelector, comparer);
         }
 
-        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector,
-                                                                                                       Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
+        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
         {
             return new GroupByObservable<TSource, TKey, TElement>(source, keySelector, elementSelector, null, comparer);
         }
@@ -325,19 +308,18 @@ namespace UniRx
             return GroupBy(source, keySelector, Stubs<TSource>.Identity, capacity, comparer);
         }
 
-        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector,
-                                                                                                       Func<TSource, TElement> elementSelector, int capacity)
+        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, int capacity)
         {
 #if !UniRxLibrary
             var comparer = UnityEqualityComparer.GetDefault<TKey>();
 #else
             var comparer = EqualityComparer<TKey>.Default;
 #endif
+
             return GroupBy(source, keySelector, elementSelector, capacity, comparer);
         }
 
-        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector,
-                                                                                                       Func<TSource, TElement> elementSelector, int capacity, IEqualityComparer<TKey> comparer)
+        public static IObservable<IGroupedObservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IObservable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, int capacity, IEqualityComparer<TKey> comparer)
         {
             return new GroupByObservable<TSource, TKey, TElement>(source, keySelector, elementSelector, capacity, comparer);
         }

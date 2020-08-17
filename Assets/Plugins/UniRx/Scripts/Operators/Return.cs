@@ -96,6 +96,7 @@ namespace UniRx.Operators
 
         ImmutableReturnUnitObservable()
         {
+
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -117,6 +118,7 @@ namespace UniRx.Operators
 
         ImmutableReturnTrueObservable()
         {
+
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -138,6 +140,7 @@ namespace UniRx.Operators
 
         ImmutableReturnFalseObservable()
         {
+
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()

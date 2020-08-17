@@ -79,7 +79,6 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(lastValue);
                     }
-
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
                 }
@@ -93,7 +92,6 @@ namespace UniRx.Operators
                     else
                     {
                         observer.OnNext(lastValue);
-
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
                     }
@@ -116,7 +114,6 @@ namespace UniRx.Operators
             public override void OnNext(T value)
             {
                 bool isPassed;
-
                 try
                 {
                     isPassed = parent.predicate(value);
@@ -125,7 +122,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 
@@ -135,7 +131,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(new InvalidOperationException("sequence is not single")); }
                         finally { Dispose(); }
-
                         return;
                     }
                     else
@@ -164,7 +159,6 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(lastValue);
                     }
-
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
                 }
@@ -178,7 +172,6 @@ namespace UniRx.Operators
                     else
                     {
                         observer.OnNext(lastValue);
-
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
                     }

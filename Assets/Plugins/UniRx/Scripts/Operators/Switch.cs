@@ -44,7 +44,6 @@ namespace UniRx.Operators
             public override void OnNext(IObservable<T> value)
             {
                 var id = default(ulong);
-
                 lock (gate)
                 {
                     id = unchecked(++latest);
@@ -70,7 +69,6 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     isStopped = true;
-
                     if (!hasLatest)
                     {
                         try { observer.OnCompleted(); }
@@ -119,7 +117,6 @@ namespace UniRx.Operators
                         if (parent.latest == id)
                         {
                             parent.hasLatest = false;
-
                             if (parent.isStopped)
                             {
                                 parent.observer.OnCompleted();

@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
-            if (onPointerUp != null) { onPointerUp.OnNext(eventData); }
+            if (onPointerUp != null) onPointerUp.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerUpAsObservable()

@@ -23,7 +23,7 @@ namespace UniRx
         public static IObservable<Unit> ToObservable(this Task task)
         {
             if (task == null)
-            { throw new ArgumentNullException("task"); }
+                throw new ArgumentNullException("task");
 
             return ToObservableImpl(task, null);
         }
@@ -39,10 +39,9 @@ namespace UniRx
         public static IObservable<Unit> ToObservable(this Task task, IScheduler scheduler)
         {
             if (task == null)
-            { throw new ArgumentNullException("task"); }
-
+                throw new ArgumentNullException("task");
             if (scheduler == null)
-            { throw new ArgumentNullException("scheduler"); }
+                throw new ArgumentNullException("scheduler");
 
             return ToObservableImpl(task, scheduler);
         }
@@ -60,11 +59,9 @@ namespace UniRx
                     case TaskStatus.RanToCompletion:
                         res = Observable.Return<Unit>(Unit.Default, scheduler);
                         break;
-
                     case TaskStatus.Faulted:
                         res = Observable.Throw<Unit>(task.Exception.InnerException, scheduler);
                         break;
-
                     case TaskStatus.Canceled:
                         res = Observable.Throw<Unit>(new TaskCanceledException(task), scheduler);
                         break;
@@ -84,8 +81,11 @@ namespace UniRx
         private static IObservable<Unit> ToObservableSlow(Task task, IScheduler scheduler)
         {
             var subject = new AsyncSubject<Unit>();
+
             var options = GetTaskContinuationOptions(scheduler);
+
             task.ContinueWith(t => ToObservableDone(task, subject), options);
+
             return ToObservableResult(subject, scheduler);
         }
 
@@ -97,11 +97,9 @@ namespace UniRx
                     subject.OnNext(Unit.Default);
                     subject.OnCompleted();
                     break;
-
                 case TaskStatus.Faulted:
                     subject.OnError(task.Exception.InnerException);
                     break;
-
                 case TaskStatus.Canceled:
                     subject.OnError(new TaskCanceledException(task));
                     break;
@@ -119,7 +117,7 @@ namespace UniRx
         public static IObservable<TResult> ToObservable<TResult>(this Task<TResult> task)
         {
             if (task == null)
-            { throw new ArgumentNullException("task"); }
+                throw new ArgumentNullException("task");
 
             return ToObservableImpl(task, null);
         }
@@ -136,10 +134,9 @@ namespace UniRx
         public static IObservable<TResult> ToObservable<TResult>(this Task<TResult> task, IScheduler scheduler)
         {
             if (task == null)
-            { throw new ArgumentNullException("task"); }
-
+                throw new ArgumentNullException("task");
             if (scheduler == null)
-            { throw new ArgumentNullException("scheduler"); }
+                throw new ArgumentNullException("scheduler");
 
             return ToObservableImpl(task, scheduler);
         }
@@ -157,11 +154,9 @@ namespace UniRx
                     case TaskStatus.RanToCompletion:
                         res = Observable.Return<TResult>(task.Result, scheduler);
                         break;
-
                     case TaskStatus.Faulted:
                         res = Observable.Throw<TResult>(task.Exception.InnerException, scheduler);
                         break;
-
                     case TaskStatus.Canceled:
                         res = Observable.Throw<TResult>(new TaskCanceledException(task), scheduler);
                         break;
@@ -181,8 +176,11 @@ namespace UniRx
         private static IObservable<TResult> ToObservableSlow<TResult>(Task<TResult> task, IScheduler scheduler)
         {
             var subject = new AsyncSubject<TResult>();
+
             var options = GetTaskContinuationOptions(scheduler);
+
             task.ContinueWith(t => ToObservableDone(task, subject), options);
+
             return ToObservableResult(subject, scheduler);
         }
 
@@ -194,11 +192,9 @@ namespace UniRx
                     subject.OnNext(task.Result);
                     subject.OnCompleted();
                     break;
-
                 case TaskStatus.Faulted:
                     subject.OnError(task.Exception.InnerException);
                     break;
-
                 case TaskStatus.Canceled:
                     subject.OnError(new TaskCanceledException(task));
                     break;
@@ -249,7 +245,7 @@ namespace UniRx
         public static Task<TResult> ToTask<TResult>(this IObservable<TResult> observable)
         {
             if (observable == null)
-            { throw new ArgumentNullException("observable"); }
+                throw new ArgumentNullException("observable");
 
             return observable.ToTask(new CancellationToken(), null);
         }
@@ -265,7 +261,7 @@ namespace UniRx
         public static Task<TResult> ToTask<TResult>(this IObservable<TResult> observable, object state)
         {
             if (observable == null)
-            { throw new ArgumentNullException("observable"); }
+                throw new ArgumentNullException("observable");
 
             return observable.ToTask(new CancellationToken(), state);
         }
@@ -281,7 +277,7 @@ namespace UniRx
         public static Task<TResult> ToTask<TResult>(this IObservable<TResult> observable, CancellationToken cancellationToken)
         {
             if (observable == null)
-            { throw new ArgumentNullException("observable"); }
+                throw new ArgumentNullException("observable");
 
             return observable.ToTask(cancellationToken, null);
         }
@@ -298,12 +294,15 @@ namespace UniRx
         public static Task<TResult> ToTask<TResult>(this IObservable<TResult> observable, CancellationToken cancellationToken, object state)
         {
             if (observable == null)
-            { throw new ArgumentNullException("observable"); }
+                throw new ArgumentNullException("observable");
 
             var hasValue = false;
             var lastValue = default(TResult);
+
             var tcs = new TaskCompletionSource<TResult>(state);
+
             var disposable = new SingleAssignmentDisposable();
+
             var ctr = default(CancellationTokenRegistration);
 
             if (cancellationToken.CanBeCanceled)
@@ -316,28 +315,29 @@ namespace UniRx
             }
 
             var taskCompletionObserver = Observer.Create<TResult>(
-                                             value =>
-            {
-                hasValue = true;
-                lastValue = value;
-            },
-            ex =>
-            {
-                tcs.TrySetException(ex);
-                ctr.Dispose(); // no null-check needed (struct)
-                disposable.Dispose();
-            },
-            () =>
-            {
-                if (hasValue)
-                { tcs.TrySetResult(lastValue); }
-                else
-                { tcs.TrySetException(new InvalidOperationException("Strings_Linq.NO_ELEMENTS")); }
+                value =>
+                {
+                    hasValue = true;
+                    lastValue = value;
+                },
+                ex =>
+                {
+                    tcs.TrySetException(ex);
 
-                ctr.Dispose(); // no null-check needed (struct)
-                disposable.Dispose();
-            }
-                                         );
+                    ctr.Dispose(); // no null-check needed (struct)
+                    disposable.Dispose();
+                },
+                () =>
+                {
+                    if (hasValue)
+                        tcs.TrySetResult(lastValue);
+                    else
+                        tcs.TrySetException(new InvalidOperationException("Strings_Linq.NO_ELEMENTS"));
+
+                    ctr.Dispose(); // no null-check needed (struct)
+                    disposable.Dispose();
+                }
+            );
 
             //
             // Subtle race condition: if the source completes before we reach the line below, the SingleAssigmentDisposable

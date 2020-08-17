@@ -1,9 +1,9 @@
 ﻿using System;
 
 #if UniRxLibrary
-    using UnityObservable = UniRx.ObservableUnity;
+using UnityObservable = UniRx.ObservableUnity;
 #else
-    using UnityObservable = UniRx.Observable;
+using UnityObservable = UniRx.Observable;
 #endif
 
 namespace UniRx.Operators
@@ -26,10 +26,11 @@ namespace UniRx.Operators
         {
             var d = new MultipleAssignmentDisposable();
             d.Disposable = UnityObservable.TimerFrame(frameCount, frameCountType)
-                           .SubscribeWithState3(observer, d, source, (_, o, disp, s) =>
-            {
-                disp.Disposable = s.Subscribe(o);
-            });
+                .SubscribeWithState3(observer, d, source, (_, o, disp, s) =>
+                {
+                    disp.Disposable = s.Subscribe(o);
+                });
+
             return d;
         }
     }

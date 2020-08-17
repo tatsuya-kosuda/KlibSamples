@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
-            if (onDeselect != null) { onDeselect.OnNext(eventData); }
+            if (onDeselect != null) onDeselect.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnDeselectAsObservable()

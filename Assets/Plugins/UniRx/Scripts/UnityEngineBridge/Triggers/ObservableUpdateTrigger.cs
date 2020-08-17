@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>Update is called every frame, if the MonoBehaviour is enabled.</summary>
         void Update()
         {
-            if (update != null) { update.OnNext(Unit.Default); }
+            if (update != null) update.OnNext(Unit.Default);
         }
 
         /// <summary>Update is called every frame, if the MonoBehaviour is enabled.</summary>

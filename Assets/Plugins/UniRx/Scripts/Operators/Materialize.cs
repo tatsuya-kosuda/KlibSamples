@@ -40,17 +40,13 @@ namespace UniRx.Operators
             public override void OnError(Exception error)
             {
                 observer.OnNext(Notification.CreateOnError<T>(error));
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 observer.OnNext(Notification.CreateOnCompleted<T>());
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

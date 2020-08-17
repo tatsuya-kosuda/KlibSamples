@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void ISubmitHandler.OnSubmit(BaseEventData eventData)
         {
-            if (onSubmit != null) { onSubmit.OnNext(eventData); }
+            if (onSubmit != null) onSubmit.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnSubmitAsObservable()

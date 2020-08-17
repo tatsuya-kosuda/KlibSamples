@@ -23,6 +23,7 @@ namespace UniRx
 
             private EmptyDisposable()
             {
+
             }
 
             public void Dispose()

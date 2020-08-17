@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>This function is called when the object becomes enabled and active.</summary>
         void OnEnable()
         {
-            if (onEnable != null) { onEnable.OnNext(Unit.Default); }
+            if (onEnable != null) onEnable.OnNext(Unit.Default);
         }
 
         /// <summary>This function is called when the object becomes enabled and active.</summary>
@@ -25,7 +25,7 @@ namespace UniRx.Triggers
         /// <summary>This function is called when the behaviour becomes disabled () or inactive.</summary>
         void OnDisable()
         {
-            if (onDisable != null) { onDisable.OnNext(Unit.Default); }
+            if (onDisable != null) onDisable.OnNext(Unit.Default);
         }
 
         /// <summary>This function is called when the behaviour becomes disabled () or inactive.</summary>
@@ -40,7 +40,6 @@ namespace UniRx.Triggers
             {
                 onEnable.OnCompleted();
             }
-
             if (onDisable != null)
             {
                 onDisable.OnCompleted();

@@ -88,7 +88,7 @@ namespace UniRx
         public override bool Equals(object obj)
         {
             if (!(obj is Timestamped<T>))
-            { return false; }
+                return false;
 
             var other = (Timestamped<T>)obj;
             return this.Equals(other);
@@ -101,6 +101,7 @@ namespace UniRx
         public override int GetHashCode()
         {
             var valueHashCode = Value == null ? 1979 : Value.GetHashCode();
+
             return _timestamp.GetHashCode() ^ valueHashCode;
         }
 

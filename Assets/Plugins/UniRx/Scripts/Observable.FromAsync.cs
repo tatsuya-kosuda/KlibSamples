@@ -9,13 +9,11 @@ namespace UniRx
             return () =>
             {
                 var subject = new AsyncSubject<TResult>();
-
                 try
                 {
                     begin(iar =>
                     {
                         TResult result;
-
                         try
                         {
                             result = end(iar);
@@ -25,7 +23,6 @@ namespace UniRx
                             subject.OnError(exception);
                             return;
                         }
-
                         subject.OnNext(result);
                         subject.OnCompleted();
                     }, null);
@@ -34,7 +31,6 @@ namespace UniRx
                 {
                     return Observable.Throw<TResult>(exception, Scheduler.DefaultSchedulers.AsyncConversions);
                 }
-
                 return subject.AsObservable();
             };
         }
@@ -44,13 +40,11 @@ namespace UniRx
             return x =>
             {
                 var subject = new AsyncSubject<TResult>();
-
                 try
                 {
                     begin(x, iar =>
                     {
                         TResult result;
-
                         try
                         {
                             result = end(iar);
@@ -60,7 +54,6 @@ namespace UniRx
                             subject.OnError(exception);
                             return;
                         }
-
                         subject.OnNext(result);
                         subject.OnCompleted();
                     }, null);
@@ -69,7 +62,6 @@ namespace UniRx
                 {
                     return Observable.Throw<TResult>(exception, Scheduler.DefaultSchedulers.AsyncConversions);
                 }
-
                 return subject.AsObservable();
             };
         }
@@ -79,13 +71,11 @@ namespace UniRx
             return (x, y) =>
             {
                 var subject = new AsyncSubject<TResult>();
-
                 try
                 {
                     begin(x, y, iar =>
                     {
                         TResult result;
-
                         try
                         {
                             result = end(iar);
@@ -95,7 +85,6 @@ namespace UniRx
                             subject.OnError(exception);
                             return;
                         }
-
                         subject.OnNext(result);
                         subject.OnCompleted();
                     }, null);
@@ -104,7 +93,6 @@ namespace UniRx
                 {
                     return Observable.Throw<TResult>(exception, Scheduler.DefaultSchedulers.AsyncConversions);
                 }
-
                 return subject.AsObservable();
             };
         }

@@ -13,7 +13,6 @@ namespace UniRx
         static IEnumerable<IObservable<T>> CombineSources<T>(IObservable<T> first, IObservable<T>[] seconds)
         {
             yield return first;
-
             for (int i = 0; i < seconds.Length; i++)
             {
                 yield return seconds[i];
@@ -22,14 +21,14 @@ namespace UniRx
 
         public static IObservable<TSource> Concat<TSource>(params IObservable<TSource>[] sources)
         {
-            if (sources == null) { throw new ArgumentNullException("sources"); }
+            if (sources == null) throw new ArgumentNullException("sources");
 
             return new ConcatObservable<TSource>(sources);
         }
 
         public static IObservable<TSource> Concat<TSource>(this IEnumerable<IObservable<TSource>> sources)
         {
-            if (sources == null) { throw new ArgumentNullException("sources"); }
+            if (sources == null) throw new ArgumentNullException("sources");
 
             return new ConcatObservable<TSource>(sources);
         }
@@ -41,12 +40,10 @@ namespace UniRx
 
         public static IObservable<TSource> Concat<TSource>(this IObservable<TSource> first, params IObservable<TSource>[] seconds)
         {
-            if (first == null) { throw new ArgumentNullException("first"); }
-
-            if (seconds == null) { throw new ArgumentNullException("seconds"); }
+            if (first == null) throw new ArgumentNullException("first");
+            if (seconds == null) throw new ArgumentNullException("seconds");
 
             var concat = first as ConcatObservable<TSource>;
-
             if (concat != null)
             {
                 return concat.Combine(seconds);
@@ -125,26 +122,22 @@ namespace UniRx
             return new ZipObservable<T1, T2, T3, TR>(source1, source2, source3, resultSelector);
         }
 
-        public static IObservable<TR> Zip<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                              ZipFunc<T1, T2, T3, T4, TR> resultSelector)
+        public static IObservable<TR> Zip<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, ZipFunc<T1, T2, T3, T4, TR> resultSelector)
         {
             return new ZipObservable<T1, T2, T3, T4, TR>(source1, source2, source3, source4, resultSelector);
         }
 
-        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                  ZipFunc<T1, T2, T3, T4, T5, TR> resultSelector)
+        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, ZipFunc<T1, T2, T3, T4, T5, TR> resultSelector)
         {
             return new ZipObservable<T1, T2, T3, T4, T5, TR>(source1, source2, source3, source4, source5, resultSelector);
         }
 
-        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                      IObservable<T6> source6, ZipFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
+        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, ZipFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
         {
             return new ZipObservable<T1, T2, T3, T4, T5, T6, TR>(source1, source2, source3, source4, source5, source6, resultSelector);
         }
 
-        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                          IObservable<T6> source6, IObservable<T7> source7, ZipFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
+        public static IObservable<TR> Zip<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, IObservable<T7> source7, ZipFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
         {
             return new ZipObservable<T1, T2, T3, T4, T5, T6, T7, TR>(source1, source2, source3, source4, source5, source6, source7, resultSelector);
         }
@@ -169,26 +162,22 @@ namespace UniRx
             return new CombineLatestObservable<T1, T2, T3, TR>(source1, source2, source3, resultSelector);
         }
 
-        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                                        CombineLatestFunc<T1, T2, T3, T4, TR> resultSelector)
+        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, CombineLatestFunc<T1, T2, T3, T4, TR> resultSelector)
         {
             return new CombineLatestObservable<T1, T2, T3, T4, TR>(source1, source2, source3, source4, resultSelector);
         }
 
-        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                            CombineLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
+        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, CombineLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
         {
             return new CombineLatestObservable<T1, T2, T3, T4, T5, TR>(source1, source2, source3, source4, source5, resultSelector);
         }
 
-        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                                                IObservable<T5> source5, IObservable<T6> source6, CombineLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
+        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, CombineLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
         {
             return new CombineLatestObservable<T1, T2, T3, T4, T5, T6, TR>(source1, source2, source3, source4, source5, source6, resultSelector);
         }
 
-        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                                                    IObservable<T5> source5, IObservable<T6> source6, IObservable<T7> source7, CombineLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
+        public static IObservable<TR> CombineLatest<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, IObservable<T7> source7, CombineLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
         {
             return new CombineLatestObservable<T1, T2, T3, T4, T5, T6, T7, TR>(source1, source2, source3, source4, source5, source6, source7, resultSelector);
         }
@@ -213,26 +202,22 @@ namespace UniRx
             return new ZipLatestObservable<T1, T2, T3, TR>(source1, source2, source3, resultSelector);
         }
 
-        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                                    ZipLatestFunc<T1, T2, T3, T4, TR> resultSelector)
+        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, ZipLatestFunc<T1, T2, T3, T4, TR> resultSelector)
         {
             return new ZipLatestObservable<T1, T2, T3, T4, TR>(source1, source2, source3, source4, resultSelector);
         }
 
-        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                        ZipLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
+        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, ZipLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
         {
             return new ZipLatestObservable<T1, T2, T3, T4, T5, TR>(source1, source2, source3, source4, source5, resultSelector);
         }
 
-        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5,
-                                                                            IObservable<T6> source6, ZipLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
+        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, T6, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, ZipLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
         {
             return new ZipLatestObservable<T1, T2, T3, T4, T5, T6, TR>(source1, source2, source3, source4, source5, source6, resultSelector);
         }
 
-        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4,
-                                                                                IObservable<T5> source5, IObservable<T6> source6, IObservable<T7> source7, ZipLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
+        public static IObservable<TR> ZipLatest<T1, T2, T3, T4, T5, T6, T7, TR>(this IObservable<T1> source1, IObservable<T2> source2, IObservable<T3> source3, IObservable<T4> source4, IObservable<T5> source5, IObservable<T6> source6, IObservable<T7> source7, ZipLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
         {
             return new ZipLatestObservable<T1, T2, T3, T4, T5, T6, T7, TR>(source1, source2, source3, source4, source5, source6, source7, resultSelector);
         }
@@ -253,7 +238,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<T[]> WhenAll<T>(params IObservable<T>[] sources)
         {
-            if (sources.Length == 0) { return Observable.Return(new T[0]); }
+            if (sources.Length == 0) return Observable.Return(new T[0]);
 
             return new WhenAllObservable<T>(sources);
         }
@@ -263,7 +248,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<Unit> WhenAll(params IObservable<Unit>[] sources)
         {
-            if (sources.Length == 0) { return Observable.ReturnUnit(); }
+            if (sources.Length == 0) return Observable.ReturnUnit();
 
             return new WhenAllObservable(sources);
         }
@@ -275,8 +260,7 @@ namespace UniRx
         public static IObservable<T[]> WhenAll<T>(this IEnumerable<IObservable<T>> sources)
         {
             var array = sources as IObservable<T>[];
-
-            if (array != null) { return WhenAll(array); }
+            if (array != null) return WhenAll(array);
 
             return new WhenAllObservable<T>(sources);
         }
@@ -287,8 +271,7 @@ namespace UniRx
         public static IObservable<Unit> WhenAll(this IEnumerable<IObservable<Unit>> sources)
         {
             var array = sources as IObservable<Unit>[];
-
-            if (array != null) { return WhenAll(array); }
+            if (array != null) return WhenAll(array);
 
             return new WhenAllObservable(sources);
         }
@@ -321,7 +304,6 @@ namespace UniRx
         public static IObservable<T> StartWith<T>(this IObservable<T> source, IScheduler scheduler, IEnumerable<T> values)
         {
             var array = values as T[];
-
             if (array == null)
             {
                 array = values.ToArray();

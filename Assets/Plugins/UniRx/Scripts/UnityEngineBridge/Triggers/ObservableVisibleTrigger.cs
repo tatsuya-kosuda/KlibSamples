@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>OnBecameInvisible is called when the renderer is no longer visible by any camera.</summary>
         void OnBecameInvisible()
         {
-            if (onBecameInvisible != null) { onBecameInvisible.OnNext(Unit.Default); }
+            if (onBecameInvisible != null) onBecameInvisible.OnNext(Unit.Default);
         }
 
         /// <summary>OnBecameInvisible is called when the renderer is no longer visible by any camera.</summary>
@@ -25,7 +25,7 @@ namespace UniRx.Triggers
         /// <summary>OnBecameVisible is called when the renderer became visible by any camera.</summary>
         void OnBecameVisible()
         {
-            if (onBecameVisible != null) { onBecameVisible.OnNext(Unit.Default); }
+            if (onBecameVisible != null) onBecameVisible.OnNext(Unit.Default);
         }
 
         /// <summary>OnBecameVisible is called when the renderer became visible by any camera.</summary>
@@ -40,7 +40,6 @@ namespace UniRx.Triggers
             {
                 onBecameInvisible.OnCompleted();
             }
-
             if (onBecameVisible != null)
             {
                 onBecameVisible.OnCompleted();

@@ -1,0 +1,9 @@
+{
+	"author": "Tatsuya Kosuda",
+    "name": "jp.TatsuyaKosuda.klib",
+    "displayName": "KLIB",
+    "version": "1.0.0-preview.1",
+    "unity": "2020.1",
+    "description": "unity utilities and extensions",
+    "dependencies": {},
+}

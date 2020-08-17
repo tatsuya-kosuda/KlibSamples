@@ -26,7 +26,6 @@ namespace UniRx.Operators
             {
                 yield return item;
             }
-
             foreach (var item in second)
             {
                 yield return item;
@@ -59,15 +58,17 @@ namespace UniRx.Operators
                 isDisposed = false;
                 e = parent.sources.GetEnumerator();
                 subscription = new SerialDisposable();
+
                 var schedule = Scheduler.DefaultSchedulers.TailRecursion.Schedule(RecursiveRun);
+
                 return StableCompositeDisposable.Create(schedule, subscription, Disposable.Create(() =>
-                {
-                    lock (gate)
-                    {
-                        this.isDisposed = true;
-                        this.e.Dispose();
-                    }
-                }));
+               {
+                   lock (gate)
+                   {
+                       this.isDisposed = true;
+                       this.e.Dispose();
+                   }
+               }));
             }
 
             void RecursiveRun(Action self)
@@ -75,8 +76,7 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     this.nextSelf = self;
-
-                    if (isDisposed) { return; }
+                    if (isDisposed) return;
 
                     var current = default(IObservable<T>);
                     var hasNext = false;
@@ -85,12 +85,10 @@ namespace UniRx.Operators
                     try
                     {
                         hasNext = e.MoveNext();
-
                         if (hasNext)
                         {
                             current = e.Current;
-
-                            if (current == null) { throw new InvalidOperationException("sequence is null."); }
+                            if (current == null) throw new InvalidOperationException("sequence is null.");
                         }
                         else
                         {
@@ -107,7 +105,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
 
@@ -115,7 +112,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
-
                         return;
                     }
 

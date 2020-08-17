@@ -43,7 +43,6 @@ namespace UniRx.Operators
             public bool Register()
             {
                 handler = parent.conversion(OnNext);
-
                 try
                 {
                     parent.addHandler(handler);
@@ -53,7 +52,6 @@ namespace UniRx.Operators
                     observer.OnError(ex);
                     return false;
                 }
-
                 return true;
             }
 
@@ -118,7 +116,6 @@ namespace UniRx.Operators
                     observer.OnError(ex);
                     return false;
                 }
-
                 return true;
             }
 
@@ -183,7 +180,6 @@ namespace UniRx.Operators
                     observer.OnError(ex);
                     return false;
                 }
-
                 return true;
             }
 
@@ -245,7 +241,6 @@ namespace UniRx.Operators
                     observer.OnError(ex);
                     return false;
                 }
-
                 return true;
             }
 
@@ -307,7 +302,6 @@ namespace UniRx.Operators
                     observer.OnError(ex);
                     return false;
                 }
-
                 return true;
             }
 

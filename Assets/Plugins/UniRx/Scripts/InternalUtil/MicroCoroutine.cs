@@ -44,7 +44,6 @@ namespace UniRx.InternalUtil
                 {
                     Array.Resize(ref coroutines, checked(tail * 2));
                 }
-
                 coroutines[tail++] = enumerator;
             }
         }
@@ -64,7 +63,6 @@ namespace UniRx.InternalUtil
                 for (int i = 0; i < coroutines.Length; i++)
                 {
                     var coroutine = coroutines[i];
-
                     if (coroutine != null)
                     {
                         try
@@ -76,21 +74,19 @@ namespace UniRx.InternalUtil
                             else
                             {
 #if UNITY_EDITOR
-
                                 // validation only on Editor.
                                 if (coroutine.Current != null)
                                 {
                                     UnityEngine.Debug.LogWarning("MicroCoroutine supports only yield return null. return value = " + coroutine.Current);
                                 }
-
 #endif
-                                continue; // next i
+
+                                continue; // next i 
                             }
                         }
                         catch (Exception ex)
                         {
                             coroutines[i] = null;
-
                             try
                             {
                                 unhandledExceptionCallback(ex);
@@ -103,7 +99,6 @@ namespace UniRx.InternalUtil
                     while (i < j)
                     {
                         var fromTail = coroutines[j];
-
                         if (fromTail != null)
                         {
                             try
@@ -117,14 +112,13 @@ namespace UniRx.InternalUtil
                                 else
                                 {
 #if UNITY_EDITOR
-
                                     // validation only on Editor.
                                     if (fromTail.Current != null)
                                     {
                                         UnityEngine.Debug.LogWarning("MicroCoroutine supports only yield return null. return value = " + coroutine.Current);
                                     }
-
 #endif
+
                                     // swap
                                     coroutines[i] = fromTail;
                                     coroutines[j] = null;
@@ -136,13 +130,11 @@ namespace UniRx.InternalUtil
                             {
                                 coroutines[j] = null;
                                 j--;
-
                                 try
                                 {
                                     unhandledExceptionCallback(ex);
                                 }
                                 catch { }
-
                                 continue; // next j
                             }
                         }
@@ -154,21 +146,21 @@ namespace UniRx.InternalUtil
 
                     tail = i; // loop end
                     break; // LOOP END
+
                     NEXT_LOOP:
                     continue;
                 }
 
+
                 lock (runningAndQueueLock)
                 {
                     running = false;
-
                     while (waitQueue.Count != 0)
                     {
                         if (coroutines.Length == tail)
                         {
                             Array.Resize(ref coroutines, checked(tail * 2));
                         }
-
                         coroutines[tail++] = waitQueue.Dequeue();
                     }
                 }

@@ -54,13 +54,12 @@ namespace UniRx
 
             lock (lockObject)
             {
-                if (Count == Max) { return Disposable.Empty; }
-                else if (incrementCount + Count > Max) { Count = Max; }
-                else { Count += incrementCount; }
+                if (Count == Max) return Disposable.Empty;
+                else if (incrementCount + Count > Max) Count = Max;
+                else Count += incrementCount;
 
                 statusChanged.OnNext(CountChangedStatus.Increment);
-
-                if (Count == Max) { statusChanged.OnNext(CountChangedStatus.Max); }
+                if (Count == Max) statusChanged.OnNext(CountChangedStatus.Max);
 
                 return Disposable.Create(() => this.Decrement(incrementCount));
             }
@@ -78,13 +77,12 @@ namespace UniRx
 
             lock (lockObject)
             {
-                if (Count == 0) { return; }
-                else if (Count - decrementCount < 0) { Count = 0; }
-                else { Count -= decrementCount; }
+                if (Count == 0) return;
+                else if (Count - decrementCount < 0) Count = 0;
+                else Count -= decrementCount;
 
                 statusChanged.OnNext(CountChangedStatus.Decrement);
-
-                if (Count == 0) { statusChanged.OnNext(CountChangedStatus.Empty); }
+                if (Count == 0) statusChanged.OnNext(CountChangedStatus.Empty);
             }
         }
 

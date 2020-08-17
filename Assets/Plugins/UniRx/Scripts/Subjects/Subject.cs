@@ -25,12 +25,10 @@ namespace UniRx
         public void OnCompleted()
         {
             IObserver<T> old;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -42,15 +40,13 @@ namespace UniRx
 
         public void OnError(Exception error)
         {
-            if (error == null) { throw new ArgumentNullException("error"); }
+            if (error == null) throw new ArgumentNullException("error");
 
             IObserver<T> old;
-
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
-                if (isStopped) { return; }
+                if (isStopped) return;
 
                 old = outObserver;
                 outObserver = EmptyObserver<T>.Instance;
@@ -68,18 +64,16 @@ namespace UniRx
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer == null) { throw new ArgumentNullException("observer"); }
+            if (observer == null) throw new ArgumentNullException("observer");
 
             var ex = default(Exception);
 
             lock (observerLock)
             {
                 ThrowIfDisposed();
-
                 if (!isStopped)
                 {
                     var listObserver = outObserver as ListObserver<T>;
-
                     if (listObserver != null)
                     {
                         outObserver = listObserver.Add(observer);
@@ -87,7 +81,6 @@ namespace UniRx
                     else
                     {
                         var current = outObserver;
-
                         if (current is EmptyObserver<T>)
                         {
                             outObserver = observer;
@@ -127,7 +120,7 @@ namespace UniRx
 
         void ThrowIfDisposed()
         {
-            if (isDisposed) { throw new ObjectDisposedException(""); }
+            if (isDisposed) throw new ObjectDisposedException("");
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -156,7 +149,6 @@ namespace UniRx
                         lock (parent.observerLock)
                         {
                             var listObserver = parent.outObserver as ListObserver<T>;
-
                             if (listObserver != null)
                             {
                                 parent.outObserver = listObserver.Remove(unsubscribeTarget);

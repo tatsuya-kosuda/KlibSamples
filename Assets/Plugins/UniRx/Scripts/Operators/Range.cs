@@ -11,7 +11,7 @@ namespace UniRx.Operators
         public RangeObservable(int start, int count, IScheduler scheduler)
             : base(scheduler == Scheduler.CurrentThread)
         {
-            if (count < 0) { throw new ArgumentOutOfRangeException("count < 0"); }
+            if (count < 0) throw new ArgumentOutOfRangeException("count < 0");
 
             this.start = start;
             this.count = count;
@@ -29,8 +29,8 @@ namespace UniRx.Operators
                     int v = start + i;
                     observer.OnNext(v);
                 }
-
                 observer.OnCompleted();
+
                 return Disposable.Empty;
             }
             else

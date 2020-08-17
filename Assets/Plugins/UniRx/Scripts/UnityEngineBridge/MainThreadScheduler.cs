@@ -98,8 +98,7 @@ namespace UniRx
                     yield return new WaitForSeconds((float)dueTime.TotalSeconds);
                 }
 
-                if (cancellation.IsDisposed) { yield break; }
-
+                if (cancellation.IsDisposed) yield break;
                 MainThreadDispatcher.UnsafeSend(action);
             }
 
@@ -111,8 +110,7 @@ namespace UniRx
                     while (true)
                     {
                         yield return null; // not immediately, run next frame
-
-                        if (cancellation.IsDisposed) { yield break; }
+                        if (cancellation.IsDisposed) yield break;
 
                         MainThreadDispatcher.UnsafeSend(action);
                     }
@@ -125,8 +123,7 @@ namespace UniRx
                     while (true)
                     {
                         yield return yieldInstruction;
-
-                        if (cancellation.IsDisposed) { yield break; }
+                        if (cancellation.IsDisposed) yield break;
 
                         MainThreadDispatcher.UnsafeSend(action);
                     }
@@ -141,7 +138,6 @@ namespace UniRx
             void Schedule(object state)
             {
                 var t = (Tuple<BooleanDisposable, Action>)state;
-
                 if (!t.Item1.IsDisposed)
                 {
                     t.Item2();
@@ -164,7 +160,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(dueTime);
+
                 MainThreadDispatcher.SendStartCoroutine(DelayAction(time, action, d));
+
                 return d;
             }
 
@@ -172,14 +170,15 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(period);
+
                 MainThreadDispatcher.SendStartCoroutine(PeriodicAction(time, action, d));
+
                 return d;
             }
 
             void ScheduleQueueing<T>(object state)
             {
                 var t = (Tuple<ICancelable, T, Action<T>>)state;
-
                 if (!t.Item1.IsDisposed)
                 {
                     t.Item3(t.Item2);
@@ -222,8 +221,7 @@ namespace UniRx
                 if (dueTime == TimeSpan.Zero)
                 {
                     yield return null;
-
-                    if (cancellation.IsDisposed) { yield break; }
+                    if (cancellation.IsDisposed) yield break;
 
                     MainThreadDispatcher.UnsafeSend(action);
                 }
@@ -231,15 +229,12 @@ namespace UniRx
                 {
                     var elapsed = 0f;
                     var dt = (float)dueTime.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
+                        if (cancellation.IsDisposed) break;
 
                         elapsed += Time.unscaledDeltaTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -257,8 +252,7 @@ namespace UniRx
                     while (true)
                     {
                         yield return null; // not immediately, run next frame
-
-                        if (cancellation.IsDisposed) { yield break; }
+                        if (cancellation.IsDisposed) yield break;
 
                         MainThreadDispatcher.UnsafeSend(action);
                     }
@@ -267,15 +261,12 @@ namespace UniRx
                 {
                     var elapsed = 0f;
                     var dt = (float)period.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
+                        if (cancellation.IsDisposed) break;
 
                         elapsed += Time.unscaledDeltaTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -293,7 +284,6 @@ namespace UniRx
             void Schedule(object state)
             {
                 var t = (Tuple<BooleanDisposable, Action>)state;
-
                 if (!t.Item1.IsDisposed)
                 {
                     t.Item2();
@@ -316,7 +306,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(dueTime);
+
                 MainThreadDispatcher.SendStartCoroutine(DelayAction(time, action, d));
+
                 return d;
             }
 
@@ -324,7 +316,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(period);
+
                 MainThreadDispatcher.SendStartCoroutine(PeriodicAction(time, action, d));
+
                 return d;
             }
 
@@ -359,8 +353,7 @@ namespace UniRx
             IEnumerator ImmediateAction<T>(T state, Action<T> action, ICancelable cancellation)
             {
                 yield return null;
-
-                if (cancellation.IsDisposed) { yield break; }
+                if (cancellation.IsDisposed) yield break;
 
                 MainThreadDispatcher.UnsafeSend(action, state);
             }
@@ -370,8 +363,7 @@ namespace UniRx
                 if (dueTime == TimeSpan.Zero)
                 {
                     yield return null;
-
-                    if (cancellation.IsDisposed) { yield break; }
+                    if (cancellation.IsDisposed) yield break;
 
                     MainThreadDispatcher.UnsafeSend(action);
                 }
@@ -379,15 +371,12 @@ namespace UniRx
                 {
                     var startTime = Time.fixedTime;
                     var dt = (float)dueTime.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
+                        if (cancellation.IsDisposed) break;
 
                         var elapsed = Time.fixedTime - startTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -405,8 +394,7 @@ namespace UniRx
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { yield break; }
+                        if (cancellation.IsDisposed) yield break;
 
                         MainThreadDispatcher.UnsafeSend(action);
                     }
@@ -415,16 +403,13 @@ namespace UniRx
                 {
                     var startTime = Time.fixedTime;
                     var dt = (float)period.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
+                        if (cancellation.IsDisposed) break;
 
                         var ft = Time.fixedTime;
                         var elapsed = ft - startTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -453,7 +438,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(dueTime);
+
                 MainThreadDispatcher.StartFixedUpdateMicroCoroutine(DelayAction(time, action, d));
+
                 return d;
             }
 
@@ -461,7 +448,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(period);
+
                 MainThreadDispatcher.StartFixedUpdateMicroCoroutine(PeriodicAction(time, action, d));
+
                 return d;
             }
 
@@ -481,8 +470,7 @@ namespace UniRx
             IEnumerator ImmediateAction<T>(T state, Action<T> action, ICancelable cancellation)
             {
                 yield return null;
-
-                if (cancellation.IsDisposed) { yield break; }
+                if (cancellation.IsDisposed) yield break;
 
                 MainThreadDispatcher.UnsafeSend(action, state);
             }
@@ -492,8 +480,7 @@ namespace UniRx
                 if (dueTime == TimeSpan.Zero)
                 {
                     yield return null;
-
-                    if (cancellation.IsDisposed) { yield break; }
+                    if (cancellation.IsDisposed) yield break;
 
                     MainThreadDispatcher.UnsafeSend(action);
                 }
@@ -501,15 +488,12 @@ namespace UniRx
                 {
                     var elapsed = 0f;
                     var dt = (float)dueTime.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
+                        if (cancellation.IsDisposed) break;
 
                         elapsed += Time.deltaTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -527,8 +511,7 @@ namespace UniRx
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { yield break; }
+                        if (cancellation.IsDisposed) yield break;
 
                         MainThreadDispatcher.UnsafeSend(action);
                     }
@@ -537,15 +520,12 @@ namespace UniRx
                 {
                     var elapsed = 0f;
                     var dt = (float)period.TotalSeconds;
-
                     while (true)
                     {
                         yield return null;
-
-                        if (cancellation.IsDisposed) { break; }
-
+                        if (cancellation.IsDisposed) break;
+                        
                         elapsed += Time.deltaTime;
-
                         if (elapsed >= dt)
                         {
                             MainThreadDispatcher.UnsafeSend(action);
@@ -574,7 +554,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(dueTime);
+
                 MainThreadDispatcher.StartEndOfFrameMicroCoroutine(DelayAction(time, action, d));
+
                 return d;
             }
 
@@ -582,7 +564,9 @@ namespace UniRx
             {
                 var d = new BooleanDisposable();
                 var time = Scheduler.Normalize(period);
+
                 MainThreadDispatcher.StartEndOfFrameMicroCoroutine(PeriodicAction(time, action, d));
+
                 return d;
             }
 

@@ -54,6 +54,7 @@ namespace UniRx.Operators
             {
                 var l = parent.left.Subscribe(new LeftObserver(this));
                 var r = parent.right.Subscribe(new RightObserver(this));
+
                 return StableCompositeDisposable.Create(l, r);
             }
 
@@ -64,7 +65,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
-
                     return;
                 }
                 else if (!(leftStarted && rightStarted))
@@ -73,7 +73,6 @@ namespace UniRx.Operators
                 }
 
                 TResult v;
-
                 try
                 {
                     v = parent.selector(leftValue, rightValue);
@@ -82,7 +81,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 
@@ -138,8 +136,7 @@ namespace UniRx.Operators
                     lock (parent.gate)
                     {
                         parent.leftCompleted = true;
-
-                        if (parent.rightCompleted) { parent.OnCompleted(); }
+                        if (parent.rightCompleted) parent.OnCompleted();
                     }
                 }
             }
@@ -177,8 +174,7 @@ namespace UniRx.Operators
                     lock (parent.gate)
                     {
                         parent.rightCompleted = true;
-
-                        if (parent.leftCompleted) { parent.OnCompleted(); }
+                        if (parent.leftCompleted) parent.OnCompleted();
                     }
                 }
             }
@@ -224,8 +220,8 @@ namespace UniRx.Operators
                 isStarted = new bool[length];
                 isCompleted = new bool[length];
                 isAllValueStarted = false;
-                var disposables = new IDisposable[length];
 
+                var disposables = new IDisposable[length];
                 for (int i = 0; i < length; i++)
                 {
                     var source = parent.sources[i];
@@ -247,7 +243,6 @@ namespace UniRx.Operators
                 }
 
                 var allValueStarted = true;
-
                 for (int i = 0; i < length; i++)
                 {
                     if (!isStarted[i])
@@ -267,11 +262,9 @@ namespace UniRx.Operators
                 else
                 {
                     var allCompletedWithoutSelf = true;
-
                     for (int i = 0; i < length; i++)
                     {
-                        if (i == index) { continue; }
-
+                        if (i == index) continue;
                         if (!isCompleted[i])
                         {
                             allCompletedWithoutSelf = false;
@@ -283,7 +276,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
-
                         return;
                     }
                     else
@@ -343,8 +335,8 @@ namespace UniRx.Operators
                     lock (parent.gate)
                     {
                         parent.isCompleted[index] = true;
-                        var allTrue = true;
 
+                        var allTrue = true;
                         for (int i = 0; i < parent.length; i++)
                         {
                             if (!parent.isCompleted[i])
@@ -378,12 +370,12 @@ namespace UniRx.Operators
             IObservable<T1> source1,
             IObservable<T2> source2,
             IObservable<T3> source3,
-            CombineLatestFunc<T1, T2, T3, TR> resultSelector)
+              CombineLatestFunc<T1, T2, T3, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -415,9 +407,11 @@ namespace UniRx.Operators
                 c1 = new CombineLatestObserver<T1>(gate, this, 0);
                 c2 = new CombineLatestObserver<T2>(gate, this, 1);
                 c3 = new CombineLatestObserver<T3>(gate, this, 2);
+
                 var s1 = parent.source1.Subscribe(c1);
                 var s2 = parent.source2.Subscribe(c2);
                 var s3 = parent.source3.Subscribe(c3);
+
                 return StableCompositeDisposable.Create(s1, s2, s3);
             }
 
@@ -459,13 +453,13 @@ namespace UniRx.Operators
             IObservable<T2> source2,
             IObservable<T3> source3,
             IObservable<T4> source4,
-            CombineLatestFunc<T1, T2, T3, T4, TR> resultSelector)
+              CombineLatestFunc<T1, T2, T3, T4, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -500,10 +494,12 @@ namespace UniRx.Operators
                 c2 = new CombineLatestObserver<T2>(gate, this, 1);
                 c3 = new CombineLatestObserver<T3>(gate, this, 2);
                 c4 = new CombineLatestObserver<T4>(gate, this, 3);
+
                 var s1 = parent.source1.Subscribe(c1);
                 var s2 = parent.source2.Subscribe(c2);
                 var s3 = parent.source3.Subscribe(c3);
                 var s4 = parent.source4.Subscribe(c4);
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4);
             }
 
@@ -547,14 +543,14 @@ namespace UniRx.Operators
             IObservable<T3> source3,
             IObservable<T4> source4,
             IObservable<T5> source5,
-            CombineLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
+              CombineLatestFunc<T1, T2, T3, T4, T5, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -592,11 +588,13 @@ namespace UniRx.Operators
                 c3 = new CombineLatestObserver<T3>(gate, this, 2);
                 c4 = new CombineLatestObserver<T4>(gate, this, 3);
                 c5 = new CombineLatestObserver<T5>(gate, this, 4);
+
                 var s1 = parent.source1.Subscribe(c1);
                 var s2 = parent.source2.Subscribe(c2);
                 var s3 = parent.source3.Subscribe(c3);
                 var s4 = parent.source4.Subscribe(c4);
                 var s5 = parent.source5.Subscribe(c5);
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5);
             }
 
@@ -642,15 +640,15 @@ namespace UniRx.Operators
             IObservable<T4> source4,
             IObservable<T5> source5,
             IObservable<T6> source6,
-            CombineLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
+              CombineLatestFunc<T1, T2, T3, T4, T5, T6, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  source6.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                source6.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -691,12 +689,14 @@ namespace UniRx.Operators
                 c4 = new CombineLatestObserver<T4>(gate, this, 3);
                 c5 = new CombineLatestObserver<T5>(gate, this, 4);
                 c6 = new CombineLatestObserver<T6>(gate, this, 5);
+
                 var s1 = parent.source1.Subscribe(c1);
                 var s2 = parent.source2.Subscribe(c2);
                 var s3 = parent.source3.Subscribe(c3);
                 var s4 = parent.source4.Subscribe(c4);
                 var s5 = parent.source5.Subscribe(c5);
                 var s6 = parent.source6.Subscribe(c6);
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5, s6);
             }
 
@@ -744,16 +744,16 @@ namespace UniRx.Operators
             IObservable<T5> source5,
             IObservable<T6> source6,
             IObservable<T7> source7,
-            CombineLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
+              CombineLatestFunc<T1, T2, T3, T4, T5, T6, T7, TR> resultSelector)
             : base(
-                  source1.IsRequiredSubscribeOnCurrentThread() ||
-                  source2.IsRequiredSubscribeOnCurrentThread() ||
-                  source3.IsRequiredSubscribeOnCurrentThread() ||
-                  source4.IsRequiredSubscribeOnCurrentThread() ||
-                  source5.IsRequiredSubscribeOnCurrentThread() ||
-                  source6.IsRequiredSubscribeOnCurrentThread() ||
-                  source7.IsRequiredSubscribeOnCurrentThread() ||
-                  false)
+                source1.IsRequiredSubscribeOnCurrentThread() ||
+                source2.IsRequiredSubscribeOnCurrentThread() ||
+                source3.IsRequiredSubscribeOnCurrentThread() ||
+                source4.IsRequiredSubscribeOnCurrentThread() ||
+                source5.IsRequiredSubscribeOnCurrentThread() ||
+                source6.IsRequiredSubscribeOnCurrentThread() ||
+                source7.IsRequiredSubscribeOnCurrentThread() ||
+                false)
         {
             this.source1 = source1;
             this.source2 = source2;
@@ -797,6 +797,7 @@ namespace UniRx.Operators
                 c5 = new CombineLatestObserver<T5>(gate, this, 4);
                 c6 = new CombineLatestObserver<T6>(gate, this, 5);
                 c7 = new CombineLatestObserver<T7>(gate, this, 6);
+
                 var s1 = parent.source1.Subscribe(c1);
                 var s2 = parent.source2.Subscribe(c2);
                 var s3 = parent.source3.Subscribe(c3);
@@ -804,6 +805,7 @@ namespace UniRx.Operators
                 var s5 = parent.source5.Subscribe(c5);
                 var s6 = parent.source6.Subscribe(c6);
                 var s7 = parent.source7.Subscribe(c7);
+
                 return StableCompositeDisposable.Create(s1, s2, s3, s4, s5, s6, s7);
             }
 
@@ -867,7 +869,6 @@ namespace UniRx.Operators
             if (isAllValueStarted)
             {
                 var result = default(T);
-
                 try
                 {
                     result = GetResult();
@@ -876,16 +877,13 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
-
                 OnNext(result);
                 return;
             }
 
             var allValueStarted = true;
-
             for (int i = 0; i < length; i++)
             {
                 if (!isStarted[i])
@@ -900,7 +898,6 @@ namespace UniRx.Operators
             if (isAllValueStarted)
             {
                 var result = default(T);
-
                 try
                 {
                     result = GetResult();
@@ -909,21 +906,17 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
-
                 OnNext(result);
                 return;
             }
             else
             {
                 var allCompletedWithoutSelf = true;
-
                 for (int i = 0; i < length; i++)
                 {
-                    if (i == index) { continue; }
-
+                    if (i == index) continue;
                     if (!isCompleted[i])
                     {
                         allCompletedWithoutSelf = false;
@@ -935,7 +928,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
-
                     return;
                 }
                 else
@@ -948,8 +940,8 @@ namespace UniRx.Operators
         public void Done(int index)
         {
             isCompleted[index] = true;
-            var allTrue = true;
 
+            var allTrue = true;
             for (int i = 0; i < length; i++)
             {
                 if (!isCompleted[i])

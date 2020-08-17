@@ -1,8 +1,6 @@
-
 ﻿#if !(UNITY_IPHONE || UNITY_ANDROID || UNITY_METRO)
 
-    using System; // require keep for Windows Universal App
-
+using System; // require keep for Windows Universal App
 using UnityEngine;
 
 namespace UniRx.Triggers
@@ -13,9 +11,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseDown;
 
         /// <summary>OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.</summary>
-        void OnMouseDown()
+         void OnMouseDown()
         {
-            if (onMouseDown != null) { onMouseDown.OnNext(Unit.Default); }
+            if (onMouseDown != null) onMouseDown.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.</summary>
@@ -27,9 +25,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseDrag;
 
         /// <summary>OnMouseDrag is called when the user has clicked on a GUIElement or Collider and is still holding down the mouse.</summary>
-        void OnMouseDrag()
+         void OnMouseDrag()
         {
-            if (onMouseDrag != null) { onMouseDrag.OnNext(Unit.Default); }
+            if (onMouseDrag != null) onMouseDrag.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseDrag is called when the user has clicked on a GUIElement or Collider and is still holding down the mouse.</summary>
@@ -41,9 +39,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseEnter;
 
         /// <summary>OnMouseEnter is called when the mouse entered the GUIElement or Collider.</summary>
-        void OnMouseEnter()
+         void OnMouseEnter()
         {
-            if (onMouseEnter != null) { onMouseEnter.OnNext(Unit.Default); }
+            if (onMouseEnter != null) onMouseEnter.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseEnter is called when the mouse entered the GUIElement or Collider.</summary>
@@ -55,9 +53,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseExit;
 
         /// <summary>OnMouseExit is called when the mouse is not any longer over the GUIElement or Collider.</summary>
-        void OnMouseExit()
+         void OnMouseExit()
         {
-            if (onMouseExit != null) { onMouseExit.OnNext(Unit.Default); }
+            if (onMouseExit != null) onMouseExit.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseExit is called when the mouse is not any longer over the GUIElement or Collider.</summary>
@@ -69,9 +67,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseOver;
 
         /// <summary>OnMouseOver is called every frame while the mouse is over the GUIElement or Collider.</summary>
-        void OnMouseOver()
+         void OnMouseOver()
         {
-            if (onMouseOver != null) { onMouseOver.OnNext(Unit.Default); }
+            if (onMouseOver != null) onMouseOver.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseOver is called every frame while the mouse is over the GUIElement or Collider.</summary>
@@ -83,9 +81,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseUp;
 
         /// <summary>OnMouseUp is called when the user has released the mouse button.</summary>
-        void OnMouseUp()
+         void OnMouseUp()
         {
-            if (onMouseUp != null) { onMouseUp.OnNext(Unit.Default); }
+            if (onMouseUp != null) onMouseUp.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseUp is called when the user has released the mouse button.</summary>
@@ -97,9 +95,9 @@ namespace UniRx.Triggers
         Subject<Unit> onMouseUpAsButton;
 
         /// <summary>OnMouseUpAsButton is only called when the mouse is released over the same GUIElement or Collider as it was pressed.</summary>
-        void OnMouseUpAsButton()
+         void OnMouseUpAsButton()
         {
-            if (onMouseUpAsButton != null) { onMouseUpAsButton.OnNext(Unit.Default); }
+            if (onMouseUpAsButton != null) onMouseUpAsButton.OnNext(Unit.Default);
         }
 
         /// <summary>OnMouseUpAsButton is only called when the mouse is released over the same GUIElement or Collider as it was pressed.</summary>
@@ -114,32 +112,26 @@ namespace UniRx.Triggers
             {
                 onMouseDown.OnCompleted();
             }
-
             if (onMouseDrag != null)
             {
                 onMouseDrag.OnCompleted();
             }
-
             if (onMouseEnter != null)
             {
                 onMouseEnter.OnCompleted();
             }
-
             if (onMouseExit != null)
             {
                 onMouseExit.OnCompleted();
             }
-
             if (onMouseOver != null)
             {
                 onMouseOver.OnCompleted();
             }
-
             if (onMouseUp != null)
             {
                 onMouseUp.OnCompleted();
             }
-
             if (onMouseUpAsButton != null)
             {
                 onMouseUpAsButton.OnCompleted();

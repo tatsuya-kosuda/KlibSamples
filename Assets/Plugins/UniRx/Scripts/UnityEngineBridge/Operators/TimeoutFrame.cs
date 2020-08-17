@@ -1,9 +1,9 @@
 ﻿using System;
 
 #if UniRxLibrary
-    using UnityObservable = UniRx.ObservableUnity;
+using UnityObservable = UniRx.ObservableUnity;
 #else
-    using UnityObservable = UniRx.Observable;
+using UnityObservable = UniRx.Observable;
 #endif
 
 namespace UniRx.Operators
@@ -46,28 +46,27 @@ namespace UniRx.Operators
                 timerSubscription = new SerialDisposable();
                 timerSubscription.Disposable = RunTimer(objectId);
                 sourceSubscription.Disposable = parent.source.Subscribe(this);
+
                 return StableCompositeDisposable.Create(timerSubscription, sourceSubscription);
             }
 
             IDisposable RunTimer(ulong timerId)
             {
                 return UnityObservable.TimerFrame(parent.frameCount, parent.frameCountType)
-                       .Subscribe(new TimeoutFrameTick(this, timerId));
+                    .Subscribe(new TimeoutFrameTick(this, timerId));
             }
 
             public override void OnNext(T value)
             {
                 ulong useObjectId;
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                     useObjectId = objectId;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Disposable = Disposable.Empty; // cancel old timer
                 observer.OnNext(value);
@@ -77,37 +76,29 @@ namespace UniRx.Operators
             public override void OnError(Exception error)
             {
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Dispose();
-
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
                 bool timeout;
-
                 lock (gate)
                 {
                     timeout = isTimeout;
                     objectId++;
                 }
-
-                if (timeout) { return; }
+                if (timeout) return;
 
                 timerSubscription.Dispose();
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
 
             class TimeoutFrameTick : IObserver<long>
@@ -131,6 +122,8 @@ namespace UniRx.Operators
 
                 public void OnNext(long _)
                 {
+
+
                     lock (parent.gate)
                     {
                         if (parent.objectId == timerId)
@@ -138,11 +131,9 @@ namespace UniRx.Operators
                             parent.isTimeout = true;
                         }
                     }
-
                     if (parent.isTimeout)
                     {
-                        try { parent.observer.OnError(new TimeoutException()); }
-                        finally { parent.Dispose(); }
+                        try { parent.observer.OnError(new TimeoutException()); } finally { parent.Dispose(); }
                     }
                 }
             }

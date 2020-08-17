@@ -36,6 +36,7 @@ namespace UniRx.Operators
                 var now = parent.scheduler.Now;
                 var span = now.Subtract(lastTime);
                 lastTime = now;
+
                 base.observer.OnNext(new UniRx.TimeInterval<T>(value, span));
             }
 

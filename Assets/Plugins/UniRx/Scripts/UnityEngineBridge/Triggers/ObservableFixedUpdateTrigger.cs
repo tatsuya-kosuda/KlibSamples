@@ -11,7 +11,7 @@ namespace UniRx.Triggers
         /// <summary>This function is called every fixed framerate frame, if the MonoBehaviour is enabled.</summary>
         void FixedUpdate()
         {
-            if (fixedUpdate != null) { fixedUpdate.OnNext(Unit.Default); }
+            if (fixedUpdate != null) fixedUpdate.OnNext(Unit.Default);
         }
 
         /// <summary>This function is called every fixed framerate frame, if the MonoBehaviour is enabled.</summary>

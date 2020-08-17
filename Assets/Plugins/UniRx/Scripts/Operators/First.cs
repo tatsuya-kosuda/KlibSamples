@@ -53,10 +53,8 @@ namespace UniRx.Operators
                 {
                     notPublished = false;
                     observer.OnNext(value);
-
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
-
                     return;
                 }
             }
@@ -75,7 +73,6 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(default(T));
                     }
-
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
                 }
@@ -112,7 +109,6 @@ namespace UniRx.Operators
                 if (notPublished)
                 {
                     bool isPassed;
-
                     try
                     {
                         isPassed = parent.predicate(value);
@@ -121,7 +117,6 @@ namespace UniRx.Operators
                     {
                         try { observer.OnError(ex); }
                         finally { Dispose(); }
-
                         return;
                     }
 
@@ -129,7 +124,6 @@ namespace UniRx.Operators
                     {
                         notPublished = false;
                         observer.OnNext(value);
-
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
                     }
@@ -150,7 +144,6 @@ namespace UniRx.Operators
                     {
                         observer.OnNext(default(T));
                     }
-
                     try { observer.OnCompleted(); }
                     finally { Dispose(); }
                 }

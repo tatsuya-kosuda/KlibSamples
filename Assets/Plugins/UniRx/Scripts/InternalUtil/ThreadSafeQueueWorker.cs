@@ -28,8 +28,7 @@ namespace UniRx.InternalUtil
                     if (waitingList.Length == waitingListCount)
                     {
                         var newLength = waitingListCount * 2;
-
-                        if ((uint)newLength > MaxArrayLength) { newLength = MaxArrayLength; }
+                        if ((uint)newLength > MaxArrayLength) newLength = MaxArrayLength;
 
                         var newArray = new Action<object>[newLength];
                         var newArrayState = new object[newLength];
@@ -38,7 +37,6 @@ namespace UniRx.InternalUtil
                         waitingList = newArray;
                         waitingStates = newArrayState;
                     }
-
                     waitingList[waitingListCount] = action;
                     waitingStates[waitingListCount] = state;
                     waitingListCount++;
@@ -49,8 +47,7 @@ namespace UniRx.InternalUtil
                     if (actionList.Length == actionListCount)
                     {
                         var newLength = actionListCount * 2;
-
-                        if ((uint)newLength > MaxArrayLength) { newLength = MaxArrayLength; }
+                        if ((uint)newLength > MaxArrayLength) newLength = MaxArrayLength;
 
                         var newArray = new Action<object>[newLength];
                         var newArrayState = new object[newLength];
@@ -59,7 +56,6 @@ namespace UniRx.InternalUtil
                         actionList = newArray;
                         actionStates = newArrayState;
                     }
-
                     actionList[actionListCount] = action;
                     actionStates[actionListCount] = state;
                     actionListCount++;
@@ -71,7 +67,7 @@ namespace UniRx.InternalUtil
         {
             lock (gate)
             {
-                if (actionListCount == 0) { return; }
+                if (actionListCount == 0) return;
 
                 dequing = true;
             }
@@ -80,7 +76,6 @@ namespace UniRx.InternalUtil
             {
                 var action = actionList[i];
                 var state = actionStates[i];
-
                 try
                 {
                     action(state);
@@ -100,11 +95,14 @@ namespace UniRx.InternalUtil
             lock (gate)
             {
                 dequing = false;
+
                 var swapTempActionList = actionList;
                 var swapTempActionStates = actionStates;
+
                 actionListCount = waitingListCount;
                 actionList = waitingList;
                 actionStates = waitingStates;
+
                 waitingListCount = 0;
                 waitingList = swapTempActionList;
                 waitingStates = swapTempActionStates;

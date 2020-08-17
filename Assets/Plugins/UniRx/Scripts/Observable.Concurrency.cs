@@ -55,13 +55,11 @@ namespace UniRx
         public static IObservable<T> Amb<T>(IEnumerable<IObservable<T>> sources)
         {
             var result = Observable.Never<T>();
-
             foreach (var item in sources)
             {
                 var second = item;
                 result = result.Amb(second);
             }
-
             return result;
         }
 

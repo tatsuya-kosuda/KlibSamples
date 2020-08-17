@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void ISelectHandler.OnSelect(BaseEventData eventData)
         {
-            if (onSelect != null) { onSelect.OnNext(eventData); }
+            if (onSelect != null) onSelect.OnNext(eventData);
         }
 
         public IObservable<BaseEventData> OnSelectAsObservable()

@@ -50,12 +50,9 @@ namespace UniRx.Operators
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
-
                 base.observer.OnNext(value);
             }
 
@@ -67,14 +64,10 @@ namespace UniRx.Operators
                 }
                 catch (Exception ex)
                 {
-                    try { observer.OnError(ex); }
-                    finally { Dispose(); };
-
+                    try { observer.OnError(ex); } finally { Dispose(); };
                     return;
                 }
-
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             public override void OnCompleted()
@@ -89,9 +82,7 @@ namespace UniRx.Operators
                     Dispose();
                     return;
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }
@@ -137,10 +128,8 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
-
                 base.observer.OnNext(value);
             }
 
@@ -154,7 +143,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 
@@ -172,7 +160,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
 
@@ -228,9 +215,9 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
+
 
                 try { observer.OnError(error); }
                 finally { Dispose(); }
@@ -298,9 +285,7 @@ namespace UniRx.Operators
                     Dispose();
                     return;
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }
@@ -351,12 +336,9 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return;
                 }
-
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             public override void OnCompleted()
@@ -371,9 +353,7 @@ namespace UniRx.Operators
                     Dispose();
                     return;
                 }
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }
@@ -414,7 +394,6 @@ namespace UniRx.Operators
                 {
                     try { observer.OnError(ex); }
                     finally { Dispose(); }
-
                     return Disposable.Empty;
                 }
 
@@ -428,14 +407,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }
@@ -487,17 +464,13 @@ namespace UniRx.Operators
             public override void OnError(Exception error)
             {
                 isCompletedCall = true;
-
-                try { observer.OnError(error); }
-                finally { Dispose(); };
+                try { observer.OnError(error); } finally { Dispose(); };
             }
 
             public override void OnCompleted()
             {
                 isCompletedCall = true;
-
-                try { observer.OnCompleted(); }
-                finally { Dispose(); };
+                try { observer.OnCompleted(); } finally { Dispose(); };
             }
         }
     }

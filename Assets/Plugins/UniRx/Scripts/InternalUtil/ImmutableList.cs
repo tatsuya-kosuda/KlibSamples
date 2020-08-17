@@ -35,16 +35,16 @@ namespace UniRx.InternalUtil
         public ImmutableList<T> Remove(T value)
         {
             var i = IndexOf(value);
-
-            if (i < 0) { return this; }
+            if (i < 0) return this;
 
             var length = data.Length;
-
-            if (length == 1) { return Empty; }
+            if (length == 1) return Empty;
 
             var newData = new T[length - 1];
+
             Array.Copy(data, 0, newData, 0, i);
             Array.Copy(data, i + 1, newData, i, length - i - 1);
+
             return new ImmutableList<T>(newData);
         }
 
@@ -53,9 +53,8 @@ namespace UniRx.InternalUtil
             for (var i = 0; i < data.Length; ++i)
             {
                 // ImmutableList only use for IObserver(no worry for boxed)
-                if (object.Equals(data[i], value)) { return i; }
+                if (object.Equals(data[i], value)) return i;
             }
-
             return -1;
         }
     }

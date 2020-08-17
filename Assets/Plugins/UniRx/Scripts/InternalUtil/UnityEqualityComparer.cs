@@ -1,10 +1,8 @@
-
 ﻿#if CSHARP_7_OR_LATER || (UNITY_2018_3_OR_NEWER && (NET_STANDARD_2_0 || NET_4_6))
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #endif
 
-    using System;
-
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,7 +51,6 @@ namespace UniRx.InternalUtil
             static Cache()
             {
                 var comparer = GetDefaultHelper(typeof(T));
-
                 if (comparer == null)
                 {
                     Comparer = EqualityComparer<T>.Default;
@@ -74,35 +71,24 @@ namespace UniRx.InternalUtil
         {
             var t = type.TypeHandle;
 
-            if (t.Equals(vector2Type)) { return (object)UnityEqualityComparer.Vector2; }
-
-            if (t.Equals(vector3Type)) { return (object)UnityEqualityComparer.Vector3; }
-
-            if (t.Equals(vector4Type)) { return (object)UnityEqualityComparer.Vector4; }
-
-            if (t.Equals(colorType)) { return (object)UnityEqualityComparer.Color; }
-
-            if (t.Equals(color32Type)) { return (object)UnityEqualityComparer.Color32; }
-
-            if (t.Equals(rectType)) { return (object)UnityEqualityComparer.Rect; }
-
-            if (t.Equals(boundsType)) { return (object)UnityEqualityComparer.Bounds; }
-
-            if (t.Equals(quaternionType)) { return (object)UnityEqualityComparer.Quaternion; }
+            if (t.Equals(vector2Type)) return (object)UnityEqualityComparer.Vector2;
+            if (t.Equals(vector3Type)) return (object)UnityEqualityComparer.Vector3;
+            if (t.Equals(vector4Type)) return (object)UnityEqualityComparer.Vector4;
+            if (t.Equals(colorType)) return (object)UnityEqualityComparer.Color;
+            if (t.Equals(color32Type)) return (object)UnityEqualityComparer.Color32;
+            if (t.Equals(rectType)) return (object)UnityEqualityComparer.Rect;
+            if (t.Equals(boundsType)) return (object)UnityEqualityComparer.Bounds;
+            if (t.Equals(quaternionType)) return (object)UnityEqualityComparer.Quaternion;
 
 #if UNITY_2017_2_OR_NEWER
 
-            if (t.Equals(vector2IntType)) { return (object)UnityEqualityComparer.Vector2Int; }
-
-            if (t.Equals(vector3IntType)) { return (object)UnityEqualityComparer.Vector3Int; }
-
-            if (t.Equals(rangeIntType)) { return (object)UnityEqualityComparer.RangeInt; }
-
-            if (t.Equals(rectIntType)) { return (object)UnityEqualityComparer.RectInt; }
-
-            if (t.Equals(boundsIntType)) { return (object)UnityEqualityComparer.BoundsInt; }
-
+            if (t.Equals(vector2IntType)) return (object)UnityEqualityComparer.Vector2Int;
+            if (t.Equals(vector3IntType)) return (object)UnityEqualityComparer.Vector3Int;
+            if (t.Equals(rangeIntType)) return (object)UnityEqualityComparer.RangeInt;
+            if (t.Equals(rectIntType)) return (object)UnityEqualityComparer.RectInt;
+            if (t.Equals(boundsIntType)) return (object)UnityEqualityComparer.BoundsInt;
 #endif
+
             return null;
         }
 
@@ -271,7 +257,7 @@ namespace UniRx.InternalUtil
             public bool Equals(BoundsInt self, BoundsInt vector)
             {
                 return Vector3IntEqualityComparer.Default.Equals(self.position, vector.position)
-                       && Vector3IntEqualityComparer.Default.Equals(self.size, vector.size);
+                    && Vector3IntEqualityComparer.Default.Equals(self.size, vector.size);
             }
 
             public int GetHashCode(BoundsInt obj)

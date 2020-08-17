@@ -1,10 +1,8 @@
-
 ﻿#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
 #define SupportCustomYieldInstruction
 #endif
 
-    using System;
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx.InternalUtil;
@@ -13,7 +11,7 @@ using UnityEngine;
 using System.Threading;
 
 #if !UniRxLibrary
-    using SchedulerUnity = UniRx.Scheduler;
+using SchedulerUnity = UniRx.Scheduler;
 #endif
 
 namespace UniRx
@@ -43,10 +41,8 @@ namespace UniRx
             {
                 case FrameCountType.FixedUpdate:
                     return YieldInstructionCache.WaitForFixedUpdate;
-
                 case FrameCountType.EndOfFrame:
                     return YieldInstructionCache.WaitForEndOfFrame;
-
                 case FrameCountType.Update:
                 default:
                     return null;
@@ -79,7 +75,6 @@ namespace UniRx
             this.moveNext = true;
             this.reThrowOnError = reThrowOnError;
             this.cancel = cancel;
-
             try
             {
                 this.subscription = source.Subscribe(new ToYieldInstruction(this));
@@ -105,10 +100,8 @@ namespace UniRx
         {
             get
             {
-                if (hasResult) { return false; }
-
-                if (error != null) { return false; }
-
+                if (hasResult) return false;
+                if (error != null) return false;
                 return cancel.IsCancellationRequested;
             }
         }
@@ -236,11 +229,11 @@ namespace UniRx
     {
         readonly static HashSet<Type> YieldInstructionTypes = new HashSet<Type>
         {
-#if UNITY_2018_3_OR_NEWER
+            #if UNITY_2018_3_OR_NEWER
 #pragma warning disable CS0618
 #endif
             typeof(WWW),
-#if UNITY_2018_3_OR_NEWER
+            #if UNITY_2018_3_OR_NEWER
 #pragma warning restore CS0618
 #endif
             typeof(WaitForEndOfFrame),
@@ -276,7 +269,6 @@ namespace UniRx
                     {
                         count++;
                     }
-
                     return true;
                 }
                 else
@@ -339,7 +331,6 @@ namespace UniRx
         {
             var hasNext = default(bool);
             var raisedError = false;
-
             do
             {
                 try
@@ -356,16 +347,13 @@ namespace UniRx
                     finally
                     {
                         var d = enumerator as IDisposable;
-
                         if (d != null)
                         {
                             d.Dispose();
                         }
                     }
-
                     yield break;
                 }
-
                 if (hasNext && publishEveryYield)
                 {
                     try
@@ -375,22 +363,18 @@ namespace UniRx
                     catch
                     {
                         var d = enumerator as IDisposable;
-
                         if (d != null)
                         {
                             d.Dispose();
                         }
-
                         throw;
                     }
                 }
-
                 if (hasNext)
                 {
 #if SupportCustomYieldInstruction
                     var current = enumerator.Current;
                     var customHandler = current as ICustomYieldInstructionErrorHandler;
-
                     if (customHandler != null && customHandler.IsReThrowOnError)
                     {
                         // If throws exception in Custom YieldInsrtuction, can't handle parent coroutine.
@@ -410,13 +394,11 @@ namespace UniRx
                             finally
                             {
                                 var d = enumerator as IDisposable;
-
                                 if (d != null)
                                 {
                                     d.Dispose();
                                 }
                             }
-
                             yield break;
                         }
                     }
@@ -424,13 +406,11 @@ namespace UniRx
                     {
                         yield return enumerator.Current; // yield inner YieldInstruction
                     }
-
 #else
                     yield return enumerator.Current; // yield inner YieldInstruction
 #endif
                 }
-            }
-            while (hasNext && !cancellationToken.IsCancellationRequested);
+            } while (hasNext && !cancellationToken.IsCancellationRequested);
 
             try
             {
@@ -443,7 +423,6 @@ namespace UniRx
             finally
             {
                 var d = enumerator as IDisposable;
-
                 if (d != null)
                 {
                     d.Dispose();
@@ -468,14 +447,12 @@ namespace UniRx
             var hasNext = default(bool);
             var current = default(object);
             var raisedError = false;
-
             do
             {
                 try
                 {
                     hasNext = enumerator.MoveNext();
-
-                    if (hasNext) { current = enumerator.Current; }
+                    if (hasNext) current = enumerator.Current;
                 }
                 catch (Exception ex)
                 {
@@ -487,13 +464,11 @@ namespace UniRx
                     finally
                     {
                         var d = enumerator as IDisposable;
-
                         if (d != null)
                         {
                             d.Dispose();
                         }
                     }
-
                     yield break;
                 }
 
@@ -503,12 +478,10 @@ namespace UniRx
                     {
                         yield return current;
                     }
-
 #if SupportCustomYieldInstruction
                     else if (current is IEnumerator)
                     {
                         var customHandler = current as ICustomYieldInstructionErrorHandler;
-
                         if (customHandler != null && customHandler.IsReThrowOnError)
                         {
                             // If throws exception in Custom YieldInsrtuction, can't handle parent coroutine.
@@ -528,13 +501,11 @@ namespace UniRx
                                 finally
                                 {
                                     var d = enumerator as IDisposable;
-
                                     if (d != null)
                                     {
                                         d.Dispose();
                                     }
                                 }
-
                                 yield break;
                             }
                         }
@@ -543,7 +514,6 @@ namespace UniRx
                             yield return current;
                         }
                     }
-
 #endif
                     else if (current == null && nullAsNextUpdate)
                     {
@@ -558,18 +528,15 @@ namespace UniRx
                         catch
                         {
                             var d = enumerator as IDisposable;
-
                             if (d != null)
                             {
                                 d.Dispose();
                             }
-
                             throw;
                         }
                     }
                 }
-            }
-            while (hasNext && !cancellationToken.IsCancellationRequested);
+            } while (hasNext && !cancellationToken.IsCancellationRequested);
 
             try
             {
@@ -581,7 +548,6 @@ namespace UniRx
             finally
             {
                 var d = enumerator as IDisposable;
-
                 if (d != null)
                 {
                     d.Dispose();
@@ -606,7 +572,6 @@ namespace UniRx
         static IEnumerator WrapToCancellableEnumerator<T>(IEnumerator enumerator, IObserver<T> observer, CancellationToken cancellationToken)
         {
             var hasNext = default(bool);
-
             do
             {
                 try
@@ -622,23 +587,19 @@ namespace UniRx
                     finally
                     {
                         var d = enumerator as IDisposable;
-
                         if (d != null)
                         {
                             d.Dispose();
                         }
                     }
-
                     yield break;
                 }
 
                 yield return enumerator.Current; // yield inner YieldInstruction
-            }
-            while (hasNext && !cancellationToken.IsCancellationRequested);
+            } while (hasNext && !cancellationToken.IsCancellationRequested);
 
             {
                 var d = enumerator as IDisposable;
-
                 if (d != null)
                 {
                     d.Dispose();
@@ -729,15 +690,12 @@ namespace UniRx
 
         static IEnumerator EveryCycleCore(IObserver<long> observer, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested) { yield break; }
-
+            if (cancellationToken.IsCancellationRequested) yield break;
             var count = 0L;
-
             while (true)
             {
                 yield return null;
-
-                if (cancellationToken.IsCancellationRequested) { yield break; }
+                if (cancellationToken.IsCancellationRequested) yield break;
 
                 observer.OnNext(count++);
             }
@@ -810,7 +768,7 @@ namespace UniRx
         static IEnumerator TimerFrameCore(IObserver<long> observer, int dueTimeFrameCount, CancellationToken cancel)
         {
             // normalize
-            if (dueTimeFrameCount <= 0) { dueTimeFrameCount = 0; }
+            if (dueTimeFrameCount <= 0) dueTimeFrameCount = 0;
 
             var currentFrame = 0;
 
@@ -823,7 +781,6 @@ namespace UniRx
                     observer.OnCompleted();
                     break;
                 }
-
                 yield return null;
             }
         }
@@ -831,9 +788,8 @@ namespace UniRx
         static IEnumerator TimerFrameCore(IObserver<long> observer, int dueTimeFrameCount, int periodFrameCount, CancellationToken cancel)
         {
             // normalize
-            if (dueTimeFrameCount <= 0) { dueTimeFrameCount = 0; }
-
-            if (periodFrameCount <= 0) { periodFrameCount = 1; }
+            if (dueTimeFrameCount <= 0) dueTimeFrameCount = 0;
+            if (periodFrameCount <= 0) periodFrameCount = 1;
 
             var sendCount = 0L;
             var currentFrame = 0;
@@ -847,7 +803,6 @@ namespace UniRx
                     currentFrame = -1;
                     break;
                 }
-
                 yield return null;
             }
 
@@ -859,15 +814,13 @@ namespace UniRx
                     observer.OnNext(sendCount++);
                     currentFrame = 0;
                 }
-
                 yield return null;
             }
         }
 
         public static IObservable<T> DelayFrame<T>(this IObservable<T> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.DelayFrameObservable<T>(source, frameCount, frameCountType);
         }
 
@@ -878,36 +831,31 @@ namespace UniRx
 
         public static IObservable<T> SampleFrame<T>(this IObservable<T> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.SampleFrameObservable<T>(source, frameCount, frameCountType);
         }
 
         public static IObservable<TSource> ThrottleFrame<TSource>(this IObservable<TSource> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.ThrottleFrameObservable<TSource>(source, frameCount, frameCountType);
         }
 
         public static IObservable<TSource> ThrottleFirstFrame<TSource>(this IObservable<TSource> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.ThrottleFirstFrameObservable<TSource>(source, frameCount, frameCountType);
         }
 
         public static IObservable<T> TimeoutFrame<T>(this IObservable<T> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.TimeoutFrameObservable<T>(source, frameCount, frameCountType);
         }
 
         public static IObservable<T> DelayFrameSubscription<T>(this IObservable<T> source, int frameCount, FrameCountType frameCountType = FrameCountType.Update)
         {
-            if (frameCount < 0) { throw new ArgumentOutOfRangeException("frameCount"); }
-
+            if (frameCount < 0) throw new ArgumentOutOfRangeException("frameCount");
             return new UniRx.Operators.DelayFrameSubscriptionObservable<T>(source, frameCount, frameCountType);
         }
 
@@ -980,7 +928,6 @@ namespace UniRx
         {
             var enumerator = new ObservableYieldInstruction<T>(source, false, cancel);
             var e = (IEnumerator<T>)enumerator;
-
             while (e.MoveNext() && !cancel.IsCancellationRequested)
             {
                 yield return null;
@@ -1042,16 +989,12 @@ namespace UniRx
 
                 case MainThreadDispatchType.FixedUpdate:
                     return source.SelectMany(_ => EveryFixedUpdate().Take(1), (x, _) => x);
-
                 case MainThreadDispatchType.EndOfFrame:
                     return source.SelectMany(_ => EveryEndOfFrame().Take(1), (x, _) => x);
-
                 case MainThreadDispatchType.GameObjectUpdate:
                     return source.SelectMany(_ => MainThreadDispatcher.UpdateAsObservable().Take(1), (x, _) => x);
-
                 case MainThreadDispatchType.LateUpdate:
                     return source.SelectMany(_ => MainThreadDispatcher.LateUpdateAsObservable().Take(1), (x, _) => x);
-
                 default:
                     throw new ArgumentException("type is invalid");
             }
@@ -1173,8 +1116,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<IList<T>> BatchFrame<T>(this IObservable<T> source, int frameCount, FrameCountType frameCountType)
         {
-            if (frameCount < 0) { throw new ArgumentException("frameCount must be >= 0, frameCount:" + frameCount); }
-
+            if (frameCount < 0) throw new ArgumentException("frameCount must be >= 0, frameCount:" + frameCount);
             return new UniRx.Operators.BatchFrameObservable<T>(source, frameCount, frameCountType);
         }
 
@@ -1191,8 +1133,7 @@ namespace UniRx
         /// </summary>
         public static IObservable<Unit> BatchFrame(this IObservable<Unit> source, int frameCount, FrameCountType frameCountType)
         {
-            if (frameCount < 0) { throw new ArgumentException("frameCount must be >= 0, frameCount:" + frameCount); }
-
+            if (frameCount < 0) throw new ArgumentException("frameCount must be >= 0, frameCount:" + frameCount);
             return new UniRx.Operators.BatchFrameObservable(source, frameCount, frameCountType);
         }
 

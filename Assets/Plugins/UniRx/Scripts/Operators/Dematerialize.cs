@@ -29,7 +29,7 @@ namespace UniRx.Operators
 
             public IDisposable Run()
             {
-                return parent.source.Subscribe(this);
+                return parent.source.Subscribe(this); 
             }
 
             public override void OnNext(Notification<T> value)
@@ -39,19 +39,14 @@ namespace UniRx.Operators
                     case NotificationKind.OnNext:
                         observer.OnNext(value.Value);
                         break;
-
                     case NotificationKind.OnError:
                         try { observer.OnError(value.Exception); }
                         finally { Dispose(); }
-
                         break;
-
                     case NotificationKind.OnCompleted:
                         try { observer.OnCompleted(); }
                         finally { Dispose(); }
-
                         break;
-
                     default:
                         break;
                 }
@@ -59,14 +54,12 @@ namespace UniRx.Operators
 
             public override void OnError(Exception error)
             {
-                try { observer.OnError(error); }
-                finally { Dispose(); }
+                try { observer.OnError(error); } finally { Dispose(); }
             }
 
             public override void OnCompleted()
             {
-                try { observer.OnCompleted(); }
-                finally { Dispose(); }
+                try { observer.OnCompleted(); } finally { Dispose(); }
             }
         }
     }

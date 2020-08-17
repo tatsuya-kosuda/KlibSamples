@@ -52,6 +52,7 @@ namespace UniRx.Operators
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.sources.Subscribe(this);
                 return collectionDisposable;
             }
@@ -68,21 +69,18 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
             public override void OnCompleted()
             {
                 isStopped = true;
-
                 if (collectionDisposable.Count == 1)
                 {
                     lock (gate)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                 }
                 else
@@ -115,21 +113,18 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     if (parent.isStopped && parent.collectionDisposable.Count == 1)
                     {
                         lock (parent.gate)
                         {
-                            try { observer.OnCompleted(); }
-                            finally { Dispose(); };
+                            try { observer.OnCompleted(); } finally { Dispose(); };
                         }
                     }
                 }
@@ -158,9 +153,11 @@ namespace UniRx.Operators
             {
                 q = new Queue<IObservable<T>>();
                 activeCount = 0;
+
                 collectionDisposable = new CompositeDisposable();
                 sourceDisposable = new SingleAssignmentDisposable();
                 collectionDisposable.Add(sourceDisposable);
+
                 sourceDisposable.Disposable = parent.sources.Subscribe(this);
                 return collectionDisposable;
             }
@@ -185,8 +182,7 @@ namespace UniRx.Operators
             {
                 lock (gate)
                 {
-                    try { observer.OnError(error); }
-                    finally { Dispose(); };
+                    try { observer.OnError(error); } finally { Dispose(); };
                 }
             }
 
@@ -195,11 +191,9 @@ namespace UniRx.Operators
                 lock (gate)
                 {
                     isStopped = true;
-
                     if (activeCount == 0)
                     {
-                        try { observer.OnCompleted(); }
-                        finally { Dispose(); };
+                        try { observer.OnCompleted(); } finally { Dispose(); };
                     }
                     else
                     {
@@ -240,15 +234,13 @@ namespace UniRx.Operators
                 {
                     lock (parent.gate)
                     {
-                        try { observer.OnError(error); }
-                        finally { Dispose(); };
+                        try { observer.OnError(error); } finally { Dispose(); };
                     }
                 }
 
                 public override void OnCompleted()
                 {
                     parent.collectionDisposable.Remove(cancel);
-
                     lock (parent.gate)
                     {
                         if (parent.q.Count > 0)
@@ -259,11 +251,9 @@ namespace UniRx.Operators
                         else
                         {
                             parent.activeCount--;
-
                             if (parent.isStopped && parent.activeCount == 0)
                             {
-                                try { observer.OnCompleted(); }
-                                finally { Dispose(); };
+                                try { observer.OnCompleted(); } finally { Dispose(); };
                             }
                         }
                     }

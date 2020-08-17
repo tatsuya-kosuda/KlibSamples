@@ -168,14 +168,11 @@ namespace UniRx
             public override bool Equals(Notification<T> other)
             {
                 if (Object.ReferenceEquals(this, other))
-                { return true; }
-
+                    return true;
                 if (Object.ReferenceEquals(other, null))
-                { return false; }
-
+                    return false;
                 if (other.Kind != NotificationKind.OnNext)
-                { return false; }
-
+                    return false;
                 return EqualityComparer<T>.Default.Equals(Value, other.Value);
             }
 
@@ -194,7 +191,7 @@ namespace UniRx
             public override void Accept(IObserver<T> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 observer.OnNext(Value);
             }
@@ -207,7 +204,7 @@ namespace UniRx
             public override TResult Accept<TResult>(IObserver<T, TResult> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 return observer.OnNext(Value);
             }
@@ -221,13 +218,11 @@ namespace UniRx
             public override void Accept(Action<T> onNext, Action<Exception> onError, Action onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 onNext(Value);
             }
@@ -242,13 +237,11 @@ namespace UniRx
             public override TResult Accept<TResult>(Func<T, TResult> onNext, Func<Exception, TResult> onError, Func<TResult> onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 return onNext(Value);
             }
@@ -309,14 +302,11 @@ namespace UniRx
             public override bool Equals(Notification<T> other)
             {
                 if (Object.ReferenceEquals(this, other))
-                { return true; }
-
+                    return true;
                 if (Object.ReferenceEquals(other, null))
-                { return false; }
-
+                    return false;
                 if (other.Kind != NotificationKind.OnError)
-                { return false; }
-
+                    return false;
                 return Object.Equals(Exception, other.Exception);
             }
 
@@ -335,7 +325,7 @@ namespace UniRx
             public override void Accept(IObserver<T> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 observer.OnError(Exception);
             }
@@ -348,7 +338,7 @@ namespace UniRx
             public override TResult Accept<TResult>(IObserver<T, TResult> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 return observer.OnError(Exception);
             }
@@ -362,13 +352,11 @@ namespace UniRx
             public override void Accept(Action<T> onNext, Action<Exception> onError, Action onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 onError(Exception);
             }
@@ -383,13 +371,11 @@ namespace UniRx
             public override TResult Accept<TResult>(Func<T, TResult> onNext, Func<Exception, TResult> onError, Func<TResult> onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 return onError(Exception);
             }
@@ -443,11 +429,9 @@ namespace UniRx
             public override bool Equals(Notification<T> other)
             {
                 if (Object.ReferenceEquals(this, other))
-                { return true; }
-
+                    return true;
                 if (Object.ReferenceEquals(other, null))
-                { return false; }
-
+                    return false;
                 return other.Kind == NotificationKind.OnCompleted;
             }
 
@@ -466,7 +450,7 @@ namespace UniRx
             public override void Accept(IObserver<T> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 observer.OnCompleted();
             }
@@ -479,7 +463,7 @@ namespace UniRx
             public override TResult Accept<TResult>(IObserver<T, TResult> observer)
             {
                 if (observer == null)
-                { throw new ArgumentNullException("observer"); }
+                    throw new ArgumentNullException("observer");
 
                 return observer.OnCompleted();
             }
@@ -493,13 +477,11 @@ namespace UniRx
             public override void Accept(Action<T> onNext, Action<Exception> onError, Action onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 onCompleted();
             }
@@ -514,13 +496,11 @@ namespace UniRx
             public override TResult Accept<TResult>(Func<T, TResult> onNext, Func<Exception, TResult> onError, Func<TResult> onCompleted)
             {
                 if (onNext == null)
-                { throw new ArgumentNullException("onNext"); }
-
+                    throw new ArgumentNullException("onNext");
                 if (onError == null)
-                { throw new ArgumentNullException("onError"); }
-
+                    throw new ArgumentNullException("onError");
                 if (onCompleted == null)
-                { throw new ArgumentNullException("onCompleted"); }
+                    throw new ArgumentNullException("onCompleted");
 
                 return onCompleted();
             }
@@ -552,10 +532,10 @@ namespace UniRx
         public static bool operator ==(Notification<T> left, Notification<T> right)
         {
             if (object.ReferenceEquals(left, right))
-            { return true; }
+                return true;
 
             if ((object)left == null || (object)right == null)
-            { return false; }
+                return false;
 
             return left.Equals(right);
         }
@@ -640,14 +620,13 @@ namespace UniRx
         public IObservable<T> ToObservable(IScheduler scheduler)
         {
             if (scheduler == null)
-            { throw new ArgumentNullException("scheduler"); }
+                throw new ArgumentNullException("scheduler");
 
             return Observable.Create<T>(observer => scheduler.Schedule(() =>
             {
                 this.Accept(observer);
-
                 if (this.Kind == NotificationKind.OnNext)
-                { observer.OnCompleted(); }
+                    observer.OnCompleted();
             }));
         }
     }
@@ -678,7 +657,7 @@ namespace UniRx
         public static Notification<T> CreateOnError<T>(Exception error)
         {
             if (error == null)
-            { throw new ArgumentNullException("error"); }
+                throw new ArgumentNullException("error");
 
             return new Notification<T>.OnErrorNotification(error);
         }

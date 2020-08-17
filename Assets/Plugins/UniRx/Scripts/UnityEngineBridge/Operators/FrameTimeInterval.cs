@@ -29,17 +29,18 @@ namespace UniRx.Operators
             {
                 this.parent = parent;
                 this.lastTime = (parent.ignoreTimeScale)
-                                ? UnityEngine.Time.unscaledTime
-                                : UnityEngine.Time.time;
+                    ? UnityEngine.Time.unscaledTime
+                    : UnityEngine.Time.time;
             }
 
             public override void OnNext(T value)
             {
                 var now = (parent.ignoreTimeScale)
-                          ? UnityEngine.Time.unscaledTime
-                          : UnityEngine.Time.time;
+                    ? UnityEngine.Time.unscaledTime
+                    : UnityEngine.Time.time;
                 var span = now - lastTime;
                 lastTime = now;
+
                 base.observer.OnNext(new UniRx.TimeInterval<T>(value, TimeSpan.FromSeconds(span)));
             }
 
