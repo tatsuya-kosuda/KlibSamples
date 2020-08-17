@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class UniRxUtils
     {

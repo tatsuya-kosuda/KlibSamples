@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [CustomEditor(typeof(AudioManager))]
     public class AudioManagerEditor : Editor

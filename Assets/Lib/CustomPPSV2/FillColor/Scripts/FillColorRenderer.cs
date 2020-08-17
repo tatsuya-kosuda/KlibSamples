@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class FillColorRenderer : PostProcessEffectRenderer<FillColorSettings>
     {

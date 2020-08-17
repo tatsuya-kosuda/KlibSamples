@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class PooledObjectManager : Singleton<PooledObjectManager>
     {

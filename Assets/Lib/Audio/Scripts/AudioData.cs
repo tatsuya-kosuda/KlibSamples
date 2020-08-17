@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class AudioData : MonoBehaviour
     {

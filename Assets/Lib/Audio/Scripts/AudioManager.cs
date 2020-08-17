@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class AudioManager : Singleton<AudioManager>
     {

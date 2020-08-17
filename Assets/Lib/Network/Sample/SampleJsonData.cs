@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [System.Serializable]
     public class SampleJsonData : BaseJsonData

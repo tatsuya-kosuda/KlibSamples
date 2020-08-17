@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class DataUtils
     {

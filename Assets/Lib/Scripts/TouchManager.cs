@@ -9,7 +9,7 @@ using UnityEngine.Events;
 #endif
 
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class GestureInfo
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityOSC;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class UDPOSCSender : BaseUDPSender
     {

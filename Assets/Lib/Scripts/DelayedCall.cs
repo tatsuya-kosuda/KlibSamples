@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// 遅延実行ユーティルクラス

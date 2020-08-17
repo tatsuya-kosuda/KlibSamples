@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class SaveRenderTextureWindow : EditorWindow
     {

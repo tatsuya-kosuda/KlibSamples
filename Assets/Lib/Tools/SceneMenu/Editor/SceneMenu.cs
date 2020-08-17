@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// Hierarchyにフォーカスしている状態でS+altを押すとSceneショートカットを開くScript

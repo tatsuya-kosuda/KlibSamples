@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class LogPanel : MonoBehaviour
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [ExecuteInEditMode]
     public class DistortionImageEffect : MyImageEffectBase

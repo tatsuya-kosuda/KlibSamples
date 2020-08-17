@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using DG.Tweening;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [RequireComponent(typeof(RawImage))]
     [RequireComponent(typeof(VideoPlayer))]

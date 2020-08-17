@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Profiling;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [RequireComponent(typeof(Text))]
     public class StatsMemory : MonoBehaviour

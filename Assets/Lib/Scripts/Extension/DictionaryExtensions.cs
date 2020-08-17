@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// Dictionary型の拡張

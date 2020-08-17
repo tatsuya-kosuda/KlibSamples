@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class IEnumerableExtensions
     {

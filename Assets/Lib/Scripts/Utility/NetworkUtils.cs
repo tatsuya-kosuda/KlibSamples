@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using UnityEngine;
 using UnityOSC;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class NetworkUtils
     {

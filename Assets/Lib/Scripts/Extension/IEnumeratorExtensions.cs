@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class IEnumeratorExtensions
     {

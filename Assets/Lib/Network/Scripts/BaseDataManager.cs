@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public abstract class BaseDataManager<T> : Singleton<T> where T : Singleton<T>
     {

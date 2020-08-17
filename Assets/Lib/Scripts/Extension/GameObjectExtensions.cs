@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// GameObjectの拡張クラス

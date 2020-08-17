@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     [ExecuteInEditMode]
     public class FillColorTarget : MonoBehaviour

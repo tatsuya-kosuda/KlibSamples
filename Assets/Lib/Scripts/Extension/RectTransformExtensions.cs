@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public static class RectTransformExtensions
     {

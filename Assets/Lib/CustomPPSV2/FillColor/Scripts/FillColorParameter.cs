@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public enum FillColorMode
     {

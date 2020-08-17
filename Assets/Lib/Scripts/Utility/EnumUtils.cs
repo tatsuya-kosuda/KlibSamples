@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// Enum型の便利クラス

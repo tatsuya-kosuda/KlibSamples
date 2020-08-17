@@ -1,5 +1,5 @@
 ﻿
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public interface ISender
     {

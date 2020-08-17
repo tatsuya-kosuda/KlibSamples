@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// System.Actionの拡張クラス

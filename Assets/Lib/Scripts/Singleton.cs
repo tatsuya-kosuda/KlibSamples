@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// MonoBehaviour Singletonクラスを作りたい場合はこのクラスを継承する

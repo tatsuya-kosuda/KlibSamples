@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// 指定したフレーム待つ

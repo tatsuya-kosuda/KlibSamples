@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UniRx.Triggers;
-using Kosu.UnityLibrary;
+using klib;
 namespace UniRx
 {
     public static class DelayExtensions

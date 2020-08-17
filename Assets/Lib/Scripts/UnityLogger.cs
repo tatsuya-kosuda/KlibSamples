@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public class LogSetting
     {

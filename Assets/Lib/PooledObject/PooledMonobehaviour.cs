@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     public abstract class PooledMonobehaviour : MonoBehaviour
     {

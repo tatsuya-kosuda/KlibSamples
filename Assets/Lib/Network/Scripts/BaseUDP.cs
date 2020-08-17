@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading;
 using UniRx;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
 
     public class BaseUDPSender : ISender

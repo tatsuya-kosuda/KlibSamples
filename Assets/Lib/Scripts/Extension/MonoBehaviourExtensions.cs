@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Kosu.UnityLibrary
+namespace klib
 {
     /// <summary>
     /// Monobehaviourのextensions.
