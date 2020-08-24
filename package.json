@@ -5,5 +5,7 @@
     "version": "1.0.0-preview.1",
     "unity": "2020.1",
     "description": "unity utilities and extensions",
-    "dependencies": {},
+    "dependencies": {
+    	"com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts"
+    },
 }

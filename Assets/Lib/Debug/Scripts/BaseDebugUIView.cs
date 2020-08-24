@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 namespace klib
 {
@@ -79,34 +78,20 @@ namespace klib
 
         private void Show()
         {
-            if (DOTween.IsTweening(_rootCanvasGroup))
-            {
-                DOTween.Kill(_rootCanvasGroup);
-            }
-
             gameObject.SetActive(true);
-            _rootCanvasGroup.DOFade(1f, 0.1f).OnComplete(() =>
-            {
-                _rootCanvasGroup.interactable = true;
-                _rootCanvasGroup.blocksRaycasts = true;
-            });
+            _rootCanvasGroup.alpha = 1;
+            _rootCanvasGroup.interactable = true;
+            _rootCanvasGroup.blocksRaycasts = true;
             _isShowed = true;
         }
 
         private void Hide()
         {
-            if (DOTween.IsTweening(_rootCanvasGroup))
-            {
-                DOTween.Kill(_rootCanvasGroup);
-            }
-
+            _rootCanvasGroup.alpha = 0;
             _rootCanvasGroup.interactable = false;
             _rootCanvasGroup.blocksRaycasts = false;
-            _rootCanvasGroup.DOFade(0f, 0.1f).OnComplete(() =>
-            {
-                gameObject.SetActive(false);
-            });
             _isShowed = false;
+            gameObject.SetActive(false);
         }
 
     }
